@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class PlayerBehaviour : MonoBehaviour
 {
-    // �÷��̾� ����
+    // 플레이어 정보
     
-    // ī�带 ���� ����
+    // 카드를 내는 동작
 
-    // ��ο�
+    // 드로우
 
-    // �˱��
+    // 알까기
 
-    // ��� ���Ͽ� �Ҽ��ִ°͵�
+    // 등등 내턴에 할수있는것들
 }

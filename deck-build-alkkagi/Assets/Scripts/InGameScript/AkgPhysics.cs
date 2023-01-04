@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class AkgPhysics : MonoBehaviour
 {
-    // ¹°¸®¿¬»ê (¿¡³ÊÁö, ¼Ó·Â, ¹æÇâ µîµî)
-    // Ãæµ¹ ÈÄ µÎ µ¹ÀÇ ¿òÁ÷ÀÓ
-    // ÀÌµ¿ °ü·Ã ½ÇÁ¦ ÄÚµå
+    // ë¬¼ë¦¬ì—°ì‚° (ì—ë„ˆì§€, ì†ë ¥, ë°©í–¥ ë“±ë“±)
+    // ì¶©ëŒ í›„ ë‘ ëŒì˜ ì›€ì§ìž„
+    // ì´ë™ ê´€ë ¨ ì‹¤ì œ ì½”ë“œ
 
-    // µ¿±âÈ­¸¦ À§ÇÑ Ãæµ¹ ¾øÀÌ ÀÌµ¿ÇÏ±â µî (point to point)
+    // ë™ê¸°í™”ë¥¼ ìœ„í•œ ì¶©ëŒ ì—†ì´ ì´ë™í•˜ê¸° ë“± (point to point)
 }

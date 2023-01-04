@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CardDeck : MonoBehaviour
 {
-    // µé¾îÀÖ´Â Ä«µå ¸®½ºÆ®
+    // ë“¤ì–´ìžˆëŠ” ì¹´ë“œ ë¦¬ìŠ¤íŠ¸
 
-    // µ¦ ÄÚµå·Î ³»º¸³»±â
-    // µ¦ ÄÚµå ÀÐ¾î¿À±â
+    // ë± ì½”ë“œë¡œ ë‚´ë³´ë‚´ê¸°
+    // ë± ì½”ë“œ ì½ì–´ì˜¤ê¸°
 }
