@@ -438,7 +438,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b432cc53df6fe0a48a070ad47d2550b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardData: {fileID: 0}
 --- !u!65 &719863315
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1008,7 +1007,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1714026429}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75acbdaec8bd53249aefdbeca39f8e82, type: 3}
+  m_Script: {fileID: 11500000, guid: 0f2fca30fe4c5cc4a80d62c7bd56e0ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   txt: {fileID: 1134439242}
