@@ -12,13 +12,60 @@ public class NetworkManager : MonoBehaviour
     private bool m_isNetworkMode;
     MyNetwork.SocketClient m_client;
 
+    [SerializeField]
+    private string m_messageToSend;
+
+    [SerializeField]
+    private GameObject m_networkTestCanvas;
+
     private void Start()
     {
-        if (m_isNetworkMode)
+        m_networkTestCanvas.SetActive(m_isNetworkMode);
+    }
+
+    public void ConnectToServer()
+    {
+        if (!m_isNetworkMode)
         {
-            m_client = new MyNetwork.SocketClient();
-            m_client.Connect("127.0.0.1", 3333);
+            return;
         }
+
+        m_client = new MyNetwork.SocketClient();
+        m_client.Connect("127.0.0.1", 3333);
+    }
+
+    public void EnterGameRoom()
+    {
+        if (!m_isNetworkMode)
+        {
+            return;
+        }
+
+        var toSend = new MyNetworkData.TestPacket();
+        var sendPacket = new MyNetworkData.Packet();
+        sendPacket.m_type = (short)MyNetworkData.PacketType.ROOM_ENTER;
+        var toSendSerial = toSend.Serialize();
+        sendPacket.SetData(toSendSerial, toSendSerial.Length);
+        m_client.Send(sendPacket);
+    }
+
+    public void SendMessageToOpponent()
+    {
+        if (!m_isNetworkMode)
+        {
+            return;
+        }
+
+        var toSend = new MyNetworkData.MessagePacket();
+        toSend.m_senderid = -1;
+        toSend.m_message = m_messageToSend;
+        var sendPacket = new MyNetworkData.Packet();
+        sendPacket.m_type = (short)MyNetworkData.PacketType.ROOM_OPPONENT;
+        var toSendSerial = toSend.Serialize();
+        sendPacket.SetData(toSendSerial, toSendSerial.Length);
+        m_client.Send(sendPacket);
+
+        m_messageToSend += "a";
     }
 }
 
@@ -96,11 +143,25 @@ namespace MyNetworkData
         public TestPacket() { }
     }
 
-    enum PacketType
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public class MessagePacket : Data<MessagePacket>
+    {
+        public int m_senderid;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        public string m_message;
+
+        public MessagePacket() { }
+    }
+
+    public enum PacketType
     {
         UNDEFINED,
         PACKET_USER_CLOSED,
         TEST_PACKET,
+        ROOM_BROADCAST,
+        ROOM_OPPONENT,
+        ROOM_ENTER,
         PACKET_COUNT
     }
 
@@ -448,6 +509,9 @@ namespace MyNetwork
                 case MyNetworkData.PacketType.TEST_PACKET:
                     ParseTestPacket(packet);
                     break;
+                case MyNetworkData.PacketType.ROOM_OPPONENT:
+                    ParseMessagePacket(packet);
+                    break;
             }
         }
 
@@ -456,6 +520,13 @@ namespace MyNetwork
             MyNetworkData.TestPacket tp = MyNetworkData.TestPacket.Deserialize(packet.m_data);
 
             Debug.Log("from server - " + tp.m_message);
+        }
+
+        public void ParseMessagePacket(MyNetworkData.Packet packet)
+        {
+            MyNetworkData.MessagePacket mp = MyNetworkData.MessagePacket.Deserialize(packet.m_data);
+
+            Debug.LogWarning("from " + mp.m_senderid + " - " + mp.m_message);
         }
     }
 }
