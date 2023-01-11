@@ -18,4 +18,22 @@ public class StoneBehaviour : MonoBehaviour
     // 소환 이벤트
     // 파괴 이벤트
     // 타격 이벤트
+
+    private void Update()
+    {
+        //Debug.Log(CheckStoneDropByTransform());
+    }
+
+    [SerializeField] private Transform boardTransform;
+
+    private bool CheckStoneDropByTransform()
+    {
+        if(transform.position.x > boardTransform.transform.position.x + boardTransform.transform.localScale.x * 5f) return false;
+        if(transform.position.x < boardTransform.transform.position.x - boardTransform.transform.localScale.x * 5f) return false;
+        if(transform.position.z > boardTransform.transform.position.z + boardTransform.transform.localScale.z * 5f) return false;
+        if(transform.position.z < boardTransform.transform.position.z - boardTransform.transform.localScale.z * 5f) return false;
+        return true;
+    }
+
+
 }
