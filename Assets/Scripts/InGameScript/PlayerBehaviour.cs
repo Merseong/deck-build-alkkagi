@@ -6,7 +6,9 @@ using UnityEngine.UI;
 public class PlayerBehaviour : MonoBehaviour
 {
 
+    //TODO : should move to UIManager
     [SerializeField] private RectTransform cancelPanel;
+    [SerializeField] private RectTransform informPanel;
 
     // 플레이어 정보
     
@@ -21,12 +23,13 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private StoneBehaviour selectedStone;
 
     private bool isSelecting;
-    private bool isOpenStoneInform = false;
+    [SerializeField] private bool isOpenStoneInform = false;
     
     [SerializeField] private float stoneSelectionThreshold = 1f;
-    [SerializeField] private float curStoneSelectionTime;
+    private float curStoneSelectionTime;
     
     [SerializeField] private bool isDragging = false;
+    private bool startOnCancel;
     private Vector3 dragStartPoint;
     private Vector3 dragEndPoint;
 
@@ -52,17 +55,23 @@ public class PlayerBehaviour : MonoBehaviour
                 if(touch.phase == TouchPhase.Ended)
                 {
                     isSelecting = false;
-                    
-                    if(isOpenStoneInform) 
+                    selectedStone = GetStoneAroundPoint(touch.position);
+
+                    if(selectedStone == null)
+                    {
+                        
+                    }
+                    else if(isOpenStoneInform) 
                     {
                         //Open Information about selected stone
-                        selectedStone = null;
+                        SetInformPanel(selectedStone);
+                        informPanel.gameObject.SetActive(true);
                         Debug.Log("Information");
                     }
                     else
                     {
                         //Simply select current stone and move to shooting phase
-                        selectedStone = GetStoneAroundPoint(touch.position);
+                        cancelPanel.gameObject.SetActive(true);
                         Debug.Log("Selected");
                     }    
                 }
@@ -70,29 +79,34 @@ public class PlayerBehaviour : MonoBehaviour
             else
             {
                 Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(touch.position);
-                //shooting
+                bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, touch.position, null);
+                isDragging = !isTouchOnCancel;
                 if(touch.phase == TouchPhase.Began)
                 {
-                    isDragging = true;
                     dragStartPoint = curTouchPosition;
-                    cancelPanel.gameObject.SetActive(true);
+                    startOnCancel = isTouchOnCancel;
                 }
 
                 if(touch.phase == TouchPhase.Moved)
                 {
-                    isDragging = true;
-                    if(RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, touch.position, null))
-                    {
-                        isDragging = false;
-                    }
+                    isDragging = !isTouchOnCancel;
                 }                
 
                 if(touch.phase == TouchPhase.Ended) 
                 {
                     dragEndPoint = curTouchPosition;
-                    cancelPanel.gameObject.SetActive(false);
                     Vector3 moveVec = dragStartPoint - dragEndPoint;
-                    if(isDragging) ShootStone(moveVec);
+                    
+                    cancelPanel.gameObject.SetActive(false);
+                    informPanel.gameObject.SetActive(false);
+                    
+                    Debug.Log(isDragging + ", " + startOnCancel);
+                    
+                    if(isDragging && !startOnCancel) 
+                    {
+                        ShootStone(moveVec);   
+                    }
+                    selectedStone = null;
                 }
             }
         }
@@ -116,8 +130,13 @@ public class PlayerBehaviour : MonoBehaviour
     {
         //Shoot stone...
         //TODO act through physics
-        selectedStone.transform.position += vec;
-        selectedStone.transform.position = new Vector3(selectedStone.transform.position.x, 1f, selectedStone.transform.position.z);
+        selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);
+        Debug.Log(vec);
+    }
+
+    private void SetInformPanel(StoneBehaviour stone)
+    {
+        //TODO : Set inform panel to designated stons's data
     }
 
     private IEnumerator EStoneSelection()
