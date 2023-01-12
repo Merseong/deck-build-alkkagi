@@ -9,7 +9,7 @@ public class AkgRigidbody : MonoBehaviour
     public float mass = 1.0f;
     public float cor = 0.9f;    // 반발계수
 
-    //[HideInInspector]
+    [HideInInspector]
     public Vector3 velocity = Vector3.zero;
     private Vector3 oldVelocity = Vector3.zero;
 
@@ -55,13 +55,7 @@ public class AkgRigidbody : MonoBehaviour
         if (isStatic) return;
 
         AkgRigidbody other = collision.transform.GetComponent<AkgRigidbody>();
-
         if (other == null) return;
-
-        if (gameObject.name == "Cube")
-        {
-            Debug.Log("in");
-        }
 
         ContactPoint cp = collision.GetContact(0);
         
