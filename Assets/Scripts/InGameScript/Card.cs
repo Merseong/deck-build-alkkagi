@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Card : MonoBehaviour
 {
-    private CardData cardData;
-    public CardData CardData { set { cardData = value; } }
+    [SerializeField] private CardData cardData;
+    // public CardData CardData { set { cardData = value; } }
+    public CardData CardData => cardData;
 }

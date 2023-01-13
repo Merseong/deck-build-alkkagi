@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ab37ca60595e43469bbcaf7f2d4c0a7, type: 3}
+  m_Name: TestStoneData
+  m_EditorClassIdentifier: 
+  cardID: 1
+  stoneSize: 0
+  stoneWeight: 0
+  cardCost: 2
+  inDeckNumber: 0
+  sprite: {fileID: 21300000, guid: f9161c6c9e06dc445ada3ee16d991f90, type: 3}
+  description: This is test stone

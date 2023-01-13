@@ -19,9 +19,16 @@ public class StoneBehaviour : MonoBehaviour
     // 파괴 이벤트
     // 타격 이벤트
 
+    [SerializeField] private CardData cardData;
+    public CardData CardData => cardData;
+
     private void Update()
     {
-        //Debug.Log(CheckStoneDropByTransform());
+        if(!CheckStoneDropByTransform())
+        {   
+            Destroy(gameObject);
+        }
+
     }
 
     [SerializeField] private Transform boardTransform;
@@ -34,6 +41,4 @@ public class StoneBehaviour : MonoBehaviour
         if(transform.position.z < boardTransform.transform.position.z - boardTransform.transform.localScale.z * 5f) return false;
         return true;
     }
-
-
 }

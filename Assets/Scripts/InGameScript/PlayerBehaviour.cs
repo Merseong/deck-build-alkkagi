@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerBehaviour : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class PlayerBehaviour : MonoBehaviour
     // 등등 내턴에 할수있는것들
 
     [SerializeField] private StoneBehaviour selectedStone;
+    [SerializeField] private Card selectedCard;
 
     private bool isSelecting;
     [SerializeField] private bool isOpenStoneInform = false;
@@ -40,31 +42,40 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void InputHandler()
     {   
-
-        if(Input.touchCount > 0)
+        
+        if(Input.touchCount < 1) return; 
+        
+        Touch touch = Input.GetTouch(0);
+        
+        //UI handle
+        if(touch.phase == TouchPhase.Ended)
         {
-            Touch touch = Input.GetTouch(0);
-            if(selectedStone == null)
+            if(selectedCard != null || selectedStone != null)
             {
-                if(touch.phase == TouchPhase.Began)
-                {
-                    isSelecting = true;
-                    StartCoroutine(EStoneSelection());
-                }
+                informPanel.gameObject.SetActive(false);
+            }
+        }
 
-                if(touch.phase == TouchPhase.Ended)
-                {
-                    isSelecting = false;
-                    selectedStone = GetStoneAroundPoint(touch.position);
+        //Stone related input handle
+        if(selectedStone == null)
+        {
+            if(touch.phase == TouchPhase.Began)
+            {
+                isSelecting = true;
+                StartCoroutine(EStoneSelection());
+            }
 
-                    if(selectedStone == null)
-                    {
-                        
-                    }
-                    else if(isOpenStoneInform) 
+            if(touch.phase == TouchPhase.Ended)
+            {
+                isSelecting = false;
+                selectedStone = GetStoneAroundPoint(touch.position);
+
+                if(selectedStone != null)
+                {
+                    if(isOpenStoneInform) 
                     {
                         //Open Information about selected stone
-                        SetInformPanel(selectedStone);
+                        SetInformPanel(selectedStone.CardData);
                         informPanel.gameObject.SetActive(true);
                         Debug.Log("Information");
                     }
@@ -73,43 +84,54 @@ public class PlayerBehaviour : MonoBehaviour
                         //Simply select current stone and move to shooting phase
                         cancelPanel.gameObject.SetActive(true);
                         Debug.Log("Selected");
-                    }    
-                }
-            }
-            else
-            {
-                Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(touch.position);
-                bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, touch.position, null);
-                isDragging = !isTouchOnCancel;
-                if(touch.phase == TouchPhase.Began)
-                {
-                    dragStartPoint = curTouchPosition;
-                    startOnCancel = isTouchOnCancel;
-                }
-
-                if(touch.phase == TouchPhase.Moved)
-                {
-                    isDragging = !isTouchOnCancel;
-                }                
-
-                if(touch.phase == TouchPhase.Ended) 
-                {
-                    dragEndPoint = curTouchPosition;
-                    Vector3 moveVec = dragStartPoint - dragEndPoint;
-                    
-                    cancelPanel.gameObject.SetActive(false);
-                    informPanel.gameObject.SetActive(false);
-                    
-                    Debug.Log(isDragging + ", " + startOnCancel);
-                    
-                    if(isDragging && !startOnCancel) 
-                    {
-                        ShootStone(moveVec);   
                     }
-                    selectedStone = null;
-                }
+                } 
             }
         }
+        else
+        {
+            Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+            bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, touch.position, null);
+            isDragging = !isTouchOnCancel;
+            if(touch.phase == TouchPhase.Began)
+            {
+                dragStartPoint = curTouchPosition;
+                startOnCancel = isTouchOnCancel;
+            }
+
+            if(touch.phase == TouchPhase.Moved)
+            {
+                isDragging = !isTouchOnCancel;
+            }                
+
+            if(touch.phase == TouchPhase.Ended) 
+            {
+                dragEndPoint = curTouchPosition;
+                Vector3 moveVec = dragStartPoint - dragEndPoint;
+                
+                cancelPanel.gameObject.SetActive(false);
+                
+                Debug.Log(isDragging + ", " +  startOnCancel);
+                
+                if(isDragging && !startOnCancel) 
+                {
+                    ShootStone(moveVec);   
+                }
+                selectedStone = null;
+            }
+        }
+    
+        //Card related input handle
+        if(touch.phase == TouchPhase.Ended)
+        {
+            selectedCard = GetCardAroundPoint(touch.position);
+            if(selectedCard != null)
+            {
+                SetInformPanel(selectedCard.CardData);
+                informPanel.gameObject.SetActive(true);
+            }
+        }
+
     }
 
     private StoneBehaviour GetStoneAroundPoint(Vector3 point)
@@ -126,17 +148,36 @@ public class PlayerBehaviour : MonoBehaviour
         return null;
     }
 
-    private void ShootStone(Vector3 vec)
+    private Card GetCardAroundPoint(Vector3 point)
     {
-        //Shoot stone...
-        //TODO act through physics
-        selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);
-        Debug.Log(vec);
+        Ray ray = Camera.main.ScreenPointToRay(point);
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit))
+        {
+            if(hit.transform.CompareTag("Card"))
+            {
+                return hit.transform.GetComponent<Card>();
+            }
+        }
+        return null;
     }
 
-    private void SetInformPanel(StoneBehaviour stone)
+    private void ShootStone(Vector3 vec)
     {
-        //TODO : Set inform panel to designated stons's data
+        selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);
+        // Debug.Log(vec);
+    }
+
+    private void SetInformPanel(CardData data)
+    {
+        //sprite
+        informPanel.GetChild(0).GetComponent<Image>().sprite = data.sprite;
+        //size
+        informPanel.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Size : " + data.stoneSize.ToString();
+        //weight
+        informPanel.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Weight : " + data.stoneWeight.ToString();
+        //description
+        informPanel.GetChild(3).GetComponent<TextMeshProUGUI>().text = data.description.ToString();
     }
 
     private IEnumerator EStoneSelection()
