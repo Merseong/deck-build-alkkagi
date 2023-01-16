@@ -30,6 +30,8 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private float stoneSelectionThreshold = 1f;
     private float curStoneSelectionTime;
     
+    [SerializeField] private float maxDragLimit;
+    [SerializeField] private LineRenderer dragEffectObj;
     [SerializeField] private bool isDragging = false;
     private bool startOnCancel;
     private Vector3 dragStartPoint;
@@ -41,8 +43,13 @@ public class PlayerBehaviour : MonoBehaviour
     }
 
     private void InputHandler()
-    {   
-        
+    {
+//플랫폼별 테스트를 위한 분기 코드        
+#if UNITY_EDITOR
+
+#elif UNITY_ANDROID
+
+#endif  
         if(Input.touchCount < 1) return; 
         
         Touch touch = Input.GetTouch(0);
@@ -91,33 +98,56 @@ public class PlayerBehaviour : MonoBehaviour
         else
         {
             Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+            Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
+            Vector3 moveVec;
             bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, touch.position, null);
             isDragging = !isTouchOnCancel;
             if(touch.phase == TouchPhase.Began)
             {
-                dragStartPoint = curTouchPosition;
+                dragStartPoint = curTouchPositionNormalized;
                 startOnCancel = isTouchOnCancel;
+                if(isDragging)
+                {
+                    dragEffectObj.gameObject.SetActive(true);
+                    dragEffectObj.SetPosition(0, curTouchPositionNormalized);
+                    dragEffectObj.SetPosition(1, curTouchPositionNormalized);
+                } 
             }
 
-            if(touch.phase == TouchPhase.Moved)
+            if(touch.phase == TouchPhase.Moved && !startOnCancel)
             {
+                dragEffectObj.gameObject.SetActive(false);
                 isDragging = !isTouchOnCancel;
+
+                dragEndPoint = curTouchPositionNormalized;
+                moveVec = dragStartPoint - dragEndPoint;
+
+                if(isDragging && moveVec.magnitude >= maxDragLimit)
+                {
+                    dragEffectObj.gameObject.SetActive(true);
+                    dragEffectObj.SetPosition(1, dragStartPoint - moveVec.normalized * maxDragLimit);
+                }
+                else if(isDragging)
+                {
+                    dragEffectObj.gameObject.SetActive(true);
+                    dragEffectObj.SetPosition(1, curTouchPositionNormalized);
+                }
             }                
 
             if(touch.phase == TouchPhase.Ended) 
             {
-                dragEndPoint = curTouchPosition;
-                Vector3 moveVec = dragStartPoint - dragEndPoint;
+                dragEndPoint = curTouchPositionNormalized;
+                moveVec = dragStartPoint - dragEndPoint;
                 
                 cancelPanel.gameObject.SetActive(false);
                 
-                Debug.Log(isDragging + ", " +  startOnCancel);
-                
                 if(isDragging && !startOnCancel) 
                 {
-                    ShootStone(moveVec);   
+                    ShootStone( 2 * moveVec.normalized * Mathf.Min(moveVec.magnitude, maxDragLimit));   
                 }
                 selectedStone = null;
+
+                dragEffectObj.gameObject.SetActive(false);
             }
         }
     
@@ -131,7 +161,6 @@ public class PlayerBehaviour : MonoBehaviour
                 informPanel.gameObject.SetActive(true);
             }
         }
-
     }
 
     private StoneBehaviour GetStoneAroundPoint(Vector3 point)
