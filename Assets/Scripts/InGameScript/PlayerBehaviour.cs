@@ -25,14 +25,14 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private Card selectedCard;
 
     private bool isSelecting;
-    [SerializeField] private bool isOpenStoneInform = false;
+    private bool isOpenStoneInform = false;
     
     [SerializeField] private float stoneSelectionThreshold = 1f;
     private float curStoneSelectionTime;
     
     [SerializeField] private float maxDragLimit;
     [SerializeField] private LineRenderer dragEffectObj;
-    [SerializeField] private bool isDragging = false;
+    private bool isDragging = false;
     private bool startOnCancel;
     private Vector3 dragStartPoint;
     private Vector3 dragEndPoint;
@@ -44,18 +44,37 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void InputHandler()
     {
+        bool isTouchBeginning, isTouching, isTouchEnded;
+        Vector3 curScreenTouchPosition, curTouchPosition, curTouchPositionNormalized, moveVec;
+
 //플랫폼별 테스트를 위한 분기 코드        
-#if UNITY_EDITOR
-
-#elif UNITY_ANDROID
-
-#endif  
-        if(Input.touchCount < 1) return; 
+#if     UNITY_EDITOR
         
+        isTouchBeginning = Input.GetMouseButtonDown(0);
+        isTouching = Input.GetMouseButton(0);
+        isTouchEnded = Input.GetMouseButtonUp(0);
+
+        curTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
+        curScreenTouchPosition = Input.mousePosition;
+
+#elif   UNITY_ANDROID
+
+        if(Input.touchCount < 1) return; 
         Touch touch = Input.GetTouch(0);
+
+        isTouchBeginning = touch.phase == TouchPhase.Began;
+        isTouching = touch.phase == TouchPhase.Moved;
+        isTouchEnded = touch.phase == TouchPhase.Ended;
+
+        curTouchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+        curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
+        curScreenTouchPosition = touch.position;
+
+#endif   
         
         //UI handle
-        if(touch.phase == TouchPhase.Ended)
+        if(isTouchEnded)
         {
             if(selectedCard != null || selectedStone != null)
             {
@@ -66,16 +85,16 @@ public class PlayerBehaviour : MonoBehaviour
         //Stone related input handle
         if(selectedStone == null)
         {
-            if(touch.phase == TouchPhase.Began)
+            if(isTouchBeginning)
             {
                 isSelecting = true;
                 StartCoroutine(EStoneSelection());
             }
 
-            if(touch.phase == TouchPhase.Ended)
+            if(isTouchEnded)
             {
                 isSelecting = false;
-                selectedStone = GetStoneAroundPoint(touch.position);
+                selectedStone = GetStoneAroundPoint(curScreenTouchPosition);
 
                 if(selectedStone != null)
                 {
@@ -97,12 +116,10 @@ public class PlayerBehaviour : MonoBehaviour
         }
         else
         {
-            Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(touch.position);
-            Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
-            Vector3 moveVec;
-            bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, touch.position, null);
+
+            bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, curScreenTouchPosition, null);
             isDragging = !isTouchOnCancel;
-            if(touch.phase == TouchPhase.Began)
+            if(isTouchBeginning)
             {
                 dragStartPoint = curTouchPositionNormalized;
                 startOnCancel = isTouchOnCancel;
@@ -114,7 +131,7 @@ public class PlayerBehaviour : MonoBehaviour
                 } 
             }
 
-            if(touch.phase == TouchPhase.Moved && !startOnCancel)
+            if(isTouching && !startOnCancel)
             {
                 dragEffectObj.gameObject.SetActive(false);
                 isDragging = !isTouchOnCancel;
@@ -134,7 +151,7 @@ public class PlayerBehaviour : MonoBehaviour
                 }
             }                
 
-            if(touch.phase == TouchPhase.Ended) 
+            if(isTouchEnded) 
             {
                 dragEndPoint = curTouchPositionNormalized;
                 moveVec = dragStartPoint - dragEndPoint;
@@ -152,9 +169,9 @@ public class PlayerBehaviour : MonoBehaviour
         }
     
         //Card related input handle
-        if(touch.phase == TouchPhase.Ended)
+        if(isTouchEnded)
         {
-            selectedCard = GetCardAroundPoint(touch.position);
+            selectedCard = GetCardAroundPoint(curScreenTouchPosition);
             if(selectedCard != null)
             {
                 SetInformPanel(selectedCard.CardData);
