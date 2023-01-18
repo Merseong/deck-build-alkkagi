@@ -6,7 +6,7 @@ public class CardData : ScriptableObject
     // 고유ID
     [SerializeField]
     private int cardID;
-    public int CardID { get { return cardID; } }
+    public int CardID => cardID;
     // 크기
     public enum StoneSize
     {
