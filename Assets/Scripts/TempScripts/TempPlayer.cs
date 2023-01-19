@@ -6,6 +6,7 @@ using TMPro;
 
 public class TempPlayer : MonoBehaviour
 {
+    public GameObject stone;
     public TextMeshProUGUI txt;
     public GameObject canvas;
     private GameObject dragObject;
@@ -54,6 +55,11 @@ public class TempPlayer : MonoBehaviour
                     {
                         dragObject = hit.collider.gameObject;
                         txt.text = "CardTouch";
+                    }
+                    else if (hit.collider.tag == "Board")
+                    {
+                        bool isCan = GameBoard.IsPossibleToPut(hit.point + new Vector3(0,1.4f,0), 1);
+                        Debug.Log(isCan);
                     }
                     else
                     {

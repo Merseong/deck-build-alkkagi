@@ -9,8 +9,8 @@ public class BoardData : ScriptableObject
     public int BoardID => boardID;
 
     // 크기
-    public int width;
-    public int height;
+    public float width;
+    public float height;
 
     // 전진가속도
     public float movingDragAccleration;
