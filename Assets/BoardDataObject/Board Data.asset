@@ -12,11 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc37004eb72219440a2f0744da69c107, type: 3}
   m_Name: Board Data
   m_EditorClassIdentifier: 
-  boardID: 0
-  width: 0
-  height: 0
+  boardID: 1
+  width: 1.2
+  height: 1.9
   movingDragAccleration: 0
   dragAccleration: 0
-  player1CanStone: []
+  player1CanStone:
+  - x: 2
+    y: 2
+  - x: 4
+    y: 2
   player2CanStone: []
   obstacles: []
