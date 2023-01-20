@@ -6,11 +6,12 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-public class NetworkManager : MonoBehaviour
+public class NetworkManager : SingletonBehavior<NetworkManager>
 {
     [SerializeField]
     private bool m_isNetworkMode;
     MyNetwork.SocketClient m_client;
+    public MyNetwork.SocketClient Client => m_client;
 
     [SerializeField]
     private string m_messageToSend;
@@ -18,9 +19,34 @@ public class NetworkManager : MonoBehaviour
     [SerializeField]
     private GameObject m_networkTestCanvas;
 
-    private void Start()
+    // [SerializeField]
+    // private Dictionary<uint, byte[]> syncVarDataDict;
+    // public Dictionary<uint, byte[]> SyncVarDataDict => syncVarDataDict;
+
+    // [SerializeField]
+    // private Dictionary<uint, Action> syncVarActionDict;
+    // public Dictionary<uint, Action> SyncVarActionDict => syncVarActionDict;
+
+    [SerializeField]
+    private Dictionary<uint, (byte[] data, Action callback)> syncVarDict;
+    public Dictionary<uint, (byte[] data, Action callback)> SyncVarDict => syncVarDict;
+
+    private void Awake()
     {
         m_networkTestCanvas.SetActive(m_isNetworkMode);
+
+        // syncVarDataDict = new Dictionary<uint, byte[]>();
+        // syncVarActionDict = new Dictionary<uint, Action>();
+        syncVarDict = new Dictionary<uint, (byte[], Action)>();
+    }
+
+    public void InitSyncVar(uint netID, byte[] data, Action callback)
+    {
+        if (syncVarDict.ContainsKey(netID)) return;
+
+        // syncVarDataDict[netID] = data;
+        // syncVarActionDict[netID] = callback;
+        syncVarDict[netID] = (data, callback);
     }
 
     public void ConnectToServer()
@@ -154,6 +180,18 @@ namespace MyNetworkData
         public MessagePacket() { }
     }
 
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public class SyncVarPacket : Data<SyncVarPacket>
+    {
+        public uint NetID;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 100)]
+        public byte[] Data;
+
+        public SyncVarPacket() { }
+    }
+
+
     public enum PacketType
     {
         UNDEFINED,
@@ -162,7 +200,10 @@ namespace MyNetworkData
         ROOM_BROADCAST,
         ROOM_OPPONENT,
         ROOM_ENTER,
+        SYNCVAR_INIT,
+        SYNCVAR_CHANGE,
         PACKET_COUNT
+
     }
 
     public class MessageResolver
@@ -339,6 +380,8 @@ namespace MyNetwork
         GamePacketHandler m_game_packet_handler;
         byte[] m_receive_buffer;
 
+        public Socket Socket => m_socket;
+
         void InitReceive()
         {
             m_receive_packet_list = new LinkedList<MyNetworkData.Packet>();
@@ -509,24 +552,58 @@ namespace MyNetwork
                 case MyNetworkData.PacketType.TEST_PACKET:
                     ParseTestPacket(packet);
                     break;
+                case MyNetworkData.PacketType.ROOM_ENTER:
+                    Debug.Log("Room Entered!!");
+                    InitServerSyncVar();
+                    break;
                 case MyNetworkData.PacketType.ROOM_OPPONENT:
                     ParseMessagePacket(packet);
+                    break;
+                case MyNetworkData.PacketType.SYNCVAR_CHANGE:
+                    ParseSyncVarPacket(packet);
                     break;
             }
         }
 
-        public void ParseTestPacket(MyNetworkData.Packet packet)
+        private void ParseTestPacket(MyNetworkData.Packet packet)
         {
             MyNetworkData.TestPacket tp = MyNetworkData.TestPacket.Deserialize(packet.m_data);
 
             Debug.Log("from server - " + tp.m_message);
         }
 
-        public void ParseMessagePacket(MyNetworkData.Packet packet)
+        private void ParseMessagePacket(MyNetworkData.Packet packet)
         {
             MyNetworkData.MessagePacket mp = MyNetworkData.MessagePacket.Deserialize(packet.m_data);
 
             Debug.LogWarning("from " + mp.m_senderid + " - " + mp.m_message);
+        }
+
+        private void ParseSyncVarPacket(MyNetworkData.Packet packet)
+        {
+            var sp = MyNetworkData.SyncVarPacket.Deserialize(packet.m_data);
+
+            if (!NetworkManager.Inst.SyncVarDict.ContainsKey(sp.NetID)) return;
+
+            var (_data, _callback) = NetworkManager.Inst.SyncVarDict[sp.NetID];
+            _data = sp.Data;
+            NetworkManager.Inst.SyncVarDict[sp.NetID] = (_data, _callback);
+            _callback();
+        }
+
+        private void InitServerSyncVar()
+        {
+            foreach (var kv in NetworkManager.Inst.SyncVarDict)
+            {
+                var syncPacket = new MyNetworkData.SyncVarPacket();
+                syncPacket.NetID = kv.Key;
+                syncPacket.Data = kv.Value.data;
+                var data = syncPacket.Serialize();
+                var p = new MyNetworkData.Packet();
+                p.m_type = (Int16)MyNetworkData.PacketType.SYNCVAR_INIT;
+                p.SetData(data, data.Length);
+                m_network.Send(p);
+            }
         }
     }
 }
