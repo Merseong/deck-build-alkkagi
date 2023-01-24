@@ -37,6 +37,9 @@ public class PlayerBehaviour : MonoBehaviour
     private Vector3 dragStartPoint;
     private Vector3 dragEndPoint;
 
+    [Header("DebugTools"), SerializeField]
+    private bool pauseEditorOnShoot = false;
+
      private void Update()
     {
         InputHandler();
@@ -211,6 +214,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void ShootStone(Vector3 vec)
     {
+        if (pauseEditorOnShoot) UnityEditor.EditorApplication.isPaused = true;
         selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);
         // Debug.Log(vec);
     }
