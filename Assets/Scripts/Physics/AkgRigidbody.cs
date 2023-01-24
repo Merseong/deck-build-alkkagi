@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class AkgRigidbody : MonoBehaviour
@@ -78,5 +79,11 @@ public class AkgRigidbody : MonoBehaviour
         }
 
         velocity = normalVelocity + tangentialVelocity;
+    }
+
+    private void OnDrawGizmos()
+    {
+        GUI.color = velocity.magnitude >= AkgPhysics.dragThreshold ? Color.red : Color.blue;
+        Handles.Label(transform.position + Vector3.up * .2f, velocity.magnitude.ToString());
     }
 }
