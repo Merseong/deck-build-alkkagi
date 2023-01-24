@@ -160,7 +160,8 @@ public class PlayerBehaviour : MonoBehaviour
                 
                 if(isDragging && !startOnCancel) 
                 {
-                    ShootStone( 2 * moveVec.normalized * Mathf.Min(moveVec.magnitude, maxDragLimit));   
+                    //FIXME: Same velocity for every stone, set min max velocity for shooting (different form dragLimit)
+                    ShootStone( 2 * selectedStone.GetComponent<AkgRigidbody>().mass * 100 * moveVec.normalized * Mathf.Lerp(5, 22, Mathf.Min(moveVec.magnitude, maxDragLimit) / maxDragLimit));   
                 }
                 selectedStone = null;
 
