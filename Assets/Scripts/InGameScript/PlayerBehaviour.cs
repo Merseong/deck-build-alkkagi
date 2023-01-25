@@ -28,7 +28,7 @@ public class PlayerBehaviour : MonoBehaviour
     private bool isSelecting;
     private bool isOpenStoneInform = false;
     
-    [SerializeField] private float stoneSelectionThreshold = 1f;
+    
     private float curStoneSelectionTime;
 
     [SerializeField] private bool isDragging = false;
@@ -36,6 +36,10 @@ public class PlayerBehaviour : MonoBehaviour
     private Vector3 dragStartPoint;
     private Vector3 dragEndPoint;
     private ArrowGenerator stoneArrowObj;
+    
+
+    [Header("SelectionVariable")]
+    [SerializeField] private float stoneSelectionThreshold = 1f;
     
     [Header("ShootVelocityDecider")]
     [SerializeField] private int minShootVelocity;
@@ -53,7 +57,15 @@ public class PlayerBehaviour : MonoBehaviour
     [Header("DebugTools"), SerializeField]
     private bool pauseEditorOnShoot = false;
 
-     private void Update()
+
+
+    private void Start()
+    {
+        cancelPanel = GameObject.Find("InformPanel").GetComponent<RectTransform>();
+        informPanel = GameObject.Find("CancelPanel").GetComponent<RectTransform>();
+    }
+
+    private void Update()
     {
         // if(!isLocalPlayer) return;
         NormalTurnInputHandler();

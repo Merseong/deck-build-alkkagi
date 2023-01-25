@@ -22,6 +22,11 @@ public class StoneBehaviour : MonoBehaviour
     [SerializeField] private CardData cardData;
     public CardData CardData => cardData;
 
+    private void Start()
+    {
+        boardTransform = GameObject.Find("Board").transform;
+    }
+
     private void Update()
     {
         if(!CheckStoneDropByTransform())
