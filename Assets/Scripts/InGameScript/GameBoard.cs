@@ -7,12 +7,23 @@ public class GameBoard : MonoBehaviour
     [SerializeField] private BoardData boardData;
     public BoardData BoardData => boardData;
 
+    public GameObject putMark;
     public float nearbyRadius = 1.0f;
     public static Vector3 isNullPos = new Vector3(0, 100, 0);
 
     public void Awake()
     {
         gameObject.transform.localScale = new Vector3(BoardData.width, 1, BoardData.height);
+        foreach (BoardPos boardPos in BoardData.player1CanStone)
+        {
+            Vector3 putPos = new Vector3(boardPos.x, 0, boardPos.y);
+            Instantiate(putMark, putPos, new Quaternion(0, 0, 0, 0));
+        }
+        foreach (BoardPos boardPos in BoardData.player2CanStone)
+        {
+            Vector3 putPos = new Vector3(boardPos.x, 0, boardPos.y);
+            Instantiate(putMark, putPos, new Quaternion(0, 0, 0, 0));
+        }
     }
 
     // 올라와있는 스톤 (각 진영별) 체크
