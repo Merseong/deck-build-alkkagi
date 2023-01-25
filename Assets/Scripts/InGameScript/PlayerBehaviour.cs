@@ -6,7 +6,8 @@ using TMPro;
 
 public class PlayerBehaviour : MonoBehaviour
 {
-
+    [SerializeField] private bool isLocalPlayer = true;
+    
     //TODO : should move to UIManager
     [SerializeField] private RectTransform cancelPanel;
     [SerializeField] private RectTransform informPanel;
@@ -29,23 +30,36 @@ public class PlayerBehaviour : MonoBehaviour
     
     [SerializeField] private float stoneSelectionThreshold = 1f;
     private float curStoneSelectionTime;
-    
-    [SerializeField] private float maxDragLimit;
-    [SerializeField] private LineRenderer dragEffectObj;
-    private bool isDragging = false;
-    private bool startOnCancel;
+
+    [SerializeField] private bool isDragging = false;
+    [SerializeField] private bool startOnCancel;    
     private Vector3 dragStartPoint;
     private Vector3 dragEndPoint;
+    private ArrowGenerator stoneArrowObj;
+    
+    [Header("ShootVelocityDecider")]
+    [SerializeField] private int minShootVelocity;
+    [SerializeField] private int maxShootVelocity;
+    [SerializeField] private float velocityMultiplier;
+
+    [Header("DragEffect")]
+    [SerializeField] private LineRenderer dragEffectObj;
+    [SerializeField] private float maxDragLimit;
+    [SerializeField] private Color dragStartColor;
+    [SerializeField] private Color dragEndColor;
+    [SerializeField] private AnimationCurve dragColorCurve;
+    [Range(0f, 1.0f)][SerializeField] private float alphaOnCancel;
 
     [Header("DebugTools"), SerializeField]
     private bool pauseEditorOnShoot = false;
 
      private void Update()
     {
-        InputHandler();
+        // if(!isLocalPlayer) return;
+        NormalTurnInputHandler();
     }
 
-    private void InputHandler()
+    private void NormalTurnInputHandler()
     {
         bool isTouchBeginning, isTouching, isTouchEnded;
         Vector3 curScreenTouchPosition, curTouchPosition, curTouchPositionNormalized, moveVec;
@@ -56,6 +70,8 @@ public class PlayerBehaviour : MonoBehaviour
         isTouchBeginning = Input.GetMouseButtonDown(0);
         isTouching = Input.GetMouseButton(0);
         isTouchEnded = Input.GetMouseButtonUp(0);
+        
+        if(!isTouchBeginning && !isTouching && !isTouchEnded) return;
 
         curTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
@@ -82,6 +98,7 @@ public class PlayerBehaviour : MonoBehaviour
             if(selectedCard != null || selectedStone != null)
             {
                 informPanel.gameObject.SetActive(false);
+                // return;
             }
         }
 
@@ -119,40 +136,66 @@ public class PlayerBehaviour : MonoBehaviour
         }
         else
         {
-
             bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, curScreenTouchPosition, null);
             isDragging = !isTouchOnCancel;
             if(isTouchBeginning)
             {
                 dragStartPoint = curTouchPositionNormalized;
                 startOnCancel = isTouchOnCancel;
+
                 if(isDragging)
                 {
                     dragEffectObj.gameObject.SetActive(true);
                     dragEffectObj.SetPosition(0, curTouchPositionNormalized);
                     dragEffectObj.SetPosition(1, curTouchPositionNormalized);
+
+                    stoneArrowObj = selectedStone.transform.GetChild(0).GetComponent<ArrowGenerator>();
+                    stoneArrowObj.gameObject.SetActive(true);
                 } 
             }
 
             if(isTouching && !startOnCancel)
             {
-                dragEffectObj.gameObject.SetActive(false);
                 isDragging = !isTouchOnCancel;
 
                 dragEndPoint = curTouchPositionNormalized;
                 moveVec = dragStartPoint - dragEndPoint;
 
-                if(isDragging && moveVec.magnitude >= maxDragLimit)
+                dragEffectObj.startColor = Color.Lerp(dragStartColor, dragEndColor, dragColorCurve.Evaluate(Mathf.Min(moveVec.magnitude, maxDragLimit)/maxDragLimit));
+                dragEffectObj.endColor = dragEffectObj.startColor;
+                stoneArrowObj.GetComponent<MeshRenderer>().material.color = dragEffectObj.startColor;
+
+                if(moveVec.magnitude >= maxDragLimit) 
                 {
-                    dragEffectObj.gameObject.SetActive(true);
                     dragEffectObj.SetPosition(1, dragStartPoint - moveVec.normalized * maxDragLimit);
+                    stoneArrowObj.stemLength = maxDragLimit;
                 }
-                else if(isDragging)
-                {
-                    dragEffectObj.gameObject.SetActive(true);
+                else
+                {    
                     dragEffectObj.SetPosition(1, curTouchPositionNormalized);
+                    stoneArrowObj.stemLength = moveVec.magnitude;
                 }
-            }                
+                
+                if(moveVec.z >= 0) 
+                {
+                    float angle = Mathf.Acos(Vector3.Dot(Vector3.left, moveVec.normalized)) * 180 / Mathf.PI + 180;
+                    stoneArrowObj.transform.rotation = Quaternion.Euler(90, angle, 0);
+                }
+                else
+                {
+                    float angle = Mathf.Acos(Vector3.Dot(Vector3.right, moveVec.normalized)) * 180 / Mathf.PI;
+                    stoneArrowObj.transform.rotation = Quaternion.Euler(90, angle, 0);
+                }
+                
+                if(!isDragging)
+                {
+                    Color temp = dragEffectObj.startColor;
+                    temp.a = alphaOnCancel;
+                    dragEffectObj.startColor = temp;
+                    dragEffectObj.endColor = temp;
+                    stoneArrowObj.GetComponent<MeshRenderer>().material.color = temp;
+                }
+            }
 
             if(isTouchEnded) 
             {
@@ -164,11 +207,13 @@ public class PlayerBehaviour : MonoBehaviour
                 if(isDragging && !startOnCancel) 
                 {
                     //FIXME: Same velocity for every stone, set min max velocity for shooting (different form dragLimit)
-                    ShootStone( 2 * selectedStone.GetComponent<AkgRigidbody>().mass * 100 * moveVec.normalized * Mathf.Lerp(5, 22, Mathf.Min(moveVec.magnitude, maxDragLimit) / maxDragLimit));   
+                    float VelocityCalc = Mathf.Lerp(minShootVelocity, maxShootVelocity, Mathf.Min(moveVec.magnitude, maxDragLimit) / maxDragLimit) * velocityMultiplier;
+                    ShootStone( moveVec.normalized * selectedStone.GetComponent<AkgRigidbody>().mass * VelocityCalc);   
                 }
                 selectedStone = null;
 
                 dragEffectObj.gameObject.SetActive(false);
+                stoneArrowObj.gameObject.SetActive(false);
             }
         }
     
