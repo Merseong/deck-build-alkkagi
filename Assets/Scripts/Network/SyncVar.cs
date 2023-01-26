@@ -50,7 +50,7 @@ public class SyncVar<T> where T : struct
         toSend.Data = data;
         var sendData = toSend.Serialize();
         var packet = new MyNetworkData.Packet();
-        packet.m_type = (Int16)MyNetworkData.PacketType.SYNCVAR_CHANGE;
+        packet.Type = (Int16)MyNetworkData.PacketType.SYNCVAR_CHANGE;
         packet.SetData(sendData, sendData.Length);
         NetworkManager.Inst.Client?.Send(packet);
 
