@@ -72,6 +72,6 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
-Packages/
-Assets/ParrelSync.meta
-Assets/ParrelSync
+/Packages/
+/Assets/ParrelSync.meta
+/Assets/ParrelSync
