@@ -50,6 +50,12 @@ public class AkgRigidbody : MonoBehaviour
         Vector3 acceleration = force / mass;
         velocity += Time.fixedDeltaTime * acceleration;
     }
+    public void SetVelocity(Vector3 vel)
+    {
+        if (isStatic) return;
+
+        velocity = vel;
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
