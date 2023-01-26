@@ -5,8 +5,8 @@ using UnityEngine;
 public class AkgPhysics
 {
     public static float dragThreshold = 0.0f;
-    public static float movingDragAccleration = 230.0f;
-    public static float dragAccleration = 300.0f;
+    public static float movingDragAccleration = 250.0f;
+    public static float dragAccleration = 250.0f;
 
     public static Vector3 Collide1D(float mass1, Vector3 velocity1, float mass2, Vector3 velocity2, float cor)
     {

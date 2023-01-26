@@ -216,7 +216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isStatic: 0
   mass: 0.01
-  cor: 0.9
+  cor: 0.5
   velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &6663944191401573521
 MonoBehaviour:

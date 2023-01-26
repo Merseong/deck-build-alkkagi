@@ -8,7 +8,7 @@ public class AkgRigidbody : MonoBehaviour
 {
     public bool isStatic = false;
     public float mass = 1.0f;
-    public float cor = 0.9f;    // 반발계수
+    public float cor = 0.5f;    // 반발계수
 
     [HideInInspector]
     public Vector3 velocity = Vector3.zero;
@@ -53,6 +53,8 @@ public class AkgRigidbody : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        // TODO: 저속으로 충돌시 뚫는 현상 고쳐야함
+
         if (isStatic) return;
 
         AkgRigidbody other = collision.transform.GetComponent<AkgRigidbody>();
