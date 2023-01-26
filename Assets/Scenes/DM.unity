@@ -593,14 +593,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d8921209736da64e86855822f26a151, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isLocalGoFirst: 0
-  isPlayerHonorSkip: 0
-  isPlayerConsentHonorSkip: 0
-  localPlayer: {fileID: 0}
-  opponentPlayer: {fileID: 0}
-  localTurn: 0
-  oppoNextTurn: 0
-  localNextTurn: 0
 --- !u!4 &501744209
 Transform:
   m_ObjectHideFlags: 0
@@ -869,6 +861,7 @@ MonoBehaviour:
   boardData: {fileID: 11400000, guid: e5fd9aa4646e76f40a1531880de2b194, type: 2}
   putMark: {fileID: 468834610}
   nearbyRadius: 1
+  isNullPos: {x: 0, y: 100, z: 0}
 --- !u!64 &1227286729
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1082,7 +1075,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1227609722}
   m_CullTransparentMesh: 1
---- !u!1001 &1275845745
+--- !u!224 &1374542147 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 984495492050547765, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+  m_PrefabInstance: {fileID: 984495492866551158}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1630511930
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -1103,7 +1101,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6663944191401573526, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.0000009536743
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6663944191401573526, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1139,11 +1137,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
---- !u!224 &1374542147 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 984495492050547765, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
-  m_PrefabInstance: {fileID: 984495492866551158}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1750098828
 GameObject:
   m_ObjectHideFlags: 0
@@ -1922,10 +1915,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Stone
       objectReference: {fileID: 0}
-    - target: {fileID: 6663944191401573521, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
-      propertyPath: boardTransform
-      value: 
-      objectReference: {fileID: 1227286732}
     - target: {fileID: 6663944191401573526, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
       propertyPath: m_RootOrder
       value: 11
@@ -1936,7 +1925,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6663944191401573526, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6663944191401573526, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
       propertyPath: m_LocalPosition.z
