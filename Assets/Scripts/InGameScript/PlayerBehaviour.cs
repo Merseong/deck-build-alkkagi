@@ -9,21 +9,42 @@ public class PlayerBehaviour : MonoBehaviour
     //Temp
     public GameObject Stone;
 
+    // 나와 적한테 하나씩 붙임
+
+    // TODO: 나중에 싹다 getter setter로 바꾸고 싶다...
+
     [SerializeField] private bool isLocalPlayer = true;
     
     //TODO : should move to UIManager
     [SerializeField] private RectTransform cancelPanel;
     [SerializeField] private RectTransform informPanel;
 
-    // 플레이어 정보
-    
-    // 카드를 내는 동작
+    [SerializeField] private int cost;
+    public int Cost
+    {
+        get
+        {
+            return cost;
+        }
 
-    // 드로우
+        private set
+        {
+            if (value < 0)
+                Debug.LogError("Cost is less than 0! Fix this!");
 
-    // 알까기
+            cost = value;
+        }
+    }
 
-    // 등등 내턴에 할수있는것들
+    [SerializeField] private Card[] deck;
+    [SerializeField] private Card[] hand;
+
+    [SerializeField] private StoneBehaviour[] stones;
+
+    // 이거는 상황 봐서 액션 자체에 대한 클래스를 만들어서 HistoryAction 클래스랑 합칠 수도 있음
+    private delegate void ActionDelegate();
+    [SerializeField] private ActionDelegate actionQueue;
+    [SerializeField] private HistoryAction[] hitory;
 
     [SerializeField] private StoneBehaviour selectedStone;
     [SerializeField] private Card selectedCard;
@@ -304,7 +325,36 @@ public class PlayerBehaviour : MonoBehaviour
         return null;
     }
 
-    private void ShootStone(Vector3 vec)
+    // 여기서부터 액션들
+
+    // 이건 사실 액션은 아님
+    private void SpendCost(int i)
+    {
+        Cost -= i;
+    }
+    public void ResetCost()
+    {
+        // 게임매니저나 이런데에 디폴트 코스트를 정해놓고 그걸 대입하는 게 나중에 편할듯
+        // 예시
+        // if (GameManager.Instance.turn == 0)
+        //     Cost = GameManager.Instance.InitialTurnCost;
+        // else
+        //     Cost = GameManager.Instance.NormalTurnCost;
+        Cost = 3;
+    }
+
+    private void DrawCards(int number)
+    {
+        // TODO
+    }
+
+    // 카드 내기; 하스스톤에서는 카드를 "내다"가 play인듯
+    private void PlayCard(Card card)
+    {
+        // TODO
+    }
+
+    private void ShootStone(Vector3 vec) // vec이 velocity인지 force인지 명확하게 해야함
     {
         if (pauseEditorOnShoot) UnityEditor.EditorApplication.isPaused = true;
         selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);

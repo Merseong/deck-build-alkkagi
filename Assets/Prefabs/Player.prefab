@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 178128855195758150}
-  - component: {fileID: 178128855195758151}
   - component: {fileID: 178128855195758144}
   m_Layer: 0
   m_Name: Player
@@ -34,18 +33,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &178128855195758151
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 178128855195758145}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 186ddb490b0e16a408a0433cbadbf8ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &178128855195758144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,6 +49,10 @@ MonoBehaviour:
   isLocalPlayer: 1
   cancelPanel: {fileID: 0}
   informPanel: {fileID: 0}
+  cost: 0
+  deck: []
+  hand: []
+  stones: []
   selectedStone: {fileID: 0}
   selectedCard: {fileID: 0}
   isDragging: 0
