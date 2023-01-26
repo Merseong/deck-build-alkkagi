@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7143488552480288810}
   m_Layer: 0
   m_Name: Board
-  m_TagString: Untagged
+  m_TagString: Board
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -114,3 +114,4 @@ MonoBehaviour:
   boardData: {fileID: 11400000, guid: e5fd9aa4646e76f40a1531880de2b194, type: 2}
   putMark: {fileID: 4446608909018917832, guid: 70a8ac05b6498334cbc85659a4f15335, type: 3}
   nearbyRadius: 1
+  isNullPos: {x: 0, y: 100, z: 0}

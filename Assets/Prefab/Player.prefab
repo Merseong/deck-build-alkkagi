@@ -58,14 +58,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02edbd3a56bd54346a2ac9933a06f574, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Stone: {fileID: 6663944191401573520, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
   isLocalPlayer: 1
   cancelPanel: {fileID: 0}
   informPanel: {fileID: 0}
   selectedStone: {fileID: 0}
   selectedCard: {fileID: 0}
-  stoneSelectionThreshold: 1
   isDragging: 0
   startOnCancel: 0
+  stoneSelectionThreshold: 1
   minShootVelocity: 5
   maxShootVelocity: 22
   velocityMultiplier: 100

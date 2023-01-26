@@ -8,8 +8,8 @@ public class GameBoard : MonoBehaviour
     public BoardData BoardData => boardData;
 
     public GameObject putMark;
-    public float nearbyRadius = 1.0f;
-    public static Vector3 isNullPos = new Vector3(0, 100, 0);
+    public float nearbyRadius = 10.0f;
+    public Vector3 isNullPos = new Vector3(0, 100, 0);
 
     public void Awake()
     {
@@ -40,7 +40,7 @@ public class GameBoard : MonoBehaviour
                 Vector3 nearbyPos = new Vector3(boardPos.x, 0, boardPos.y);
                 if (Vector3.Distance(pos, nearbyPos) <= nearbyRadius)
                 {
-                    return nearbyPos;
+                    return nearbyPos + new Vector3(0,14,0);
                 }
             }
         }
@@ -51,7 +51,7 @@ public class GameBoard : MonoBehaviour
                 Vector3 nearbyPos = new Vector3(boardPos.x, 0, boardPos.y);
                 if (Vector3.Distance(pos, nearbyPos) <= nearbyRadius)
                 {
-                    return nearbyPos;
+                    return nearbyPos + new Vector3(0, 14, 0);
                 }
             }
         }
@@ -60,7 +60,7 @@ public class GameBoard : MonoBehaviour
 
     // 지정된 위치에 가능한지 판별
 
-    public static bool IsPossibleToPut(Vector3 pos, float stoneRadius)
+    public bool IsPossibleToPut(Vector3 pos, float stoneRadius)
     {
         Collider[] hitcolliders = Physics.OverlapSphere(pos, stoneRadius);
         if (hitcolliders.Length > 0)

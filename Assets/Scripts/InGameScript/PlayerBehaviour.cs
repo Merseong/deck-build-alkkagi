@@ -6,6 +6,9 @@ using TMPro;
 
 public class PlayerBehaviour : MonoBehaviour
 {
+    //Temp
+    public GameObject Stone;
+
     [SerializeField] private bool isLocalPlayer = true;
     
     //TODO : should move to UIManager
@@ -114,8 +117,28 @@ public class PlayerBehaviour : MonoBehaviour
             }
         }
 
+        //Temp put the stone
+        GameBoard isMousePointOnBoard = IsMouseOnBoard(curScreenTouchPosition);
+
+        if (isMousePointOnBoard != null)
+        {
+            Vector3 nearbyPos = isMousePointOnBoard.GiveNearbyPos(curTouchPositionNormalized, 1);
+            if (nearbyPos != isMousePointOnBoard.isNullPos)
+            {
+                // 투명돌 생성
+
+                if (isTouchEnded)
+                {
+                    if (isMousePointOnBoard.IsPossibleToPut(nearbyPos, 1))
+                    {
+                        Instantiate(Stone, nearbyPos, new Quaternion(0, 0, 0, 0));
+                    }
+                }
+            }
+        }
+
         //Stone related input handle
-        if(selectedStone == null)
+        if (selectedStone == null)
         {
             if(isTouchBeginning)
             {
@@ -240,7 +263,19 @@ public class PlayerBehaviour : MonoBehaviour
             }
         }
     }
-
+    private GameBoard IsMouseOnBoard(Vector3 point)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(point);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.transform.CompareTag("Board"))
+            {
+                return hit.transform.GetComponent<GameBoard>();
+            }
+        }
+        return null;
+    }
     private StoneBehaviour GetStoneAroundPoint(Vector3 point)
     {
         Ray ray = Camera.main.ScreenPointToRay(point);

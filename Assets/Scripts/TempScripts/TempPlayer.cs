@@ -58,7 +58,7 @@ public class TempPlayer : MonoBehaviour
                     }
                     else if (hit.collider.tag == "Board")
                     {
-                        bool isCan = GameBoard.IsPossibleToPut(hit.point + new Vector3(0,1.4f,0), 1);
+                        bool isCan = true; //= GameBoard.IsPossibleToPut(hit.point + new Vector3(0,1.4f,0), 1);
                         Debug.Log(isCan);
                     }
                     else
