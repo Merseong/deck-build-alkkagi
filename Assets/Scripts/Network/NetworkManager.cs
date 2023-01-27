@@ -9,24 +9,58 @@ using MyNetworkData;
 
 public class NetworkManager : SingletonBehavior<NetworkManager>
 {
-
-    [SerializeField]
-    private bool m_isNetworkMode;
     SocketClient m_client;
     public SocketClient Client => m_client;
 
     [SerializeField]
     private int networkId = -1;
     public int NetworkId => networkId;
+    private int roomNumber = -1;
+    
+    enum ConnectionStatusEnum
+    {
+        DISCONNECTED,
+        IDLE,
+        ROOM,
+    }
+    private ConnectionStatusEnum _connectionStatus;
+    private string connectionStatusString;
+    private ConnectionStatusEnum ConnectionStatus
+    {
+        get => _connectionStatus;
+        set
+        {
+            _connectionStatus = value;
+
+            switch(value)
+            {
+                case ConnectionStatusEnum.DISCONNECTED:
+                    testStatusText.text = "Disconnected";
+                    break;
+                case ConnectionStatusEnum.IDLE:
+                    testStatusText.text = $"Connected, ID: {NetworkId}";
+                    break;
+                case ConnectionStatusEnum.ROOM:
+                    testStatusText.text = $"Room {roomNumber}, {connectionStatusString}";
+                    break;
+            }
+        }
+    }
 
     public delegate void ParsePacketDelegate(Packet packet);
     public ParsePacketDelegate ParsePacket;
 
+    // TEMP
+    [SerializeField]
+    private bool m_isNetworkMode;
     [SerializeField]
     private string m_messageToSend;
 
+    // TEMP canvas
     [SerializeField]
     private GameObject m_networkTestCanvas;
+    [SerializeField]
+    private TMPro.TextMeshProUGUI testStatusText;
 
     // [SerializeField]
     // private Dictionary<uint, byte[]> syncVarDataDict;
@@ -46,6 +80,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
         m_networkTestCanvas.SetActive(m_isNetworkMode);
         ParsePacket = new ParsePacketDelegate((_) => { });
+        ConnectionStatus = ConnectionStatusEnum.DISCONNECTED;
 
         // syncVarDataDict = new Dictionary<uint, byte[]>();
         // syncVarActionDict = new Dictionary<uint, Action>();
@@ -54,6 +89,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
     private void Start()
     {
+        ParsePacket += BasicProcessPacket;
         ParsePacket += ParsePacketAction;
     }
 
@@ -103,6 +139,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         {
             return;
         }
+        testStatusText.text = "Disconnected";
     }
 
     public void EnterGameRoom()
@@ -134,77 +171,6 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
         m_messageToSend += "a";
     }
-    #endregion
-
-    #region Receive Actions
-    public void ParsePacketAction(Packet packet)
-    {
-        switch ((PacketType)packet.Type)
-        {
-            case PacketType.PACKET_TEST:
-                ParseTestPacket(packet);
-                break;
-            case PacketType.PACKET_INFO:
-                var mp = MessagePacket.Deserialize(packet.Data);
-                NetworkManager.Inst.SetNetworkId(mp.senderID);
-                break;
-            case PacketType.ROOM_CONTROL:
-                CheckMessageEntered(packet);
-                InitServerSyncVar();
-                break;
-            case PacketType.ROOM_OPPONENT:
-                ParseMessagePacket(packet);
-                break;
-            case PacketType.SYNCVAR_CHANGE:
-                ParseSyncVarPacket(packet);
-                break;
-        }
-    }
-
-    private void ParseTestPacket(Packet packet)
-    {
-        var tp = TestPacket.Deserialize(packet.Data);
-
-        Debug.Log("from server - " + tp.message);
-    }
-
-    private void ParseMessagePacket(Packet packet)
-    {
-        MessagePacket mp = MessagePacket.Deserialize(packet.Data);
-
-        Debug.LogWarning("from " + mp.senderID + " - " + mp.message);
-    }
-
-    private void CheckMessageEntered(Packet packet)
-    {
-        MessagePacket mp = MessagePacket.Deserialize(packet.Data);
-        var arr = mp.message.Split(" ");
-        if (arr[1] == "ENTERED")
-        {
-            Debug.Log($"from server - room {arr[0]} matched!");
-            var toSend = new MessagePacket();
-            toSend.senderID = NetworkManager.Inst.NetworkId;
-            toSend.message = "LOADED";
-            var sendPacket = new Packet().Pack(PacketType.ROOM_CONTROL, toSend);
-            Client.Send(sendPacket);
-        }
-        else if (arr[1] == "START")
-        {
-            Debug.Log($"from server - game start! with first player {arr[0]}");
-        }
-    }
-
-    private void ParseSyncVarPacket(Packet packet)
-    {
-        var sp = SyncVarPacket.Deserialize(packet.Data);
-
-        if (!NetworkManager.Inst.SyncVarDict.ContainsKey(sp.NetID)) return;
-
-        var (_data, _callback) = NetworkManager.Inst.SyncVarDict[sp.NetID];
-        _data = sp.Data;
-        NetworkManager.Inst.SyncVarDict[sp.NetID] = (_data, _callback);
-        _callback();
-    }
 
     private void InitServerSyncVar()
     {
@@ -219,6 +185,93 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
             p.SetData(data, data.Length);
             Client.Send(p);
         }
+    }
+    #endregion
+
+    #region Receive Actions
+    public void BasicProcessPacket(Packet packet)
+    {
+        switch((PacketType)packet.Type)
+        {
+            case PacketType.PACKET_USER_CLOSED:
+                DisconnectServer();
+                break;
+            case PacketType.PACKET_TEST:
+                var message = TestPacket.Deserialize(packet.Data);
+                Debug.Log($"[TESTPACKET] {message.message}");
+                break;
+            case PacketType.PACKET_INFO:
+                var mp = MessagePacket.Deserialize(packet.Data);
+                SetNetworkId(mp.senderID);
+                ConnectionStatus = ConnectionStatusEnum.IDLE;
+                break;
+        }
+    }
+
+    public void ParsePacketAction(Packet packet)
+    {
+        switch ((PacketType)packet.Type)
+        {
+            case PacketType.ROOM_CONTROL:
+                CheckMessageEntered(packet);
+                InitServerSyncVar();
+                break;
+            case PacketType.ROOM_OPPONENT:
+                var mp = MessagePacket.Deserialize(packet.Data);
+                Debug.LogWarning($"[{mp.senderID}] {mp.message}");
+                break;
+            case PacketType.SYNCVAR_CHANGE:
+                ParseSyncVarPacket(packet);
+                break;
+        }
+    }
+
+    private void CheckMessageEntered(Packet packet)
+    {
+        MessagePacket mp = MessagePacket.Deserialize(packet.Data);
+        var arr = mp.message.Split(" ");
+        if (arr[0] == "ENTERED")
+        {
+            roomNumber = int.Parse(arr[1]);
+            connectionStatusString = arr[0];
+            Debug.Log($"[room{roomNumber}] room {roomNumber} matched!");
+            ConnectionStatus = ConnectionStatusEnum.ROOM;
+
+            // TODO:
+            //  씬 이동, 로딩 작업 진행
+            //
+
+            // 로드 완료 후 서버로 로드 완료 메세지 보냄
+            var toSend = new MessagePacket();
+            toSend.senderID = NetworkId;
+            toSend.message = "LOADED";
+            var sendPacket = new Packet().Pack(PacketType.ROOM_CONTROL, toSend);
+            Client.Send(sendPacket);
+        }
+        else if (arr[0] == "START")
+        {
+            connectionStatusString = mp.message;
+            // arr[1]의 플레이어가 선턴을 잡고 시작함
+            Debug.Log($"[room{roomNumber}] game start! with first player {arr[1]}");
+            ConnectionStatus = ConnectionStatusEnum.ROOM;
+        }
+        else if (arr[0] == "EXIT")
+        {
+            Debug.Log($"[room{roomNumber}] room breaked! by {arr[1]}");
+            ConnectionStatus = ConnectionStatusEnum.IDLE;
+        }
+    }
+
+    private void ParseSyncVarPacket(Packet packet)
+    {
+        var sp = SyncVarPacket.Deserialize(packet.Data);
+
+        if (!SyncVarDict.ContainsKey(sp.NetID)) return;
+
+        var (_data, _callback) = SyncVarDict[sp.NetID];
+        _data = sp.Data;
+        SyncVarDict[sp.NetID] = (_data, _callback);
+        _callback();
     }
     #endregion
 }
