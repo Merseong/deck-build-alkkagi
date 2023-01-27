@@ -85,8 +85,8 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void Start()
     {
-        cancelPanel = GameObject.Find("InformPanel").GetComponent<RectTransform>();
-        informPanel = GameObject.Find("CancelPanel").GetComponent<RectTransform>();
+        //cancelPanel = GameObject.Find("InformPanel").GetComponent<RectTransform>();
+        //informPanel = GameObject.Find("CancelPanel").GetComponent<RectTransform>();
     }
 
     private void Update()
@@ -152,7 +152,7 @@ public class PlayerBehaviour : MonoBehaviour
                 {
                     if (isMousePointOnBoard.IsPossibleToPut(nearbyPos, 1))
                     {
-                        Instantiate(Stone, nearbyPos, new Quaternion(0, 0, 0, 0));
+                        Instantiate(Stone, nearbyPos, Quaternion.identity);
                     }
                 }
             }
@@ -174,6 +174,7 @@ public class PlayerBehaviour : MonoBehaviour
 
                 if(selectedStone != null)
                 {
+                    selectedStone.isClicked = true;
                     if(isOpenStoneInform) 
                     {
                         //Open Information about selected stone

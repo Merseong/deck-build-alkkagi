@@ -17,12 +17,12 @@ public class GameBoard : MonoBehaviour
         foreach (BoardPos boardPos in BoardData.player1CanStone)
         {
             Vector3 putPos = new Vector3(boardPos.x, 0, boardPos.y);
-            Instantiate(putMark, putPos, new Quaternion(0, 0, 0, 0));
+            Instantiate(putMark, putPos, Quaternion.identity);
         }
         foreach (BoardPos boardPos in BoardData.player2CanStone)
         {
             Vector3 putPos = new Vector3(boardPos.x, 0, boardPos.y);
-            Instantiate(putMark, putPos, new Quaternion(0, 0, 0, 0));
+            Instantiate(putMark, putPos, Quaternion.identity);
         }
     }
 
@@ -40,7 +40,7 @@ public class GameBoard : MonoBehaviour
                 Vector3 nearbyPos = new Vector3(boardPos.x, 0, boardPos.y);
                 if (Vector3.Distance(pos, nearbyPos) <= nearbyRadius)
                 {
-                    return nearbyPos + new Vector3(0,14,0);
+                    return nearbyPos + new Vector3(0,2,0);
                 }
             }
         }
@@ -51,7 +51,7 @@ public class GameBoard : MonoBehaviour
                 Vector3 nearbyPos = new Vector3(boardPos.x, 0, boardPos.y);
                 if (Vector3.Distance(pos, nearbyPos) <= nearbyRadius)
                 {
-                    return nearbyPos + new Vector3(0, 14, 0);
+                    return nearbyPos + new Vector3(0, 2, 0);
                 }
             }
         }

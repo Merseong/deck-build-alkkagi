@@ -22,18 +22,49 @@ public class StoneBehaviour : MonoBehaviour
     [SerializeField] private CardData cardData;
     public CardData CardData => cardData;
 
+    private AkgRigidbody akgRigidbody;
+    private Vector3 nowPos, nextPos;
+    public ParticleSystem followingStone;
+    private ParticleSystem nowParticle = null;
+    public float _ChasingSpeed = 0.1f;
+    public bool isClicked = false;
+
     private void Start()
     {
         boardTransform = GameObject.Find("Board").transform;
+        akgRigidbody = GetComponent<AkgRigidbody>();
     }
 
     private void Update()
     {
         if(!CheckStoneDropByTransform())
-        {   
+        {
+            Destroy(nowParticle);
             Destroy(gameObject);
         }
+        if (akgRigidbody.velocity == Vector3.zero || !isClicked)
+        {
+            if (nowParticle == null) return;
+            
+            isClicked = false;
 
+            nowParticle.Stop();
+            nowParticle = null;
+        }
+        else
+        {
+            if (nowParticle == null)
+            {
+                nowParticle = Instantiate(followingStone,transform.position,Quaternion.identity);
+                nowParticle.Play();
+            }
+            //속력에 따른 파티클 양 조절
+
+
+            nowPos = transform.position;
+            nextPos = Camera.main.ScreenToWorldPoint(nowPos);
+            nowParticle.transform.position = Vector3.Lerp(nowParticle.transform.position, nowPos, _ChasingSpeed);
+        }
     }
 
     [SerializeField] private Transform boardTransform;
