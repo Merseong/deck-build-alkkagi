@@ -49,6 +49,7 @@ public class StoneBehaviour : MonoBehaviour
             isClicked = false;
 
             nowParticle.Stop();
+            Destroy(nowParticle.gameObject);
             nowParticle = null;
         }
         else
@@ -59,7 +60,8 @@ public class StoneBehaviour : MonoBehaviour
                 nowParticle.Play();
             }
             //속력에 따른 파티클 양 조절
-
+            var em = nowParticle.emission;
+            em.rateOverDistanceMultiplier = akgRigidbody.velocity.magnitude;
 
             nowPos = transform.position;
             nextPos = Camera.main.ScreenToWorldPoint(nowPos);
