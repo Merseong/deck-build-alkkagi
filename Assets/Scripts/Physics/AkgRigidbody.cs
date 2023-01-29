@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class AkgRigidbody : MonoBehaviour
 {
     public bool isStatic = false;
