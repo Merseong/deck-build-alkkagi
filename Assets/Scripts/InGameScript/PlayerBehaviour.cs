@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class PlayerBehaviour : MonoBehaviour
 {
@@ -49,17 +50,19 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private StoneBehaviour selectedStone;
     [SerializeField] private Card selectedCard;
 
+    private StateMachine stateMachine;
+    private Dictionary<GameManager.TurnState, IState> dicState = new Dictionary<GameManager.TurnState, IState>();
     private bool isSelecting;
     private bool isOpenStoneInform = false;
     
     
-    private float curStoneSelectionTime;
+    [SerializeField] private float curStoneSelectionTime;
 
     [SerializeField] private bool isDragging = false;
     [SerializeField] private bool startOnCancel;    
-    private Vector3 dragStartPoint;
-    private Vector3 dragEndPoint;
-    private ArrowGenerator stoneArrowObj;
+    [SerializeField] private Vector3 dragStartPoint;
+    [SerializeField] private Vector3 dragEndPoint;
+    [SerializeField] private ArrowGenerator stoneArrowObj;
     
 
     [Header("SelectionVariable")]
@@ -82,23 +85,39 @@ public class PlayerBehaviour : MonoBehaviour
     private bool pauseEditorOnShoot = false;
 
 
-
     private void Start()
     {
         //cancelPanel = GameObject.Find("InformPanel").GetComponent<RectTransform>();
         //informPanel = GameObject.Find("CancelPanel").GetComponent<RectTransform>();
+        IState prepare = new PrepareTurn(this);
+        IState wait = new WaitTurn(this);
+        IState normal = new NormalTurn(this);
+        IState fnormal = new FnormalTurn(this);
+        IState honorskip = new HonorskipTurn(this);
+        IState hsconsent = new HsconsentTurn(this);
+
+        dicState.Add(GameManager.TurnState.PREPARE, prepare);
+        dicState.Add(GameManager.TurnState.WAIT, wait);
+        dicState.Add(GameManager.TurnState.NORMAL, normal);
+        dicState.Add(GameManager.TurnState.FNORMAL, fnormal);
+        dicState.Add(GameManager.TurnState.HONORSKIP, honorskip);
+        dicState.Add(GameManager.TurnState.HSCONSENT, hsconsent);
+
+        stateMachine = new StateMachine(dicState[GameManager.TurnState.NORMAL]);
+        normal.OperateEnter();
     }
 
     private void Update()
     {
         // if(!isLocalPlayer) return;
-        NormalTurnInputHandler();
+        //NormalTurnInputHandler();
+        stateMachine.DoOperateUpdate();
     }
 
     private void NormalTurnInputHandler()
     {
         bool isTouchBeginning, isTouching, isTouchEnded;
-        Vector3 curScreenTouchPosition, curTouchPosition, curTouchPositionNormalized, moveVec;
+        Vector3 curScreenTouchPosition, curTouchPosition, curTouchPositionNormalized;
 
 //플랫폼별 테스트를 위한 분기 코드        
 #if     UNITY_EDITOR
@@ -127,16 +146,6 @@ public class PlayerBehaviour : MonoBehaviour
         curScreenTouchPosition = touch.position;
 
 #endif   
-        
-        //UI handle
-        if(isTouchEnded)
-        {
-            if(selectedCard != null || selectedStone != null)
-            {
-                informPanel.gameObject.SetActive(false);
-                // return;
-            }
-        }
 
         //Temp put the stone
         GameBoard isMousePointOnBoard = IsMouseOnBoard(curScreenTouchPosition);
@@ -157,134 +166,8 @@ public class PlayerBehaviour : MonoBehaviour
                 }
             }
         }
-
-        //Stone related input handle
-        if (selectedStone == null)
-        {
-            if(isTouchBeginning)
-            {
-                isSelecting = true;
-                StartCoroutine(EStoneSelection());
-            }
-
-            if(isTouchEnded)
-            {
-                isSelecting = false;
-                selectedStone = GetStoneAroundPoint(curScreenTouchPosition);
-
-                if(selectedStone != null)
-                {
-                    selectedStone.isClicked = true;
-                    if(isOpenStoneInform) 
-                    {
-                        //Open Information about selected stone
-                        SetInformPanel(selectedStone.CardData);
-                        informPanel.gameObject.SetActive(true);
-                        Debug.Log("Information");
-                    }
-                    else
-                    {
-                        //Simply select current stone and move to shooting phase
-                        cancelPanel.gameObject.SetActive(true);
-                        Debug.Log("Selected");
-                    }
-                } 
-            }
-        }
-        else
-        {
-            bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, curScreenTouchPosition, null);
-            isDragging = !isTouchOnCancel;
-            if(isTouchBeginning)
-            {
-                dragStartPoint = curTouchPositionNormalized;
-                startOnCancel = isTouchOnCancel;
-
-                if(isDragging)
-                {
-                    dragEffectObj.gameObject.SetActive(true);
-                    dragEffectObj.SetPosition(0, curTouchPositionNormalized);
-                    dragEffectObj.SetPosition(1, curTouchPositionNormalized);
-
-                    stoneArrowObj = selectedStone.transform.GetChild(0).GetComponent<ArrowGenerator>();
-                    stoneArrowObj.gameObject.SetActive(true);
-                } 
-            }
-
-            if(isTouching && !startOnCancel)
-            {
-                isDragging = !isTouchOnCancel;
-
-                dragEndPoint = curTouchPositionNormalized;
-                moveVec = dragStartPoint - dragEndPoint;
-
-                dragEffectObj.startColor = Color.Lerp(dragStartColor, dragEndColor, dragColorCurve.Evaluate(Mathf.Min(moveVec.magnitude, maxDragLimit)/maxDragLimit));
-                dragEffectObj.endColor = dragEffectObj.startColor;
-                stoneArrowObj.GetComponent<MeshRenderer>().material.color = dragEffectObj.startColor;
-
-                if(moveVec.magnitude >= maxDragLimit) 
-                {
-                    dragEffectObj.SetPosition(1, dragStartPoint - moveVec.normalized * maxDragLimit);
-                    stoneArrowObj.stemLength = maxDragLimit;
-                }
-                else
-                {    
-                    dragEffectObj.SetPosition(1, curTouchPositionNormalized);
-                    stoneArrowObj.stemLength = moveVec.magnitude;
-                }
-                
-                if(moveVec.z >= 0) 
-                {
-                    float angle = Mathf.Acos(Vector3.Dot(Vector3.left, moveVec.normalized)) * 180 / Mathf.PI + 180;
-                    stoneArrowObj.transform.rotation = Quaternion.Euler(90, angle, 0);
-                }
-                else
-                {
-                    float angle = Mathf.Acos(Vector3.Dot(Vector3.right, moveVec.normalized)) * 180 / Mathf.PI;
-                    stoneArrowObj.transform.rotation = Quaternion.Euler(90, angle, 0);
-                }
-                
-                if(!isDragging)
-                {
-                    Color temp = dragEffectObj.startColor;
-                    temp.a = alphaOnCancel;
-                    dragEffectObj.startColor = temp;
-                    dragEffectObj.endColor = temp;
-                    stoneArrowObj.GetComponent<MeshRenderer>().material.color = temp;
-                }
-            }
-
-            if(isTouchEnded) 
-            {
-                dragEndPoint = curTouchPositionNormalized;
-                moveVec = dragStartPoint - dragEndPoint;
-                
-                cancelPanel.gameObject.SetActive(false);
-                
-                if(isDragging && !startOnCancel) 
-                {
-                    //FIXME: Same velocity for every stone, set min max velocity for shooting (different form dragLimit)
-                    float VelocityCalc = Mathf.Lerp(minShootVelocity, maxShootVelocity, Mathf.Min(moveVec.magnitude, maxDragLimit) / maxDragLimit) * velocityMultiplier;
-                    ShootStone( moveVec.normalized * selectedStone.GetComponent<AkgRigidbody>().mass * VelocityCalc);   
-                }
-                selectedStone = null;
-
-                dragEffectObj.gameObject.SetActive(false);
-                stoneArrowObj.gameObject.SetActive(false);
-            }
-        }
-    
-        //Card related input handle
-        if(isTouchEnded)
-        {
-            selectedCard = GetCardAroundPoint(curScreenTouchPosition);
-            if(selectedCard != null)
-            {
-                SetInformPanel(selectedCard.CardData);
-                informPanel.gameObject.SetActive(true);
-            }
-        }
     }
+
     private GameBoard IsMouseOnBoard(Vector3 point)
     {
         Ray ray = Camera.main.ScreenPointToRay(point);
@@ -298,6 +181,7 @@ public class PlayerBehaviour : MonoBehaviour
         }
         return null;
     }
+
     private StoneBehaviour GetStoneAroundPoint(Vector3 point)
     {
         Ray ray = Camera.main.ScreenPointToRay(point);
@@ -385,5 +269,154 @@ public class PlayerBehaviour : MonoBehaviour
             yield return null;
         }
         isOpenStoneInform = true;
+    }
+
+    public void NormalTouchBegin(Vector3 curScreenTouchPosition)
+    {
+        Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
+        Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
+        
+        // Debug.Log("Touchbegin Enter: " + curScreenTouchPosition + curTouchPositionNormalized);
+        if (selectedStone == null)
+        {
+            isSelecting = true;
+            StartCoroutine(EStoneSelection());
+        }
+        else
+        {
+            bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, curScreenTouchPosition, null);
+            isDragging = !isTouchOnCancel;
+
+            dragStartPoint = curTouchPositionNormalized;
+            startOnCancel = isTouchOnCancel;
+
+            if(isDragging)
+            {
+                dragEffectObj.gameObject.SetActive(true);
+                dragEffectObj.SetPosition(0, curTouchPositionNormalized);
+                dragEffectObj.SetPosition(1, curTouchPositionNormalized);
+
+                stoneArrowObj = selectedStone.transform.GetChild(0).GetComponent<ArrowGenerator>();
+                stoneArrowObj.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    public void NormalInTouch(Vector3 curScreenTouchPosition)
+    {
+        Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
+        Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
+
+        Debug.Log("Intouch Enter : " + curScreenTouchPosition + curTouchPositionNormalized);
+        bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, curScreenTouchPosition, null);
+        isDragging = !isTouchOnCancel;
+        
+        if(selectedStone != null && !startOnCancel)
+        {
+            isDragging = !isTouchOnCancel;
+
+            dragEndPoint = curTouchPositionNormalized;
+            Vector3 moveVec = dragStartPoint - dragEndPoint;
+
+            dragEffectObj.startColor = Color.Lerp(dragStartColor, dragEndColor, dragColorCurve.Evaluate(Mathf.Min(moveVec.magnitude, maxDragLimit)/maxDragLimit));
+            dragEffectObj.endColor = dragEffectObj.startColor;
+            stoneArrowObj.GetComponent<MeshRenderer>().material.color = dragEffectObj.startColor;
+
+            if(moveVec.magnitude >= maxDragLimit) 
+            {
+                dragEffectObj.SetPosition(1, dragStartPoint - moveVec.normalized * maxDragLimit);
+                stoneArrowObj.stemLength = maxDragLimit;
+            }
+            else
+            {    
+                dragEffectObj.SetPosition(1, curTouchPositionNormalized);
+                stoneArrowObj.stemLength = moveVec.magnitude;
+            }
+            
+            if(moveVec.z >= 0) 
+            {
+                float angle = Mathf.Acos(Vector3.Dot(Vector3.left, moveVec.normalized)) * 180 / Mathf.PI + 180;
+                stoneArrowObj.transform.rotation = Quaternion.Euler(90, angle, 0);
+            }
+            else
+            {
+                float angle = Mathf.Acos(Vector3.Dot(Vector3.right, moveVec.normalized)) * 180 / Mathf.PI;
+                stoneArrowObj.transform.rotation = Quaternion.Euler(90, angle, 0);
+            }
+            
+            if(!isDragging)
+            {
+                Color temp = dragEffectObj.startColor;
+                temp.a = alphaOnCancel;
+                dragEffectObj.startColor = temp;
+                dragEffectObj.endColor = temp;
+                stoneArrowObj.GetComponent<MeshRenderer>().material.color = temp;
+            }
+        }
+    }
+
+    public void NormalTouchEnd(Vector3 curScreenTouchPosition)
+    {
+        Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
+        Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
+
+        // Debug.Log("TouchEnd Enter: " + curScreenTouchPosition);
+        //UI handle
+        if(selectedCard != null || selectedStone != null)
+        {
+            informPanel.gameObject.SetActive(false);
+        }
+
+        if(selectedStone == null)
+        {
+            isSelecting = false;
+            selectedStone = GetStoneAroundPoint(curScreenTouchPosition);
+
+            if(selectedStone != null)
+            {
+                selectedStone.isClicked = true;
+                if(isOpenStoneInform) 
+                {
+                    //Open Information about selected stone
+                    SetInformPanel(selectedStone.CardData);
+                    informPanel.gameObject.SetActive(true);
+                    Debug.Log("Information");
+                    return;
+                }
+                else
+                {
+                    //Simply select current stone and move to shooting phase
+                    cancelPanel.gameObject.SetActive(true);
+                    Debug.Log("Selected");
+                    return;
+                }
+            }
+        }
+        else
+        {
+            dragEndPoint = curTouchPositionNormalized;
+            Vector3 moveVec = dragStartPoint - dragEndPoint;
+            
+            cancelPanel.gameObject.SetActive(false);
+            
+            if(isDragging && !startOnCancel) 
+            {
+                //FIXME: Same velocity for every stone, set min max velocity for shooting (different form dragLimit)
+                float VelocityCalc = Mathf.Lerp(minShootVelocity, maxShootVelocity, Mathf.Min(moveVec.magnitude, maxDragLimit) / maxDragLimit) * velocityMultiplier;
+                ShootStone( moveVec.normalized * selectedStone.GetComponent<AkgRigidbody>().mass * VelocityCalc);
+            }
+            selectedStone = null;
+
+            dragEffectObj.gameObject.SetActive(false);
+            stoneArrowObj.gameObject.SetActive(false);
+            return;
+        }
+
+        selectedCard = GetCardAroundPoint(curScreenTouchPosition);
+        if(selectedCard != null)
+        {
+            SetInformPanel(selectedCard.CardData);
+            informPanel.gameObject.SetActive(true);
+        }
     }
 }
