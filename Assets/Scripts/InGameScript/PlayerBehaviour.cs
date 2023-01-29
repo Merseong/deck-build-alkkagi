@@ -52,16 +52,16 @@ public class PlayerBehaviour : MonoBehaviour
 
     private StateMachine stateMachine;
     private Dictionary<GameManager.TurnState, IState> dicState = new Dictionary<GameManager.TurnState, IState>();
+
     private bool isSelecting;
     private bool isOpenStoneInform = false;
+    private bool isInformOpened = false;
     
-    
-    [SerializeField] private float curStoneSelectionTime;
-
+    private float curStoneSelectionTime;
     [SerializeField] private bool isDragging = false;
     [SerializeField] private bool startOnCancel;    
-    [SerializeField] private Vector3 dragStartPoint;
-    [SerializeField] private Vector3 dragEndPoint;
+    private Vector3 dragStartPoint;
+    private Vector3 dragEndPoint;
     [SerializeField] private ArrowGenerator stoneArrowObj;
     
 
@@ -248,6 +248,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void SetInformPanel(CardData data)
     {
+        isInformOpened = true;
         //sprite
         informPanel.GetChild(0).GetComponent<Image>().sprite = data.sprite;
         //size
@@ -276,7 +277,6 @@ public class PlayerBehaviour : MonoBehaviour
         Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
         Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
         
-        // Debug.Log("Touchbegin Enter: " + curScreenTouchPosition + curTouchPositionNormalized);
         if (selectedStone == null)
         {
             isSelecting = true;
@@ -290,7 +290,7 @@ public class PlayerBehaviour : MonoBehaviour
             dragStartPoint = curTouchPositionNormalized;
             startOnCancel = isTouchOnCancel;
 
-            if(isDragging)
+            if(isDragging && !isInformOpened)
             {
                 dragEffectObj.gameObject.SetActive(true);
                 dragEffectObj.SetPosition(0, curTouchPositionNormalized);
@@ -307,11 +307,10 @@ public class PlayerBehaviour : MonoBehaviour
         Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
         Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
 
-        Debug.Log("Intouch Enter : " + curScreenTouchPosition + curTouchPositionNormalized);
         bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, curScreenTouchPosition, null);
         isDragging = !isTouchOnCancel;
         
-        if(selectedStone != null && !startOnCancel)
+        if(selectedStone != null && !startOnCancel && !isInformOpened)
         {
             isDragging = !isTouchOnCancel;
 
@@ -360,11 +359,14 @@ public class PlayerBehaviour : MonoBehaviour
         Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
         Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
 
-        // Debug.Log("TouchEnd Enter: " + curScreenTouchPosition);
         //UI handle
-        if(selectedCard != null || selectedStone != null)
+        if(isInformOpened)
         {
             informPanel.gameObject.SetActive(false);
+            isInformOpened = false;
+            selectedCard = null;
+            selectedStone = null;
+            return;
         }
 
         if(selectedStone == null)
