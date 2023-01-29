@@ -11,11 +11,15 @@ public class NetworkTestButton : Editor
         base.OnInspectorGUI();
 
         NetworkManager networkManager = (NetworkManager)target;
-        if (GUILayout.Button("Enter Room"))
+        if (GUILayout.Button("Connect to Server"))
         {
-            networkManager.EnterGameRoom();
+            networkManager.ConnectServer();
         }
-        if (GUILayout.Button("Send Message to Opponent"))
+        if (GUILayout.Button("Disconnect"))
+        {
+            networkManager.DisconnectServer();
+        }
+        if (GUILayout.Button("Send msg to Opponent"))
         {
             networkManager.SendMessageToOpponent();
         }

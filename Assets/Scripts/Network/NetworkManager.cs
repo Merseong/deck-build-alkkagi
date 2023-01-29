@@ -10,7 +10,7 @@ using MyNetworkData;
 public class NetworkManager : SingletonBehavior<NetworkManager>
 {
     SocketClient m_client;
-    public SocketClient Client => m_client;
+    private SocketClient Client => m_client;
 
     [SerializeField]
     private int networkId = -1;
@@ -48,7 +48,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     }
 
     public delegate void ParsePacketDelegate(Packet packet);
-    public ParsePacketDelegate ParsePacket;
+    private ParsePacketDelegate ParsePacket;
 
     // TEMP
     [SerializeField]
@@ -74,12 +74,14 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     private Dictionary<uint, (byte[] data, Action callback)> syncVarDict;
     public Dictionary<uint, (byte[] data, Action callback)> SyncVarDict => syncVarDict;
 
+    #region Unity functions
     private void Awake()
     {
+        ParsePacket = new ParsePacketDelegate((_) => { });
+
         if (!m_isNetworkMode) return;
 
         m_networkTestCanvas.SetActive(m_isNetworkMode);
-        ParsePacket = new ParsePacketDelegate((_) => { });
         ConnectionStatus = ConnectionStatusEnum.DISCONNECTED;
 
         // syncVarDataDict = new Dictionary<uint, byte[]>();
@@ -95,11 +97,41 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
     private void LateUpdate()
     {
-        if (m_isNetworkMode && m_client != null)
+        if (m_isNetworkMode && m_client != null && ConnectionStatus != ConnectionStatusEnum.DISCONNECTED)
         {
             m_client.ProcessPackets(ParsePacket);
         }
     }
+
+    private void OnDestroy()
+    {
+        DisconnectServer();
+    }
+    #endregion
+
+    public void ConnectServer()
+    {
+        if (!m_isNetworkMode || ConnectionStatus == ConnectionStatusEnum.DISCONNECTED)
+        {
+            return;
+        }
+
+        m_client = new SocketClient();
+        m_client.Connect("127.0.0.1", 3333);
+    }
+
+    public void DisconnectServer()
+    {
+        if (!m_isNetworkMode || m_client == null)
+        {
+            return;
+        }
+        m_client.Disconnect();
+
+        ConnectionStatus = ConnectionStatusEnum.DISCONNECTED;
+        m_client = null;
+    }
+
 
     public void SetNetworkId(int id, bool reset = false)
     {
@@ -112,7 +144,18 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         networkId = id;
     }
 
-    #region Send Actions
+    public void SendData<T>(Data<T> data, PacketType type) where T : class
+    {
+        if (!m_isNetworkMode) return;
+        if (Client == null)
+        {
+            Debug.LogError("[NETWORK] not connected");
+        }
+        
+        var sendPacket = new Packet().Pack(type, data);
+        Client.Send(sendPacket);
+    }
+
     public void InitSyncVar(uint netID, byte[] data, Action callback)
     {
         if (syncVarDict.ContainsKey(netID)) return;
@@ -122,25 +165,22 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         syncVarDict[netID] = (data, callback);
     }
 
-    public void ConnectToServer()
+    #region Delegate Control functions
+    public void AddReceiveDelegate(ParsePacketDelegate func)
     {
-        if (!m_isNetworkMode)
-        {
-            return;
-        }
-
-        m_client = new SocketClient();
-        m_client.Connect("127.0.0.1", 3333);
+        ParsePacket += func;
     }
 
-    public void DisconnectServer()
+    /// <summary>
+    /// 주의사항, 여러개의 func가 있을 경우, 가장 마지막이 삭제됨
+    /// </summary>
+    public void RemoveReceiveDelegate(ParsePacketDelegate func)
     {
-        if (!m_isNetworkMode)
-        {
-            return;
-        }
-        testStatusText.text = "Disconnected";
+        ParsePacket -= func;
     }
+    #endregion
+
+    #region Send Actions
 
     public void EnterGameRoom()
     {
@@ -156,6 +196,9 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         Client.Send(sendPacket);
     }
 
+    /// <summary>
+    /// 임시, 겜매니저로 옮기든 할듯
+    /// </summary>
     public void SendMessageToOpponent()
     {
         if (!m_isNetworkMode)
@@ -189,6 +232,9 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     #endregion
 
     #region Receive Actions
+    /// <summary>
+    /// 
+    /// </summary>
     public void BasicProcessPacket(Packet packet)
     {
         switch((PacketType)packet.Type)

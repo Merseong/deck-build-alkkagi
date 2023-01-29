@@ -48,11 +48,7 @@ public class SyncVar<T> where T : struct
         var toSend = new MyNetworkData.SyncVarPacket();
         toSend.NetID = NetID;
         toSend.Data = data;
-        var sendData = toSend.Serialize();
-        var packet = new MyNetworkData.Packet();
-        packet.Type = (Int16)MyNetworkData.PacketType.SYNCVAR_CHANGE;
-        packet.SetData(sendData, sendData.Length);
-        NetworkManager.Inst.Client?.Send(packet);
+        NetworkManager.Inst.SendData(toSend, MyNetworkData.PacketType.SYNCVAR_CHANGE);
 
         if (OnSendData != null)
         {

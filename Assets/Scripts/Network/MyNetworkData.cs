@@ -49,7 +49,6 @@ namespace MyNetworkData
         }
     }
 
-
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 1)] // 1byte 단위
     public class Data<T> where T : class
@@ -333,6 +332,20 @@ namespace MyNetworkData
             {
                 OnConnected(null, eventArgs);
             }
+        }
+
+        public void Disconnect()
+        {
+            if (m_socket == null) return;
+
+            var toSend = new Packet().Pack(PacketType.PACKET_USER_CLOSED, new TestPacket());
+            Send(toSend);
+
+            if (m_socket.Connected)
+            {
+                m_socket.Disconnect(false);
+            }
+            m_socket.Dispose();
         }
 
         void StartReceive()
