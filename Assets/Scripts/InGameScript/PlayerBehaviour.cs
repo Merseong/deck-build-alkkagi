@@ -86,14 +86,14 @@ public class PlayerBehaviour : MonoBehaviour
         IState prepare = new PrepareTurn(this);
         IState wait = new WaitTurn(this);
         IState normal = new NormalTurn(this);
-        IState fnormal = new FnormalTurn(this);
+        //IState fnormal = new FnormalTurn(this);
         IState honorskip = new HonorskipTurn(this);
         IState hsconsent = new HsconsentTurn(this);
 
         dicState.Add(GameManager.TurnState.PREPARE, prepare);
         dicState.Add(GameManager.TurnState.WAIT, wait);
         dicState.Add(GameManager.TurnState.NORMAL, normal);
-        dicState.Add(GameManager.TurnState.FNORMAL, fnormal);
+        //dicState.Add(GameManager.TurnState.FNORMAL, fnormal);
         dicState.Add(GameManager.TurnState.HONORSKIP, honorskip);
         dicState.Add(GameManager.TurnState.HSCONSENT, hsconsent);
 
@@ -236,7 +236,18 @@ public class PlayerBehaviour : MonoBehaviour
         selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);
         // Debug.Log(vec);
     }
+
+    private void PrepareTurnEnd()
+    {
+        // TODO
+    }
+
     private void NormalTurnEnd()
+    {
+        // TODO
+    }
+
+    private void ConsentHS()
     {
         // TODO
     }
@@ -247,11 +258,6 @@ public class PlayerBehaviour : MonoBehaviour
     }
 
     private void DenyHS()
-    {
-        // TODO
-    }
-
-    private void ConsentHS()
     {
         // TODO
     }

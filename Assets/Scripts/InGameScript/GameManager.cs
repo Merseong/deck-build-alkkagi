@@ -9,8 +9,14 @@ public class GameManager : SingletonBehavior<GameManager>
 
     // 각 플레이어
     public PlayerBehaviour[] players;  // 0: local, 1: oppo
+    public PlayerBehaviour LocalPlayer => players[0];
+    public PlayerBehaviour OppoPlayer => players[1];
+    public PlayerBehaviour CurrentPlayer => players[(int)WhoseTurn];
 
+    // 서버에서 선공이 누구인지 정해줘야함
     public bool isLocalGoFirst;
+    PlayerEnum FirstPlayer => isLocalGoFirst ? PlayerEnum.LOCAL: PlayerEnum.OPPO;
+    PlayerEnum SecondPlayer => isLocalGoFirst ? PlayerEnum.OPPO : PlayerEnum.LOCAL;
     //선,후공과 관계없이 HS를 했는지 여부에 대한 bool
     public bool isPlayerHonorSkip;
     //후공의 경우에 상대가 HS했을 경우 동의 여부에 대한 bool
@@ -27,20 +33,44 @@ public class GameManager : SingletonBehavior<GameManager>
     {
         PREPARE,
         WAIT,
+        WAITFORHS,
+        WAITFORHSCONSENT,
         NORMAL,
-        FNORMAL,
         HONORSKIP,
         HSCONSENT,
         LENGTH
     }
 
+    // 0: 준비턴 선공, 1: 준비턴 후공
+    // 2: 1턴 선공, 3: 1턴 후공
+    // 이후는 노말턴 선공 및 후공
     private int turnCount = 0;
+    private int nextTurnCount;
     public int TurnCount => turnCount / 2;
     public PlayerEnum WhoseTurn => (PlayerEnum)((turnCount + (isLocalGoFirst ? 0 : 1)) % 2);
 
-    public TurnState localTurn;
-    public TurnState oppoNextTurn;
-    public TurnState localNextTurn;
+    public TurnState[] turnStates = { TurnState.PREPARE, TurnState.PREPARE };  // 0: local, 1: oppo
+    public TurnState LocalTurnState
+    {
+        get => turnStates[0];
+        set => turnStates[0] = value;
+    }
+    public TurnState OppoTurnState
+    {
+        get => turnStates[1];
+        set => turnStates[1] = value;
+    }
+    public TurnState[] nextTurnStates;
+    public TurnState LocalNextTurnState
+    {
+        get => nextTurnStates[0];
+        set => nextTurnStates[0] = value;
+    }
+    public TurnState OppoNextTurnState
+    {
+        get => nextTurnStates[1];
+        set => nextTurnStates[1] = value;
+    }
 
     public int initialTurnCost = 6;
     public int normalTurnCost = 3;
@@ -48,113 +78,156 @@ public class GameManager : SingletonBehavior<GameManager>
     public void Start()
     {
         InitializeTurn();
-        OnTurnEnd += SetNextTurnState;
+        //OnTurnEnd += SetNextTurnState;
     }
     
     public void InitializeTurn()
     {
-        if(isLocalGoFirst)
+        turnStates[(int)FirstPlayer] = TurnState.PREPARE;
+        turnStates[(int)SecondPlayer] = TurnState.WAIT;
+    }
+
+    // 네트워크에서 turnCount, playerTurns 받아오기
+    // 아마 void가 아니고 패킷과 같은 형태로 주고받아야 할듯
+    private async void GetTurnInfo()
+    {
+        // TODO
+    }
+    // 네트워크에 turnCount, playerTurns 전송
+    // 아마 void가 아니고 패킷과 같은 형태로 주고받아야 할듯
+    private async void SendTurnInfo()
+    {
+        // TODO
+    }
+
+    public void TurnEnd()
+    {
+        OnTurnEnd(LocalTurnState);
+        SetNextTurnState();
+        // 상대 GameManager의 turn info 변경
+        // 예시
+        // SomeNetworkPacket result = await SendTurnInfo();
+        // if (result.applied)
+        LocalTurnState = LocalNextTurnState;
+        OppoTurnState = OppoNextTurnState;
+        turnCount = nextTurnCount;
+        OnTurnStart(LocalTurnState);
+    }
+
+    private void SetNextTurnState()
+    {
+        if (WhoseTurn == PlayerEnum.OPPO)
         {
-            localTurn = TurnState.PREPARE;
+            Debug.LogError("Waiting player ended turn!");
+            return;
         }
-        else
+
+        nextTurnCount = TurnCount;
+
+        switch (turnCount)
         {
-            localTurn = TurnState.WAIT;
+            // 준비턴 선공
+            case 0:
+                LocalNextTurnState = TurnState.WAIT;
+                OppoNextTurnState = TurnState.PREPARE;
+                nextTurnCount++;
+                break;
+            // 준비턴 후공
+            case 1:
+                LocalNextTurnState = TurnState.WAITFORHS;
+                OppoNextTurnState = TurnState.HONORSKIP;
+                nextTurnCount++;
+                break;
+            // 1턴 선공 (HS or FNORMAL)
+            case 2:
+                FirstHSTurn();
+                break;
+            // 1턴 후공 (HS or normal)
+            case 3:
+                SecondHSTurn();
+                break;
+            // 2턴 이후
+            default:
+                OppoNormalTurn();
+                turnCount++;
+                break;
         }
     }
 
-    public void SetTurn()
+    private void FirstHSTurn()
     {
-        OnTurnEnd(localTurn);
-        //상대 턴 변경(네트워킹 작업 필요)
-        //(상대 게임메니저).SetTurn(oppoNextTurn);
-        localTurn = localNextTurn;
-        OnTurnStart(localNextTurn);
-    }
-    public void SetTurn(TurnState dest)
-    {
-        OnTurnEnd(localTurn);
-        localTurn = dest;
-        OnTurnStart(dest);
-    }
-
-    private void SetNextTurnState(TurnState curTurn)
-    {
-        if(curTurn == TurnState.WAIT) return;
-
-        if(isLocalGoFirst)
-            switch(curTurn){
-                case TurnState.FNORMAL :
-                    localNextTurn = TurnState.WAIT;
-                    oppoNextTurn = TurnState.HONORSKIP;
-                    break;
-                case TurnState.PREPARE :
-                    localNextTurn = TurnState.WAIT;
-                    oppoNextTurn = TurnState.PREPARE;
-                    break;
-                case TurnState.HONORSKIP :
-                    if(isPlayerHonorSkip)
-                    {
-                        localNextTurn = TurnState.WAIT;
-                        oppoNextTurn = TurnState.HSCONSENT;
-                    }
-                    else
-                    {
-                        localNextTurn = TurnState.FNORMAL;
-                        oppoNextTurn = TurnState.WAIT;
-                    }
-                    break;    
-                case TurnState.NORMAL : 
-                    localNextTurn = TurnState.WAIT;
-                    oppoNextTurn = TurnState.NORMAL;
-                    break;
-                default :
-                    Debug.LogError("Undefined state!");
-                    break;
-            }
-        else
+        switch (LocalTurnState)
         {
-            switch(curTurn){
-                case TurnState.PREPARE :
-                    localNextTurn = TurnState.WAIT; 
-                    oppoNextTurn = TurnState.HONORSKIP;
-                    break;
-                case TurnState.HONORSKIP : 
-                    if(isPlayerHonorSkip)
-                    {
-                        localNextTurn = TurnState.WAIT; 
-                        oppoNextTurn = TurnState.NORMAL;
-                    }
-                    else
-                    {
-                        localNextTurn = TurnState.NORMAL; 
-                        oppoNextTurn = TurnState.WAIT;
-                    }
-                    break;
-                case TurnState.HSCONSENT :
-                    //Agree
-                    if(isPlayerConsentHonorSkip)
-                    {
-                        localNextTurn = TurnState.NORMAL; 
-                        oppoNextTurn = TurnState.WAIT;
-                    }
-                    //Denial
-                    else
-                    {
-                        localNextTurn = TurnState.WAIT;
-                        oppoNextTurn = TurnState.FNORMAL; 
-                    }
-                    break;    
-                case TurnState.NORMAL : 
-                    localNextTurn = TurnState.WAIT; 
-                    oppoNextTurn = TurnState.NORMAL;
-                    break;
-                default :
-                    Debug.LogError("Undefined state!");
-                    break;
-            }
+            case TurnState.HONORSKIP:
+                if (isPlayerHonorSkip)
+                {
+                    LocalNextTurnState = TurnState.WAITFORHSCONSENT;
+                    OppoNextTurnState = TurnState.HSCONSENT;
+                }
+                else
+                {
+                    LocalNormalTurn();
+                }
+                break;
+            case TurnState.HSCONSENT:
+                if (isPlayerConsentHonorSkip)
+                {
+                    LocalNormalTurn();
+                    nextTurnCount++;
+                }
+                else
+                {
+                    OppoNormalTurn();
+                }
+                break;
+            case TurnState.NORMAL:
+                LocalNextTurnState = TurnState.WAITFORHS;
+                OppoNextTurnState = TurnState.HONORSKIP;
+                nextTurnCount++;
+                break;
+            default:
+                Debug.LogError("Invalid state!");
+                break;
         }
     }
+
+    private void SecondHSTurn()
+    {
+        switch (LocalTurnState)
+        {
+            case TurnState.HONORSKIP:
+                if (isPlayerHonorSkip)
+                {
+                    OppoNormalTurn();
+                    nextTurnCount++;
+                }
+                else
+                {
+                    LocalNormalTurn();
+                }
+                break;
+            case TurnState.NORMAL:
+                OppoNormalTurn();
+                nextTurnCount++;
+                break;
+            default:
+                Debug.LogError("Invalid state!");
+                break;
+        }
+    }
+
+    private void LocalNormalTurn()
+    {
+        LocalNextTurnState = TurnState.NORMAL;
+        OppoNextTurnState = TurnState.WAIT;
+    }
+
+    private void OppoNormalTurn()
+    {
+        LocalNextTurnState = TurnState.WAIT;
+        OppoNextTurnState = TurnState.NORMAL;
+    }
+    
 
     // 아너스킵
     // 게임중 서버 통신
