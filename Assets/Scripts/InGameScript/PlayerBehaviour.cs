@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.InputSystem;
+using System;
 
 public class PlayerBehaviour : MonoBehaviour
 {
@@ -46,7 +46,7 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private Card selectedCard;
 
     private StateMachine stateMachine;
-    private Dictionary<GameManager.TurnState, IState> dicState = new Dictionary<GameManager.TurnState, IState>();
+    public readonly Dictionary<GameManager.TurnState, Action<Vector3>[]> turnActionDic = new Dictionary<GameManager.TurnState, Action<Vector3>[]>();
 
     private bool isSelecting;
     private bool isOpenStoneInform = false;
@@ -81,24 +81,15 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void Start()
     {
-        //cancelPanel = GameObject.Find("InformPanel").GetComponent<RectTransform>();
-        //informPanel = GameObject.Find("CancelPanel").GetComponent<RectTransform>();
-        IState prepare = new PrepareTurn(this);
-        IState wait = new WaitTurn(this);
-        IState normal = new NormalTurn(this);
-        //IState fnormal = new FnormalTurn(this);
-        IState honorskip = new HonorskipTurn(this);
-        IState hsconsent = new HsconsentTurn(this);
+        turnActionDic.Add(GameManager.TurnState.PREPARE, new Action<Vector3>[]{PrepareTouchBegin, PrepareInTouch, PrepareTouchEnd});
+        turnActionDic.Add(GameManager.TurnState.WAIT, new Action<Vector3>[]{WaitTouchBegin, WaitInTouch, WaitTouchEnd});  
+        turnActionDic.Add(GameManager.TurnState.NORMAL, new Action<Vector3>[]{NormalTouchBegin, NormalInTouch, NormalTouchEnd});
+        turnActionDic.Add(GameManager.TurnState.HONORSKIP, new Action<Vector3>[]{HonorskipTouchBegin, HonorskipInTouch, HonorskipTouchEnd});
+        turnActionDic.Add(GameManager.TurnState.HSCONSENT, new Action<Vector3>[]{HSConsentTouchBegin, HSConsentInTouch, HSConsentTouchEnd});
 
-        dicState.Add(GameManager.TurnState.PREPARE, prepare);
-        dicState.Add(GameManager.TurnState.WAIT, wait);
-        dicState.Add(GameManager.TurnState.NORMAL, normal);
-        //dicState.Add(GameManager.TurnState.FNORMAL, fnormal);
-        dicState.Add(GameManager.TurnState.HONORSKIP, honorskip);
-        dicState.Add(GameManager.TurnState.HSCONSENT, hsconsent);
-
-        stateMachine = new StateMachine(dicState[GameManager.TurnState.NORMAL]);
-        normal.OperateEnter();
+        //FIXME : Later turn control by GameManager
+        stateMachine = new StateMachine(this, GameManager.TurnState.NORMAL);
+        stateMachine.OperateEnter();
     }
 
     private void Update()
@@ -288,6 +279,8 @@ public class PlayerBehaviour : MonoBehaviour
         isOpenStoneInform = true;
     }
 
+#region TouchInputActions
+
     public void NormalTouchBegin(Vector3 curScreenTouchPosition)
     {
         Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
@@ -437,4 +430,68 @@ public class PlayerBehaviour : MonoBehaviour
             informPanel.gameObject.SetActive(true);
         }
     }
+
+    public void PrepareTouchBegin(Vector3 curScreenTouchPosition)
+    {
+
+    }
+
+    public void PrepareInTouch(Vector3 curScreenTouchPosition)
+    {
+
+    }
+
+    public void PrepareTouchEnd(Vector3 curScreenTouchPosition)
+    {
+
+    }
+
+    public void WaitTouchBegin(Vector3 curScreenTouchPosition)
+    {
+
+    }
+
+    public void WaitInTouch(Vector3 curScreenTouchPosition)
+    {
+
+    }
+
+    public void WaitTouchEnd(Vector3 curScreenTouchPosition)
+    {
+
+    }
+
+    public void HonorskipTouchBegin(Vector3 curScreenTouchPosition)
+    {
+
+    }
+
+    public void HonorskipInTouch(Vector3 curScreenTouchPosition)
+    {
+
+    }
+
+    public void HonorskipTouchEnd(Vector3 curScreenTouchPosition)
+    {
+
+    }
+
+    public void HSConsentTouchBegin(Vector3 curScreenTouchPosition)
+    {
+
+    }
+
+    public void HSConsentInTouch(Vector3 curScreenTouchPosition)
+    {
+
+    }
+
+    public void HSConsentTouchEnd(Vector3 curScreenTouchPosition)
+    {
+
+    }
+
+#endregion TouchInputActions
+
 }
+
