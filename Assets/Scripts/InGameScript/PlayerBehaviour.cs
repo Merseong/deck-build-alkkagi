@@ -12,8 +12,6 @@ public class PlayerBehaviour : MonoBehaviour
 
     // 나와 적한테 하나씩 붙임
 
-    // TODO: 나중에 싹다 getter setter로 바꾸고 싶다...
-
     [SerializeField] private bool isLocalPlayer = true;
     
     //TODO : should move to UIManager
@@ -23,10 +21,7 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private int cost;
     public int Cost
     {
-        get
-        {
-            return cost;
-        }
+        get => cost;
 
         private set
         {
@@ -83,7 +78,6 @@ public class PlayerBehaviour : MonoBehaviour
 
     [Header("DebugTools"), SerializeField]
     private bool pauseEditorOnShoot = false;
-
 
     private void Start()
     {
@@ -219,13 +213,10 @@ public class PlayerBehaviour : MonoBehaviour
     }
     public void ResetCost()
     {
-        // 게임매니저나 이런데에 디폴트 코스트를 정해놓고 그걸 대입하는 게 나중에 편할듯
-        // 예시
-        // if (GameManager.Instance.turn == 0)
-        //     Cost = GameManager.Instance.InitialTurnCost;
-        // else
-        //     Cost = GameManager.Instance.NormalTurnCost;
-        Cost = 3;
+        if (GameManager.Inst.TurnCount == 0)
+            Cost = GameManager.Inst.initialTurnCost;
+        else
+            Cost = GameManager.Inst.normalTurnCost;
     }
 
     private void DrawCards(int number)
@@ -244,6 +235,25 @@ public class PlayerBehaviour : MonoBehaviour
         if (pauseEditorOnShoot) UnityEditor.EditorApplication.isPaused = true;
         selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);
         // Debug.Log(vec);
+    }
+    private void NormalTurnEnd()
+    {
+        // TODO
+    }
+
+    private void HonorSkip()
+    {
+        // TODO
+    }
+
+    private void DenyHS()
+    {
+        // TODO
+    }
+
+    private void ConsentHS()
+    {
+        // TODO
     }
 
     private void SetInformPanel(CardData data)

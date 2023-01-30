@@ -5,14 +5,17 @@ using System;
 
 public class GameManager : SingletonBehavior<GameManager>
 {
+    public enum PlayerEnum { LOCAL, OPPO }
+
     // 각 플레이어
+    public PlayerBehaviour[] players;  // 0: local, 1: oppo
+
     public bool isLocalGoFirst;
     //선,후공과 관계없이 HS를 했는지 여부에 대한 bool
     public bool isPlayerHonorSkip;
     //후공의 경우에 상대가 HS했을 경우 동의 여부에 대한 bool
     public bool isPlayerConsentHonorSkip;
-    public PlayerBehaviour localPlayer;
-    public PlayerBehaviour opponentPlayer;
+
     // 현재 보드
 
     // 각자 턴의 제어
@@ -31,9 +34,16 @@ public class GameManager : SingletonBehavior<GameManager>
         LENGTH
     }
 
+    private int turnCount = 0;
+    public int TurnCount => turnCount / 2;
+    public PlayerEnum WhoseTurn => (PlayerEnum)((turnCount + (isLocalGoFirst ? 0 : 1)) % 2);
+
     public TurnState localTurn;
     public TurnState oppoNextTurn;
     public TurnState localNextTurn;
+
+    public int initialTurnCost = 6;
+    public int normalTurnCost = 3;
 
     public void Start()
     {
@@ -146,9 +156,7 @@ public class GameManager : SingletonBehavior<GameManager>
         }
     }
 
-    // 코스트 관련 동작
     // 아너스킵
-
     // 게임중 서버 통신
     // 메세지 받아서 뿌려주기
     // 메세지 보내기
