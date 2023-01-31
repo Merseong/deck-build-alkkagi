@@ -91,6 +91,8 @@ public class PlayerBehaviour : MonoBehaviour
         //FIXME : Later turn control by GameManager
         stateMachine = new StateMachine(this, GameManager.TurnState.NORMAL);
         stateMachine.OperateEnter();
+
+        NetworkManager.Inst.AddReceiveDelegate(PlayCardReceiveNetworkAction);
     }
 
     private void Update()
@@ -98,6 +100,12 @@ public class PlayerBehaviour : MonoBehaviour
         // if(!isLocalPlayer) return;
         //NormalTurnInputHandler();
         stateMachine.DoOperateUpdate();
+    }
+
+    // temp: AppQuit-Disable-Destroy 순이길래 적당히 넣음
+    private void OnApplicationQuit()
+    {
+        NetworkManager.Inst.RemoveReceiveDelegate(PlayCardReceiveNetworkAction);
     }
 
     private void NormalTurnInputHandler()
@@ -236,7 +244,41 @@ public class PlayerBehaviour : MonoBehaviour
         // 투명 돌 생성
 
         SpendCost(card.CardData.cardCost);
-        
+        PlayCardSendNetworkAction(card);
+    }
+
+    // PlayCard 함수에서 사용되는 패킷 전송
+    private void PlayCardSendNetworkAction(Card card)
+    {
+        Debug.Log($"[{NetworkManager.Inst.NetworkId}] PLAYCARD/ {card.CardData.CardID}");
+        return; // temp: 일단 끊어둠
+        NetworkManager.Inst.SendData(new MyNetworkData.MessagePacket
+            {
+                senderID = NetworkManager.Inst.NetworkId,
+                message = "PLAYCARD/ (TODO: 카드, 내는위치, 이후코스트)",
+            }, MyNetworkData.PacketType.ROOM_OPPONENT);
+    }
+
+    private void PlayCardReceiveNetworkAction(MyNetworkData.Packet packet)
+    {
+        if (packet.Type != (short)MyNetworkData.PacketType.ROOM_OPPONENT) return;
+
+        var msg = MyNetworkData.MessagePacket.Deserialize(packet.Data);
+
+        if (!msg.message.StartsWith("PLAYCARD/")) return;
+
+        Debug.Log($"[{NetworkManager.Inst.NetworkId}] PLAYCARD/ ");
+        return; // temp: 일단 끊어둠
+
+        // parse message
+        var dataArr = msg.message.Split(' ');
+        GameManager.Inst.OppoPlayer.PlayCard(new Card()); // 카드 ID, 내는 위치를 통해 넣어야 함
+        if (GameManager.Inst.OppoPlayer.Cost != Int16.Parse(dataArr[3]))
+        {
+            // 상대의 남은 코스트와 내가 계산한 코스트가 안맞음
+            Debug.LogError("[OPPO] PLAYCARD cost not matched!");
+            return;
+        }
     }
 
     private void ShootStone(Vector3 vec) // vec이 velocity인지 force인지 명확하게 해야함

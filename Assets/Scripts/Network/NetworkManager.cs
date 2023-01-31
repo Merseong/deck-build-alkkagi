@@ -49,14 +49,15 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
     public delegate void ParsePacketDelegate(Packet packet);
     private ParsePacketDelegate ParsePacket;
+    // temp: 만일 delegate의 삭제가 이름 순서로 이루어지면, 별도의 List<delegate>로 만들어 관리해야할듯
 
-    // TEMP
+    // temp: 
     [SerializeField]
     private bool m_isNetworkMode;
     [SerializeField]
     private string m_messageToSend;
 
-    // TEMP canvas
+    // temp: canvas
     [SerializeField]
     private GameObject m_networkTestCanvas;
     [SerializeField]
