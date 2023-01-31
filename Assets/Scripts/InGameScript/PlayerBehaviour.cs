@@ -17,6 +17,7 @@ public class PlayerBehaviour : MonoBehaviour
     //TODO : should move to UIManager
     [SerializeField] private RectTransform cancelPanel;
     [SerializeField] private RectTransform informPanel;
+    [SerializeField] private TextMeshProUGUI costTextUi;
 
     [SerializeField] private int cost;
     public int Cost
@@ -28,6 +29,7 @@ public class PlayerBehaviour : MonoBehaviour
             if (value < 0)
                 Debug.LogError("Cost is less than 0! Fix this!");
 
+            costTextUi.text = value.ToString();
             cost = value;
         }
     }

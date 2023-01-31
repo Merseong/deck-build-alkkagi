@@ -123,6 +123,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &51837017 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 51837017, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+  m_PrefabInstance: {fileID: 984495492866551158}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &60114639 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 984495492826000313, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
@@ -783,6 +794,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 178128855195758144, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: costTextUi
+      value: 
+      objectReference: {fileID: 51837017}
+    - target: {fileID: 178128855195758144, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: cancelPanel
       value: 
       objectReference: {fileID: 60114639}
@@ -851,10 +866,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2049415883, guid: 79f1642b97c92004a959cb7e00a72221, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 775994638631315114, guid: 79f1642b97c92004a959cb7e00a72221, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -902,10 +913,6 @@ PrefabInstance:
     - target: {fileID: 775994638631315116, guid: 79f1642b97c92004a959cb7e00a72221, type: 3}
       propertyPath: m_Name
       value: NetworkManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 775994638631315117, guid: 79f1642b97c92004a959cb7e00a72221, type: 3}
-      propertyPath: m_isNetworkMode
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 79f1642b97c92004a959cb7e00a72221, type: 3}
