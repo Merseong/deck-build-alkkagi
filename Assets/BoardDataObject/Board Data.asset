@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Board Data
   m_EditorClassIdentifier: 
   boardID: 1
-  width: 0.8
-  height: 1.2
+  width: 1
+  height: 1.4
   movingDragAccleration: 0
   dragAccleration: 0
   player1CanStone:

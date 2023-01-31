@@ -44,13 +44,15 @@ public class GameManager : SingletonBehavior<GameManager>
         LENGTH
     }
 
-    // 0: 준비턴 선공, 1: 준비턴 후공
-    // 2: 1턴 선공, 3: 1턴 후공
-    // 이후는 노말턴 선공 및 후공
-    private int turnCount = 0;
-    private int nextTurnCount;
-    public int TurnCount => turnCount / 2;
-    public PlayerEnum WhoseTurn => (PlayerEnum)((turnCount + (isLocalGoFirst ? 0 : 1)) % 2);
+    /// <summary>
+    /// 0: 준비턴 선공, 1: 준비턴 후공, 
+    /// 2: 1턴 선공, 3: 1턴 후공, 
+    /// 이후는 노말턴 선공 및 후공
+    /// </summary>
+    private int totalTurn = 0;
+    private int nextTotalTurn;
+    public int TurnCount => totalTurn / 2;
+    public PlayerEnum WhoseTurn => (PlayerEnum)((totalTurn + (isLocalGoFirst ? 0 : 1)) % 2);
 
     public TurnState[] turnStates = { TurnState.PREPARE, TurnState.PREPARE };  // 0: local, 1: oppo
     public TurnState LocalTurnState
@@ -113,7 +115,7 @@ public class GameManager : SingletonBehavior<GameManager>
         // if (result.applied)
         LocalTurnState = LocalNextTurnState;
         OppoTurnState = OppoNextTurnState;
-        turnCount = nextTurnCount;
+        totalTurn = nextTotalTurn;
         OnTurnStart(LocalTurnState);
     }
 
@@ -125,21 +127,21 @@ public class GameManager : SingletonBehavior<GameManager>
             return;
         }
 
-        nextTurnCount = TurnCount;
+        nextTotalTurn = TurnCount;
 
-        switch (turnCount)
+        switch (totalTurn)
         {
             // 준비턴 선공
             case 0:
                 LocalNextTurnState = TurnState.WAIT;
                 OppoNextTurnState = TurnState.PREPARE;
-                nextTurnCount++;
+                nextTotalTurn++;
                 break;
             // 준비턴 후공
             case 1:
                 LocalNextTurnState = TurnState.WAITFORHS;
                 OppoNextTurnState = TurnState.HONORSKIP;
-                nextTurnCount++;
+                nextTotalTurn++;
                 break;
             // 1턴 선공 (HS or FNORMAL)
             case 2:
@@ -152,7 +154,7 @@ public class GameManager : SingletonBehavior<GameManager>
             // 2턴 이후
             default:
                 OppoNormalTurn();
-                turnCount++;
+                totalTurn++;
                 break;
         }
     }
@@ -176,7 +178,7 @@ public class GameManager : SingletonBehavior<GameManager>
                 if (isPlayerConsentHonorSkip)
                 {
                     LocalNormalTurn();
-                    nextTurnCount++;
+                    nextTotalTurn++;
                 }
                 else
                 {
@@ -186,7 +188,7 @@ public class GameManager : SingletonBehavior<GameManager>
             case TurnState.NORMAL:
                 LocalNextTurnState = TurnState.WAITFORHS;
                 OppoNextTurnState = TurnState.HONORSKIP;
-                nextTurnCount++;
+                nextTotalTurn++;
                 break;
             default:
                 Debug.LogError("Invalid state!");
@@ -202,7 +204,7 @@ public class GameManager : SingletonBehavior<GameManager>
                 if (isPlayerHonorSkip)
                 {
                     OppoNormalTurn();
-                    nextTurnCount++;
+                    nextTotalTurn++;
                 }
                 else
                 {
@@ -211,7 +213,7 @@ public class GameManager : SingletonBehavior<GameManager>
                 break;
             case TurnState.NORMAL:
                 OppoNormalTurn();
-                nextTurnCount++;
+                nextTotalTurn++;
                 break;
             default:
                 Debug.LogError("Invalid state!");

@@ -225,6 +225,7 @@ public class PlayerBehaviour : MonoBehaviour
     }
 
     // 카드 내기; 하스스톤에서는 카드를 "내다"가 play인듯
+    // TODO: 위치도 인자로 같이 받아서 하게
     private void PlayCard(Card card)
     {
         // TODO

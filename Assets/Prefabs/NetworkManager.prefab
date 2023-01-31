@@ -960,7 +960,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2049415887
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1092,7 +1092,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkId: -1
-  m_isNetworkMode: 1
+  m_isNetworkMode: 0
   m_messageToSend: TestMessageToYou
   m_networkTestCanvas: {fileID: 2049415883}
   testStatusText: {fileID: 523208749}
