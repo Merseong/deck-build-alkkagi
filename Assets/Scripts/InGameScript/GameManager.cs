@@ -7,6 +7,9 @@ public class GameManager : SingletonBehavior<GameManager>
 {
     public enum PlayerEnum { LOCAL, OPPO }
 
+    // 물리 기록용 recorder
+    public AkgRigidbodyRecorder rigidbodyRecorder = new AkgRigidbodyRecorder();
+
     // 각 플레이어
     public PlayerBehaviour[] players;  // 0: local, 1: oppo
     public PlayerBehaviour LocalPlayer => players[0];

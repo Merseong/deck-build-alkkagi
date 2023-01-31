@@ -50,6 +50,10 @@ public class AkgRigidbody : MonoBehaviour
 
         Vector3 acceleration = force / mass;
         velocity += Time.fixedDeltaTime * acceleration;
+
+        // 처음 치는 경우
+        GameManager.Inst.rigidbodyRecorder.StartRecord(Time.time);
+        RecordVelocity();
     }
     public void SetVelocity(Vector3 vel)
     {
@@ -88,6 +92,18 @@ public class AkgRigidbody : MonoBehaviour
         }
 
         velocity = normalVelocity + tangentialVelocity;
+        RecordVelocity();
+    }
+
+    private void RecordVelocity()
+    {
+        GameManager.Inst.rigidbodyRecorder.AppendVelocity(new AkgRigidbodyRecorder.VelocityRecord
+        {
+            stoneId = 0,
+            time = Time.time,
+            xVelocity = velocity.x,
+            zVelocity = velocity.z,
+        });
     }
 
     private void OnDrawGizmos()
