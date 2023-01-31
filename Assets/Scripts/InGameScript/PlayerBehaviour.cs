@@ -44,6 +44,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     [SerializeField] private StoneBehaviour selectedStone;
     [SerializeField] private Card selectedCard;
+    [SerializeField] private GameObject followedStone;
 
     private StateMachine stateMachine;
     public readonly Dictionary<GameManager.TurnState, Action<Vector3>[]> turnActionDic = new Dictionary<GameManager.TurnState, Action<Vector3>[]>();
@@ -133,7 +134,7 @@ public class PlayerBehaviour : MonoBehaviour
 #endif   
 
         //Temp put the stone
-        GameBoard isMousePointOnBoard = IsMouseOnBoard(curScreenTouchPosition);
+        /*GameBoard isMousePointOnBoard = IsMouseOnBoard(curScreenTouchPosition);
 
         if (isMousePointOnBoard != null)
         {
@@ -150,7 +151,7 @@ public class PlayerBehaviour : MonoBehaviour
                     }
                 }
             }
-        }
+        }*/
     }
 
     private GameBoard IsMouseOnBoard(Vector3 point)
@@ -219,6 +220,23 @@ public class PlayerBehaviour : MonoBehaviour
     private void PlayCard(Card card)
     {
         // TODO
+        if (card.CardData.cardCost > Cost)
+        {
+            return;
+        }
+
+        //followedStone.GetComponent<StoneBehaviour>().CardData = card.CardData;
+        StoneBehaviour followedStoneBehaviour = followedStone.GetComponent<StoneBehaviour>();
+        //GameBoard.MarkPossiblePoses(1, followedStoneBehaviour.CardData.stoneSize);
+
+        card.gameObject.SetActive(false);
+        followedStone.gameObject.SetActive(true);
+
+        //현재 게임보드 가져와야함
+        // 투명 돌 생성
+
+        SpendCost(card.CardData.cardCost);
+        
     }
 
     private void ShootStone(Vector3 vec) // vec이 velocity인지 force인지 명확하게 해야함
@@ -285,7 +303,15 @@ public class PlayerBehaviour : MonoBehaviour
     {
         Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
         Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
-        
+
+        //Card
+        selectedCard = GetCardAroundPoint(curTouchPosition);
+        if (selectedCard != null)
+        {
+            dragStartPoint = curTouchPosition;
+            return;
+        }
+
         if (selectedStone == null)
         {
             isSelecting = true;
@@ -378,6 +404,16 @@ public class PlayerBehaviour : MonoBehaviour
             return;
         }
 
+        if (selectedCard != null)
+        {
+            if (dragStartPoint == curTouchPosition)
+            {
+                SetInformPanel(selectedCard.CardData);
+                informPanel.gameObject.SetActive(true);
+                return;
+            }
+        }
+
         if(selectedStone == null)
         {
             isSelecting = false;
@@ -423,12 +459,12 @@ public class PlayerBehaviour : MonoBehaviour
             return;
         }
 
-        selectedCard = GetCardAroundPoint(curScreenTouchPosition);
+        /*selectedCard = GetCardAroundPoint(curScreenTouchPosition);
         if(selectedCard != null)
         {
             SetInformPanel(selectedCard.CardData);
             informPanel.gameObject.SetActive(true);
-        }
+        }*/
     }
 
     public void PrepareTouchBegin(Vector3 curScreenTouchPosition)
