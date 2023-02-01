@@ -350,7 +350,8 @@ public class PlayerBehaviour : MonoBehaviour
         bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, curScreenTouchPosition, null);
         isDragging = !isTouchOnCancel;
         
-        if(selectedStone != null && !startOnCancel && !isInformOpened)
+        //Stone Dragging
+        if(selectedStone != null && !startOnCancel && !isInformOpened && TouchManager.Inst.GetTouchDelta().sqrMagnitude != 0)
         {
             isDragging = !isTouchOnCancel;
 
@@ -361,16 +362,32 @@ public class PlayerBehaviour : MonoBehaviour
             dragEffectObj.endColor = dragEffectObj.startColor;
             stoneArrowObj.GetComponent<MeshRenderer>().material.color = dragEffectObj.startColor;
 
+            float magnitude;
             if(moveVec.magnitude >= maxDragLimit) 
             {
-                dragEffectObj.SetPosition(1, dragStartPoint - moveVec.normalized * maxDragLimit);
-                stoneArrowObj.stemLength = maxDragLimit;
+                magnitude = maxDragLimit;
             }
             else
-            {    
-                dragEffectObj.SetPosition(1, curTouchPositionNormalized);
-                stoneArrowObj.stemLength = moveVec.magnitude;
+            {
+                magnitude = moveVec.magnitude;
+                float avg = (maxShootVelocity + minShootVelocity) / 2;
+                float cur = Mathf.Lerp(minShootVelocity, maxShootVelocity, Mathf.Min(moveVec.magnitude, maxDragLimit) / maxDragLimit);
+
+                //Decreasing Power
+                if(cur < avg && cur > avg * .8f && Vector3.Dot(TouchManager.Inst.GetTouchDelta(), moveVec) > 0)
+                {
+                    Debug.Log("decreasing clip");
+                    magnitude = maxDragLimit / 2;
+                }
+                else if(cur > avg && cur < avg * 1.2f && Vector3.Dot(TouchManager.Inst.GetTouchDelta(), moveVec) < 0)
+                {
+                    Debug.Log("increasing clip");
+                    magnitude = maxDragLimit / 2;
+                }
             }
+            // Debug.Log(magnitude);
+            dragEffectObj.SetPosition(1, dragStartPoint - moveVec.normalized * magnitude);
+            stoneArrowObj.stemLength = magnitude;
             
             if(moveVec.z >= 0) 
             {
