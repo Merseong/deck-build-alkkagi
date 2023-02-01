@@ -19,6 +19,7 @@ public class StoneBehaviour : MonoBehaviour
     // 파괴 이벤트
     // 타격 이벤트
 
+    [SerializeField] private Transform boardTransform;
     [SerializeField] private CardData cardData;
     public CardData CardData => cardData;
 
@@ -69,7 +70,10 @@ public class StoneBehaviour : MonoBehaviour
         }
     }
 
-    [SerializeField] private Transform boardTransform;
+    public void SetCardData(CardData data)
+    {
+        cardData = data;
+    }
 
     private bool CheckStoneDropByTransform()
     {

@@ -25,8 +25,26 @@
                 },
                 {
                     "name": "TouchPosition",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "383a77dd-9d93-4a14-af3c-168cfca48680",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "PrimaryTouch",
+                    "type": "Value",
+                    "id": "51b8a71d-bc69-4adc-997e-ec5fee7d8eeb",
+                    "expectedControlType": "Touch",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "TouchDelta",
+                    "type": "Value",
+                    "id": "b8b09ab2-4f62-4951-98ff-6a90260af21a",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -64,6 +82,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "TouchPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ee9e5d1d-0c10-40c3-8166-3cbb508252ee",
+                    "path": "<Touchscreen>/primaryTouch",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PrimaryTouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "401e7878-0149-482c-8571-76c1e947b68d",
+                    "path": "<Touchscreen>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TouchDelta",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

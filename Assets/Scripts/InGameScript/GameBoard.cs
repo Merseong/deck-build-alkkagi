@@ -24,14 +24,16 @@ public class GameBoard : MonoBehaviour
         int cnt = 0;
         foreach (BoardPos boardPos in BoardData.player1CanStone)
         {
-            Vector3 putPos = new Vector3(boardPos.x, 0, boardPos.y);
-            player1PutMarks[cnt++] = Instantiate(putMark, putPos, Quaternion.identity);
+            Vector3 putPos = new Vector3(boardPos.x, 0f, boardPos.y);
+            player1PutMarks[cnt++] = Instantiate(putMark, putPos, Quaternion.Euler(90,0,0));
+            player1PutMarks[cnt-1].SetActive(false);
         }
         cnt = 0;
         foreach (BoardPos boardPos in BoardData.player2CanStone)
         {
-            Vector3 putPos = new Vector3(boardPos.x, 0, boardPos.y);
-            player2PutMarks[cnt++] = Instantiate(putMark, putPos, Quaternion.identity);
+            Vector3 putPos = new Vector3(boardPos.x, 0f, boardPos.y);
+            player2PutMarks[cnt++] = Instantiate(putMark, putPos, Quaternion.Euler(90,0,0));
+            player2PutMarks[cnt-1].SetActive(false);
         }
     }
 
@@ -40,7 +42,7 @@ public class GameBoard : MonoBehaviour
     // 떨어짐 판정
 
     // 스톤을 놓을 수 있는 모든 위치 제공
-    public static void MarkPossiblePoses(int player, float stoneRadius)
+    public static void HighlightPossiblePos(int player, float stoneRadius)
     {
         if (player == 1)
         {
@@ -48,7 +50,13 @@ public class GameBoard : MonoBehaviour
             {
                 if (IsPossibleToPut(player1PutMarks[i].transform.position, stoneRadius))
                 {
-                    player1PutMarks[i].GetComponent<Renderer>().material.color = Color.yellow;
+                    player1PutMarks[i].SetActive(true);
+                    player1PutMarks[i].GetComponent<SpriteRenderer>().color = Color.yellow;
+                }
+                else
+                {
+                    player1PutMarks[i].SetActive(false);
+                    player1PutMarks[i].GetComponent<SpriteRenderer>().color = Color.red;
                 }
             }
         }
@@ -58,23 +66,40 @@ public class GameBoard : MonoBehaviour
             {
                 if (IsPossibleToPut(player2PutMarks[i].transform.position, stoneRadius))
                 {
-                    player2PutMarks[i].GetComponent<Renderer>().material.color = Color.yellow;
+                    player2PutMarks[i].GetComponent<SpriteRenderer>().color = Color.yellow;
+                }
+                else
+                {
+                    player2PutMarks[i].GetComponent<SpriteRenderer>().color = Color.red;
                 }
             }
         }
     }
 
+    public static void UnhightlightPossiblePos()
+    {
+        for (int i = 0; i < player1PutMarks.Length; i++)
+        {
+            player1PutMarks[i].SetActive(false);
+        }
+        for (int i = 0; i < player2PutMarks.Length; i++)
+        {
+            player2PutMarks[i].SetActive(false);
+        }
+    }
+
     // 해당 위치 근처에 스톤 놓을 수 있는 위치 제공
-    public Vector3 GiveNearbyPos(Vector3 pos, int player,float stoneRadius)
+    public Vector3 GiveNearbyPos(Vector3 pos, int player, float stoneRadius)
     {
         if (player == 1)
         {
             foreach (BoardPos boardPos in BoardData.player1CanStone)
             {
                 Vector3 nearbyPos = new Vector3(boardPos.x, 0, boardPos.y);
+                // Debug.Log(nearbyPos + ", " + IsPossibleToPut(nearbyPos,stoneRadius));
                 if (Vector3.Distance(pos, nearbyPos) <= nearbyRadius && IsPossibleToPut(nearbyPos,stoneRadius))
                 {
-                    return nearbyPos + new Vector3(0,2,0);
+                    return nearbyPos;
                 }
             }
         }
@@ -85,7 +110,7 @@ public class GameBoard : MonoBehaviour
                 Vector3 nearbyPos = new Vector3(boardPos.x, 0, boardPos.y);
                 if (Vector3.Distance(pos, nearbyPos) <= nearbyRadius && IsPossibleToPut(nearbyPos, stoneRadius))
                 {
-                    return nearbyPos + new Vector3(0, 2, 0);
+                    return nearbyPos;
                 }
             }
         }
@@ -93,10 +118,9 @@ public class GameBoard : MonoBehaviour
     }
 
     // 지정된 위치에 가능한지 판별
-
     public static bool IsPossibleToPut(Vector3 pos, float stoneRadius)
     {
-        Collider[] hitcolliders = Physics.OverlapSphere(pos, stoneRadius);
+        Collider[] hitcolliders = Physics.OverlapSphere(pos, stoneRadius, LayerMask.NameToLayer("Stone"));
         if (hitcolliders.Length > 0)
         {
             return false;

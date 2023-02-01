@@ -56,7 +56,7 @@ public class StateMachine
 
     private void TouchBeginAction(InputAction.CallbackContext context)
     {
-        Vector3 curScreenTouchPosition = TouchManager.Inst.touchPositionAction.ReadValue<Vector2>();
+        Vector3 curScreenTouchPosition = TouchManager.Inst.GetTouchPosition();
 
         isInTouch = true;
         player.turnActionDic[curState][0](curScreenTouchPosition);
@@ -64,13 +64,13 @@ public class StateMachine
 
     private void InTouchAction()
     {
-        Vector3 curScreenTouchPosition = TouchManager.Inst.touchPositionAction.ReadValue<Vector2>();
+        Vector3 curScreenTouchPosition = TouchManager.Inst.GetTouchPosition();
 
         player.turnActionDic[curState][1](curScreenTouchPosition);
     }
     private void TouchEndAction(InputAction.CallbackContext context)
     {   
-        Vector3 curScreenTouchPosition = TouchManager.Inst.touchPositionAction.ReadValue<Vector2>();
+        Vector3 curScreenTouchPosition = TouchManager.Inst.GetTouchPosition();
 
         player.turnActionDic[curState][2](curScreenTouchPosition);
         isInTouch = false;

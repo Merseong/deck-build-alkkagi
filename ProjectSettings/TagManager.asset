@@ -7,6 +7,7 @@ TagManager:
   - Stone
   - Card
   - Board
+  - PutMarker
   layers:
   - Default
   - TransparentFX

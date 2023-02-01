@@ -53,7 +53,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     private bool isSelecting;
     private bool isOpenStoneInform = false;
-    private bool isInformOpened = false;
+    [SerializeField] private bool isInformOpened = false;
     
     private float curStoneSelectionTime;
     [SerializeField] private bool isDragging = false;
@@ -62,6 +62,9 @@ public class PlayerBehaviour : MonoBehaviour
     private Vector3 dragEndPoint;
     [SerializeField] private ArrowGenerator stoneArrowObj;
     
+    //FIXME :Temporarily get board script by inspector
+    [SerializeField] private GameBoard gameBoard;
+
 
     [Header("SelectionVariable")]
     [SerializeField] private float stoneSelectionThreshold = 1f;
@@ -100,7 +103,6 @@ public class PlayerBehaviour : MonoBehaviour
     private void Update()
     {
         // if(!isLocalPlayer) return;
-        //NormalTurnInputHandler();
         stateMachine.DoOperateUpdate();
     }
 
@@ -110,72 +112,18 @@ public class PlayerBehaviour : MonoBehaviour
         NetworkManager.Inst.RemoveReceiveDelegate(PlayCardReceiveNetworkAction);
     }
 
-    private void NormalTurnInputHandler()
-    {
-        bool isTouchBeginning, isTouching, isTouchEnded;
-        Vector3 curScreenTouchPosition, curTouchPosition, curTouchPositionNormalized;
-
-//플랫폼별 테스트를 위한 분기 코드        
-#if     UNITY_EDITOR
-        
-        isTouchBeginning = Input.GetMouseButtonDown(0);
-        isTouching = Input.GetMouseButton(0);
-        isTouchEnded = Input.GetMouseButtonUp(0);
-        
-        if(!isTouchBeginning && !isTouching && !isTouchEnded) return;
-
-        curTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
-        curScreenTouchPosition = Input.mousePosition;
-
-#elif   UNITY_ANDROID
-
-        if(Input.touchCount < 1) return; 
-        Touch touch = Input.GetTouch(0);
-
-        isTouchBeginning = touch.phase == TouchPhase.Began;
-        isTouching = touch.phase == TouchPhase.Moved;
-        isTouchEnded = touch.phase == TouchPhase.Ended;
-
-        curTouchPosition = Camera.main.ScreenToWorldPoint(touch.position);
-        curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
-        curScreenTouchPosition = touch.position;
-
-#endif   
-
-        //Temp put the stone
-        /*GameBoard isMousePointOnBoard = IsMouseOnBoard(curScreenTouchPosition);
-
-        if (isMousePointOnBoard != null)
-        {
-            Vector3 nearbyPos = isMousePointOnBoard.GiveNearbyPos(curTouchPositionNormalized, 1);
-            if (nearbyPos != isMousePointOnBoard.isNullPos)
-            {
-                // 투명돌 생성
-
-                if (isTouchEnded)
-                {
-                    if (isMousePointOnBoard.IsPossibleToPut(nearbyPos, 1))
-                    {
-                        Instantiate(Stone, nearbyPos, Quaternion.identity);
-                    }
-                }
-            }
-        }*/
-    }
-
-    private GameBoard IsMouseOnBoard(Vector3 point)
+    private bool IsTouchOnBoard(Vector3 point)
     {
         Ray ray = Camera.main.ScreenPointToRay(point);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            if (hit.transform.CompareTag("Board"))
+            if (hit.transform.CompareTag("Board") || hit.transform.CompareTag("PutMarker") || hit.transform.CompareTag("Card"))
             {
-                return hit.transform.GetComponent<GameBoard>();
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
     private StoneBehaviour GetStoneAroundPoint(Vector3 point)
@@ -228,24 +176,22 @@ public class PlayerBehaviour : MonoBehaviour
 
     // 카드 내기; 하스스톤에서는 카드를 "내다"가 play인듯
     // TODO: 위치도 인자로 같이 받아서 하게
-    private void PlayCard(Card card)
+    private void PlayCard(Card card, Vector3 nearbyPos)
     {
         // TODO
-        if (card.CardData.cardCost > Cost)
+        if (card.CardData.cardCost > Cost || !GameBoard.IsPossibleToPut(nearbyPos, 1f))
         {
             return;
         }
 
-        //followedStone.GetComponent<StoneBehaviour>().CardData = card.CardData;
-        StoneBehaviour followedStoneBehaviour = followedStone.GetComponent<StoneBehaviour>();
-        //GameBoard.MarkPossiblePoses(1, followedStoneBehaviour.CardData.stoneSize);
+        // 끌어놓은 위치에 Stone 생성
+        //FIXME : 카드에 맞는 스톤을 런타임에 생성해줘야 함
+        followedStone = Instantiate(Stone, nearbyPos, Quaternion.identity);
+        selectedCard = null;
+        
+        followedStone.GetComponent<StoneBehaviour>().SetCardData(card.CardData);
 
-        card.gameObject.SetActive(false);
-        followedStone.gameObject.SetActive(true);
-
-        //현재 게임보드 가져와야함
-        // 투명 돌 생성
-
+        Destroy(card.gameObject);
         SpendCost(card.CardData.cardCost);
         PlayCardSendNetworkAction(card);
     }
@@ -275,7 +221,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         // parse message
         var dataArr = msg.message.Split(' ');
-        GameManager.Inst.OppoPlayer.PlayCard(new Card()); // 카드 ID, 내는 위치를 통해 넣어야 함
+        GameManager.Inst.OppoPlayer.PlayCard(new Card(), Vector3.zero); // 카드 ID, 내는 위치를 통해 넣어야 함
         if (GameManager.Inst.OppoPlayer.Cost != Int16.Parse(dataArr[3]))
         {
             // 상대의 남은 코스트와 내가 계산한 코스트가 안맞음
@@ -329,6 +275,20 @@ public class PlayerBehaviour : MonoBehaviour
         informPanel.GetChild(3).GetComponent<TextMeshProUGUI>().text = data.description.ToString();
     }
 
+    private Vector3 ScreenPosToNormalized(Vector3 vec)
+    {
+        Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(vec);
+        return new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
+    }
+
+    ///<summary>
+    ///Arrange cards in hand regarding hand[]
+    ///</summary>
+    private void ArrangeHand()
+    {
+        Debug.Log("Rearrange Hand!");
+    }
+
     private IEnumerator EStoneSelection()
     {
         isOpenStoneInform = false;
@@ -350,10 +310,10 @@ public class PlayerBehaviour : MonoBehaviour
         Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
 
         //Card
-        selectedCard = GetCardAroundPoint(curTouchPosition);
+        selectedCard = GetCardAroundPoint(curScreenTouchPosition);
         if (selectedCard != null)
         {
-            dragStartPoint = curTouchPosition;
+            dragStartPoint = curTouchPositionNormalized;
             return;
         }
 
@@ -432,6 +392,13 @@ public class PlayerBehaviour : MonoBehaviour
                 stoneArrowObj.GetComponent<MeshRenderer>().material.color = temp;
             }
         }
+    
+        //Card Dragging
+        if(selectedCard != null)
+        {
+            selectedCard.transform.position = curTouchPositionNormalized;
+            GameBoard.HighlightPossiblePos(1, 1f);
+        }
     }
 
     public void NormalTouchEnd(Vector3 curScreenTouchPosition)
@@ -451,7 +418,19 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (selectedCard != null)
         {
-            if (dragStartPoint == curTouchPosition)
+            if(IsTouchOnBoard(curScreenTouchPosition))
+            {
+                Vector3 nearbyPos = gameBoard.GiveNearbyPos(curTouchPositionNormalized, 1, 10f);
+                if (nearbyPos != gameBoard.isNullPos)
+                {
+                    PlayCard(selectedCard, nearbyPos);
+                }
+                ArrangeHand();
+                selectedCard = null;
+                GameBoard.UnhightlightPossiblePos();
+                return;
+            }
+            else if ((dragStartPoint - curTouchPositionNormalized).sqrMagnitude < 1.0f)
             {
                 SetInformPanel(selectedCard.CardData);
                 informPanel.gameObject.SetActive(true);
@@ -503,13 +482,6 @@ public class PlayerBehaviour : MonoBehaviour
             stoneArrowObj.gameObject.SetActive(false);
             return;
         }
-
-        /*selectedCard = GetCardAroundPoint(curScreenTouchPosition);
-        if(selectedCard != null)
-        {
-            SetInformPanel(selectedCard.CardData);
-            informPanel.gameObject.SetActive(true);
-        }*/
     }
 
     public void PrepareTouchBegin(Vector3 curScreenTouchPosition)
