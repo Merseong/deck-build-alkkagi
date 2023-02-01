@@ -684,6 +684,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1271156734 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 349950194911747238, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+  m_PrefabInstance: {fileID: 984495492866551158}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1374542147 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 984495492050547765, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
@@ -777,6 +788,10 @@ PrefabInstance:
       propertyPath: maxDragLimit
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 178128855195758144, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: shootTokenImage
+      value: 
+      objectReference: {fileID: 1271156734}
     - target: {fileID: 178128855195758145, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: m_Name
       value: Player

@@ -18,6 +18,7 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private RectTransform cancelPanel;
     [SerializeField] private RectTransform informPanel;
     [SerializeField] private TextMeshProUGUI costTextUi;
+    [SerializeField] private Image shootTokenImage;
 
     [SerializeField] private int cost;
     public int Cost
@@ -38,6 +39,17 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private Card[] hand;
 
     [SerializeField] private StoneBehaviour[] stones;
+    [SerializeField] private bool shootTokenAvailable;
+    public bool ShootTokenAvailable {
+        get => shootTokenAvailable;
+        set
+        {
+            shootTokenAvailable = value;
+
+            ColorUtility.TryParseHtmlString(value ? "#C0FFBD" : "#FF8D91", out Color color);
+            shootTokenImage.color = color;
+        }
+    }
 
     // 이거는 상황 봐서 액션 자체에 대한 클래스를 만들어서 HistoryAction 클래스랑 합칠 수도 있음
     private delegate void ActionDelegate();
@@ -98,6 +110,9 @@ public class PlayerBehaviour : MonoBehaviour
         stateMachine.OperateEnter();
 
         NetworkManager.Inst.AddReceiveDelegate(PlayCardReceiveNetworkAction);
+
+        // temp:
+        ShootTokenAvailable = true;
     }
 
     private void Update()
@@ -201,6 +216,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
         Debug.Log($"[{NetworkManager.Inst.NetworkId}] PLAYCARD/ {card.CardData.CardID}");
         return; // temp: 일단 끊어둠
+
         NetworkManager.Inst.SendData(new MyNetworkData.MessagePacket
             {
                 senderID = NetworkManager.Inst.NetworkId,
@@ -232,8 +248,17 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void ShootStone(Vector3 vec) // vec이 velocity인지 force인지 명확하게 해야함
     {
+        // shoot token이 없는 경우, 쏘지 못하게 리셋
+        if (!ShootTokenAvailable)
+        {
+            Debug.LogWarning("공격토큰이 존재하지 않습니다.");
+            return;
+        }
+
         if (pauseEditorOnShoot) UnityEditor.EditorApplication.isPaused = true;
+
         selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);
+        ShootTokenAvailable = false;
         // Debug.Log(vec);
     }
 
@@ -302,6 +327,27 @@ public class PlayerBehaviour : MonoBehaviour
         isOpenStoneInform = true;
     }
 
+    // 드래그중 토큰이 강조되는 애니메이션
+    private IEnumerator EShootTokenAlert()
+    {
+        float time;
+        RectTransform alertRect = shootTokenImage.transform.GetChild(0).GetComponent<RectTransform>();
+        alertRect.gameObject.SetActive(true);
+
+        while (isDragging)
+        {
+            time = 0;
+            while (isDragging && time < 1f)
+            {
+                alertRect.localScale = new Vector3(1 + time / 2, 1 + time / 2, 1);
+                time += Time.deltaTime;
+                yield return null;
+            }
+        }
+
+        alertRect.gameObject.SetActive(false);
+    }
+
 #region TouchInputActions
 
     public void NormalTouchBegin(Vector3 curScreenTouchPosition)
@@ -354,6 +400,7 @@ public class PlayerBehaviour : MonoBehaviour
         if(selectedStone != null && !startOnCancel && !isInformOpened && TouchManager.Inst.GetTouchDelta().sqrMagnitude != 0)
         {
             isDragging = !isTouchOnCancel;
+            StartCoroutine(EShootTokenAlert());
 
             dragEndPoint = curTouchPositionNormalized;
             Vector3 moveVec = dragStartPoint - dragEndPoint;
@@ -494,6 +541,9 @@ public class PlayerBehaviour : MonoBehaviour
                 ShootStone( moveVec.normalized * selectedStone.GetComponent<AkgRigidbody>().mass * VelocityCalc);
             }
             selectedStone = null;
+
+            // 여기넣는게 맞는지 모름
+            isDragging = false;
 
             dragEffectObj.gameObject.SetActive(false);
             stoneArrowObj.gameObject.SetActive(false);
