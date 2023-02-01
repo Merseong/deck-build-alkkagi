@@ -21,6 +21,16 @@ public class Card : MonoBehaviour
         this.CardData = card.CardData;
     }
 
+    void OnMouseOver()
+    {
+        CardManager.Inst.CardMouseOver(this);
+    }
+
+    private void OnMouseExit()
+    {
+        CardManager.Inst.CardMouseExit(this);
+    }
+
     public void SetOriginOrder(int originOrder)
     {
         this.originOrder = originOrder;
