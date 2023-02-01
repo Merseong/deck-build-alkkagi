@@ -250,6 +250,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardData: {fileID: 11400000, guid: ad9eecbeeeab2e44eb513eee02c0e6da, type: 2}
+  originRPS:
+    pos: {x: 0, y: 0, z: 0}
+    rot: {x: 0, y: 0, z: 0, w: 0}
+    scale: {x: 0, y: 0, z: 0}
 --- !u!1 &140034849
 GameObject:
   m_ObjectHideFlags: 0
@@ -784,6 +788,30 @@ PrefabInstance:
       propertyPath: informPanel
       value: 
       objectReference: {fileID: 1374542147}
+    - target: {fileID: 178128855195758144, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: Cost1Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 178128855195758144, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: Cost1Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 178128855195758144, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: Cost1Color.g
+      value: 0.89977187
+      objectReference: {fileID: 0}
+    - target: {fileID: 178128855195758144, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: Cost1Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 178128855195758144, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: Cost2Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 178128855195758144, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: Cost2Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 178128855195758144, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: maxDragLimit
       value: 10

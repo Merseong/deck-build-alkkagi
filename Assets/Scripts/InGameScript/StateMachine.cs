@@ -68,6 +68,7 @@ public class StateMachine
 
         player.turnActionDic[curState][1](curScreenTouchPosition);
     }
+    
     private void TouchEndAction(InputAction.CallbackContext context)
     {   
         Vector3 curScreenTouchPosition = TouchManager.Inst.GetTouchPosition();

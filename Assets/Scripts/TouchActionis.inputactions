@@ -99,7 +99,7 @@
                 {
                     "name": "",
                     "id": "401e7878-0149-482c-8571-76c1e947b68d",
-                    "path": "<Touchscreen>/delta",
+                    "path": "<Pointer>/delta",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

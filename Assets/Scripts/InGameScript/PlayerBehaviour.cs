@@ -72,6 +72,7 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private bool startOnCancel;    
     private Vector3 dragStartPoint;
     private Vector3 dragEndPoint;
+    [SerializeField] private float curDragMagnitude;
     [SerializeField] private ArrowGenerator stoneArrowObj;
     
     //FIXME :Temporarily get board script by inspector
@@ -89,9 +90,9 @@ public class PlayerBehaviour : MonoBehaviour
     [Header("DragEffect")]
     [SerializeField] private LineRenderer dragEffectObj;
     [SerializeField] private float maxDragLimit;
-    [SerializeField] private Color dragStartColor;
-    [SerializeField] private Color dragEndColor;
-    [SerializeField] private AnimationCurve dragColorCurve;
+    [SerializeField] private Color Cost1Color;
+    [SerializeField] private Color Cost2Color;
+    // [SerializeField] private AnimationCurve dragColorCurve;
     [Range(0f, 1.0f)][SerializeField] private float alphaOnCancel;
 
     [Header("DebugTools"), SerializeField]
@@ -397,44 +398,54 @@ public class PlayerBehaviour : MonoBehaviour
         isDragging = !isTouchOnCancel;
         
         //Stone Dragging
-        if(selectedStone != null && !startOnCancel && !isInformOpened && TouchManager.Inst.GetTouchDelta().sqrMagnitude != 0)
+        if(selectedStone != null && !startOnCancel && !isInformOpened && (TouchManager.Inst.GetTouchDelta().x != 0 || TouchManager.Inst.GetTouchDelta().y != 0))
         {
+            
             isDragging = !isTouchOnCancel;
             StartCoroutine(EShootTokenAlert());
 
             dragEndPoint = curTouchPositionNormalized;
             Vector3 moveVec = dragStartPoint - dragEndPoint;
+            Color dragColor;
+            Vector3 deltaVec = new Vector3(TouchManager.Inst.GetTouchDelta().x, 0, TouchManager.Inst.GetTouchDelta().y);
 
-            dragEffectObj.startColor = Color.Lerp(dragStartColor, dragEndColor, dragColorCurve.Evaluate(Mathf.Min(moveVec.magnitude, maxDragLimit)/maxDragLimit));
-            dragEffectObj.endColor = dragEffectObj.startColor;
-            stoneArrowObj.GetComponent<MeshRenderer>().material.color = dragEffectObj.startColor;
-
-            float magnitude;
             if(moveVec.magnitude >= maxDragLimit) 
             {
-                magnitude = maxDragLimit;
+                curDragMagnitude = maxDragLimit;
+                dragColor = Cost2Color;
             }
             else
             {
-                magnitude = moveVec.magnitude;
+                curDragMagnitude = moveVec.magnitude;
                 float avg = (maxShootVelocity + minShootVelocity) / 2;
                 float cur = Mathf.Lerp(minShootVelocity, maxShootVelocity, Mathf.Min(moveVec.magnitude, maxDragLimit) / maxDragLimit);
-
                 //Decreasing Power
-                if(cur < avg && cur > avg * .8f && Vector3.Dot(TouchManager.Inst.GetTouchDelta(), moveVec) > 0)
+                if(cur < avg && cur > avg * .8f && Vector3.Dot(deltaVec, moveVec) > 0)
                 {
                     Debug.Log("decreasing clip");
-                    magnitude = maxDragLimit / 2;
+                    curDragMagnitude = maxDragLimit / 2;
+                    dragColor = Cost1Color;
                 }
-                else if(cur > avg && cur < avg * 1.2f && Vector3.Dot(TouchManager.Inst.GetTouchDelta(), moveVec) < 0)
+                //Increasing Power
+                else if(cur > avg && cur < avg * 1.2f && Vector3.Dot(deltaVec, moveVec) < 0)
                 {
                     Debug.Log("increasing clip");
-                    magnitude = maxDragLimit / 2;
+                    curDragMagnitude = maxDragLimit / 2;
+                    dragColor = Cost1Color;
+                }
+                else
+                {
+                    if(moveVec.magnitude > maxDragLimit / 2) dragColor = Cost2Color;
+                    else dragColor = Cost1Color;
                 }
             }
-            // Debug.Log(magnitude);
-            dragEffectObj.SetPosition(1, dragStartPoint - moveVec.normalized * magnitude);
-            stoneArrowObj.stemLength = magnitude;
+
+            // dragEffectObj.endColor = dragEffectObj.startColor = Color.Lerp(Cost1Color, Cost2Color, dragColorCurve.Evaluate(Mathf.Min(moveVec.magnitude, maxDragLimit)/maxDragLimit));
+            dragEffectObj.endColor = dragEffectObj.startColor = dragColor;
+            stoneArrowObj.GetComponent<MeshRenderer>().material.color = dragEffectObj.startColor;
+
+            dragEffectObj.SetPosition(1, dragStartPoint - moveVec.normalized * curDragMagnitude);
+            stoneArrowObj.stemLength = curDragMagnitude;
             
             if(moveVec.z >= 0) 
             {
