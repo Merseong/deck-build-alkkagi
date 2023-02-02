@@ -23,12 +23,12 @@ public class Card : MonoBehaviour
 
     void OnMouseOver()
     {
-        CardManager.Inst.CardMouseOver(this);
+        EnlargeCard(true);
     }
 
     private void OnMouseExit()
     {
-        CardManager.Inst.CardMouseExit(this);
+        EnlargeCard(false);
     }
 
     public void SetOriginOrder(int originOrder)
@@ -61,5 +61,33 @@ public class Card : MonoBehaviour
             transform.rotation = rps.rot;
             transform.localScale = rps.scale;
         }
+    }
+
+    public void CardMouseOver(Card card)
+    {
+        
+    }
+    public void CardMouseExit(Card card)
+    {
+        
+    }
+
+    void EnlargeCard(bool isEnlarge)
+    {
+        if(GameManager.Inst.isInformOpened)
+        {
+            MoveTransform(originRPS, false);
+            return;   
+        } 
+        if (isEnlarge)
+        {
+            Vector3 enlargePos = new Vector3(originRPS.pos.x, 10.0f, -7f);
+            MoveTransform(new RPS(enlargePos, Quaternion.identity, originRPS.scale * 2), false);
+        }
+        else
+        {
+            MoveTransform(originRPS, false);
+        }
+        SetMostFrontOrder(isEnlarge);
     }
 }

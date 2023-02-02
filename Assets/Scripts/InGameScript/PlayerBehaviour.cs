@@ -72,7 +72,7 @@ public class PlayerBehaviour : MonoBehaviour
     private bool isSelecting;
     private bool isOpenStoneInform = false;
     [SerializeField] private bool isInformOpened = false;
-    
+
     private float curStoneSelectionTime;
     [SerializeField] private bool isDragging = false;
     [SerializeField] private bool startOnCancel;    
@@ -126,7 +126,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
         // if(!isLocalPlayer) return;
         stateMachine.DoOperateUpdate();
-        if (Input.GetKeyDown(KeyCode.Keypad1))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             DrawCards(1);
         }
@@ -198,14 +198,19 @@ public class PlayerBehaviour : MonoBehaviour
     private void DrawCards(int number)
     {
         // TODO
+        if (hand.Count + number > 7)
+        {
+            number = 7 - hand.Count;
+        }
         if(deck.Count < number)
         {
             Debug.LogError("Card 부족");
             return;
         }
-        if (deck.Count + number > 7)
+        if(number == 0)
         {
-            number = 7 - deck.Count;
+            Debug.LogError("손패가 가득 찼습니다!");
+            return;
         }
         for (int i = 0; i < number; i++)
         {
@@ -220,6 +225,7 @@ public class PlayerBehaviour : MonoBehaviour
         }
         ArrangeHand(true);
     }
+
     void SetOriginOrder()
     {
         int count = hand.Count;
@@ -284,9 +290,11 @@ public class PlayerBehaviour : MonoBehaviour
         
         followedStone.GetComponent<StoneBehaviour>().SetCardData(card.CardData);
 
+        hand.Remove(card);
         Destroy(card.gameObject);
         SpendCost(card.CardData.cardCost);
         PlayCardSendNetworkAction(card);
+        ArrangeHand(false);
     }
 
     // PlayCard 함수에서 사용되는 패킷 전송
@@ -367,7 +375,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void SetInformPanel(CardData data)
     {
-        isInformOpened = true;
+        GameManager.Inst.isInformOpened = isInformOpened = true;
         //sprite
         informPanel.GetChild(0).GetComponent<Image>().sprite = data.sprite;
         //size
@@ -587,15 +595,23 @@ public class PlayerBehaviour : MonoBehaviour
         if(isInformOpened)
         {
             informPanel.gameObject.SetActive(false);
-            isInformOpened = false;
+            GameManager.Inst.isInformOpened = isInformOpened = false;
             selectedCard = null;
             selectedStone = null;
+            GameBoard.UnhightlightPossiblePos();
             return;
         }
 
         if (selectedCard != null)
         {
-            if(IsTouchOnBoard(curScreenTouchPosition))
+            if ((dragStartPoint - curTouchPositionNormalized).sqrMagnitude < 1.0f)
+            {
+                SetInformPanel(selectedCard.CardData);
+                informPanel.gameObject.SetActive(true);
+                GameBoard.UnhightlightPossiblePos();
+                return;
+            }
+            else if(IsTouchOnBoard(curScreenTouchPosition))
             {
                 Vector3 nearbyPos = gameBoard.GiveNearbyPos(curTouchPositionNormalized, 1, 10f);
                 if (nearbyPos != gameBoard.isNullPos)
@@ -605,12 +621,6 @@ public class PlayerBehaviour : MonoBehaviour
                 ArrangeHand(false);
                 selectedCard = null;
                 GameBoard.UnhightlightPossiblePos();
-                return;
-            }
-            else if ((dragStartPoint - curTouchPositionNormalized).sqrMagnitude < 1.0f)
-            {
-                SetInformPanel(selectedCard.CardData);
-                informPanel.gameObject.SetActive(true);
                 return;
             }
         }

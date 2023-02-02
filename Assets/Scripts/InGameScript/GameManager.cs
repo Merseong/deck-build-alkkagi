@@ -24,6 +24,8 @@ public class GameManager : SingletonBehavior<GameManager>
     public bool isPlayerHonorSkip;
     //후공의 경우에 상대가 HS했을 경우 동의 여부에 대한 bool
     public bool isPlayerConsentHonorSkip;
+    //카드 정보 일람 여부에 대햔 flag
+    public bool isInformOpened;
 
     // 현재 보드
 
