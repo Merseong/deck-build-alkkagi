@@ -30,8 +30,8 @@ public class GameManager : SingletonBehavior<GameManager>
     // 각자 턴의 제어
     // WAIT가 아닌 턴의 종료가 일어나는 PLAYER쪽에서 턴 변경 처리
     // 턴 시작 시 처리되어야하는 일 ex) UI, 코스트 증감, 드로우 등등
-    public event Action<TurnState> OnTurnStart;
-    public event Action<TurnState> OnTurnEnd;
+    public event Action<TurnState> OnTurnStart = new Action<TurnState>((_) => { });
+    public event Action<TurnState> OnTurnEnd = new Action<TurnState>((_) => { });
     public enum TurnState
     {
         PREPARE,
@@ -43,13 +43,14 @@ public class GameManager : SingletonBehavior<GameManager>
         HSCONSENT,
         LENGTH
     }
+    private bool isTurnEndSent;
 
     /// <summary>
     /// 0: 준비턴 선공, 1: 준비턴 후공, 
     /// 2: 1턴 선공, 3: 1턴 후공, 
     /// 이후는 노말턴 선공 및 후공
     /// </summary>
-    private int totalTurn = 0;
+    [SerializeField] private int totalTurn = 0;
     private int nextTotalTurn;
     public int TurnCount => totalTurn / 2;
     public PlayerEnum WhoseTurn => (PlayerEnum)((totalTurn + (isLocalGoFirst ? 0 : 1)) % 2);
@@ -82,33 +83,100 @@ public class GameManager : SingletonBehavior<GameManager>
 
     public void Start()
     {
-        InitializeTurn();
         //OnTurnEnd += SetNextTurnState;
+
+        NetworkManager.Inst.AddReceiveDelegate(TurnInfoReceiveNetworkAction);
+
+        // temp: 서버의 응답 없이도 턴 시작
     }
-    
+
+    private void OnApplicationQuit()
+    {
+        NetworkManager.Inst.RemoveReceiveDelegate(TurnInfoReceiveNetworkAction);
+    }
+
     public void InitializeTurn()
     {
         turnStates[(int)FirstPlayer] = TurnState.PREPARE;
         turnStates[(int)SecondPlayer] = TurnState.WAIT;
+
+        nextTurnStates = new TurnState[2];
+        nextTurnStates[(int)FirstPlayer] = TurnState.WAIT;
+        nextTurnStates[(int)SecondPlayer] = TurnState.PREPARE;
     }
 
-    // 네트워크에서 turnCount, playerTurns 받아오기
-    // 아마 void가 아니고 패킷과 같은 형태로 주고받아야 할듯
-    private async void GetTurnInfo()
+    /// <remarks>
+    /// { ROOM_BROADCAST | 0 | TURNEND/ nextTotalTurn stonePosition LocalNextTurnState }
+    /// </remarks>
+    /// <param name="packet">
+    /// { ROOM_BROADCAST | 0 | TURNEND/ nextTotalTurn stonePosition LocalNextTurnState }
+    /// </param>
+    private void TurnInfoReceiveNetworkAction(MyNetworkData.Packet packet)
     {
-        // TODO
-    }
-    // 네트워크에 turnCount, playerTurns 전송
-    // 아마 void가 아니고 패킷과 같은 형태로 주고받아야 할듯
-    private async void SendTurnInfo()
-    {
-        // TODO
+        if (packet.Type != (short)MyNetworkData.PacketType.ROOM_BROADCAST) return;
+
+        var msg = MyNetworkData.MessagePacket.Deserialize(packet.Data);
+
+        if (msg.senderID != 0) return;
+        if (!msg.message.StartsWith("TURNEND/")) return;
+
+        var msgArr = msg.message.Split(" ");
+        //if (!isTurnEndSent) SetNextTurnState();
+        /*if (nextTotalTurn != int.Parse(msgArr[1]))
+        {
+            Debug.LogError("[ROOM] Total turn not matched!");
+            return;
+        }
+        if (LocalNextTurnState != (TurnState)int.Parse(msgArr[3]))
+        {
+            Debug.LogError("[ROOM] next state not matched!");
+            return;
+        }; */
+        nextTotalTurn = int.Parse(msgArr[1]);
+        LocalNextTurnState = (TurnState)int.Parse(msgArr[3]);
+        OppoNextTurnState = (TurnState)int.Parse(msgArr[4]);
+        TurnEnd();
     }
 
-    public void TurnEnd()
+    /// <summary>
+    /// 네트워크에 턴 완료 신호 전송
+    /// </summary>
+    /// <remarks>
+    /// { ROOM_BROADCAST | networkId | TURNEND/ nextTotalTurn stonePosition localnextturnState OpppNextTurnState }
+    /// </remarks>
+    private void TurnInfoSendNetworkAction()
     {
-        OnTurnEnd(LocalTurnState);
         SetNextTurnState();
+
+        NetworkManager.Inst.SendData(new MyNetworkData.MessagePacket
+        {
+            senderID = NetworkManager.Inst.NetworkId,
+            message = $"TURNEND/ {nextTotalTurn} {"hello"} {(short)LocalNextTurnState} {(short)OppoNextTurnState}",
+        }, MyNetworkData.PacketType.ROOM_BROADCAST);
+
+        isTurnEndSent = true;
+    }
+
+    public void TurnEndButtonAction()
+    {
+        if (isTurnEndSent)
+        {
+            Debug.LogWarning("[ME] Turn end already sent!");
+        }
+        if (WhoseTurn == PlayerEnum.OPPO)
+        {
+            Debug.LogError("Waiting player ended turn!");
+            return;
+        }
+
+        TurnInfoSendNetworkAction();
+    }
+
+    private void TurnEnd(bool turnEndAction = true)
+    {
+        isTurnEndSent = false;
+
+        if (turnEndAction) OnTurnEnd(LocalTurnState);
         // 상대 GameManager의 turn info 변경
         // 예시
         // SomeNetworkPacket result = await SendTurnInfo();
@@ -116,47 +184,166 @@ public class GameManager : SingletonBehavior<GameManager>
         LocalTurnState = LocalNextTurnState;
         OppoTurnState = OppoNextTurnState;
         totalTurn = nextTotalTurn;
+
+        if (isLocalGoFirst && totalTurn == 2 && LocalTurnState == OppoTurnState)
+        {
+            StartCoroutine(EHonorSkipRoutine());
+        }
+
         OnTurnStart(LocalTurnState);
     }
 
     private void SetNextTurnState()
     {
-        if (WhoseTurn == PlayerEnum.OPPO)
-        {
-            Debug.LogError("Waiting player ended turn!");
-            return;
-        }
-
-        nextTotalTurn = TurnCount;
-
         switch (totalTurn)
         {
-            // 준비턴 선공
+            // 준비턴 선공 종료시
             case 0:
-                LocalNextTurnState = TurnState.WAIT;
-                OppoNextTurnState = TurnState.PREPARE;
+                nextTurnStates[(int)FirstPlayer] = TurnState.WAIT;
+                nextTurnStates[(int)SecondPlayer] = TurnState.PREPARE;
                 nextTotalTurn++;
                 break;
-            // 준비턴 후공
+            // 준비턴 후공 종료시
             case 1:
-                LocalNextTurnState = TurnState.WAITFORHS;
-                OppoNextTurnState = TurnState.HONORSKIP;
+                nextTurnStates[(int)FirstPlayer] = TurnState.WAITFORHS;
+                nextTurnStates[(int)SecondPlayer] = TurnState.WAITFORHS;
                 nextTotalTurn++;
                 break;
-            // 1턴 선공 (HS or FNORMAL)
+            // 2: 1턴 선공 (HS or FNORMAL)
+            // 3: 1턴 후공 (HS or normal)
             case 2:
-                FirstHSTurn();
-                break;
-            // 1턴 후공 (HS or normal)
             case 3:
-                SecondHSTurn();
                 break;
-            // 2턴 이후
+            // 4~: 2턴 이후
             default:
                 OppoNormalTurn();
                 totalTurn++;
                 break;
         }
+    }
+
+    bool isHonorSkipRoutine = false;
+    bool isFirstTurnEnd = false;
+    bool isSecondHS = false;
+
+    private IEnumerator EHonorSkipRoutine()
+    {
+        isHonorSkipRoutine = true;
+        NetworkManager.Inst.AddReceiveDelegate(HSReceiveNetworkAction);
+        
+        // 선공의 HS 여부 선택
+        while (turnStates[(int)FirstPlayer] == TurnState.WAITFORHS)
+        {
+            /// 물어보기
+            /// turnStates[(int)FirstPlayer] = TurnState.WAITFORHSCONSENT;
+            /// turnStates[(int)FirstPlayer] = TurnState.NORMAL;
+            yield return null;
+        }
+
+        // 선공이 HS한 경우, 후공에게 동의를 물어봄
+        if (turnStates[(int)FirstPlayer] == TurnState.WAITFORHSCONSENT)
+        {
+            HSSendNetworkAction("first true");
+
+            while (turnStates[(int)FirstPlayer] == TurnState.WAITFORHSCONSENT)
+            {
+                // wait for answer
+                yield return null;
+            }
+
+            if (turnStates[(int)FirstPlayer] == TurnState.HONORSKIP)
+            {
+                // 선공의 HS 수행, 후공의 normal turn 진행
+                TurnInfoSendNetworkAction();
+            }
+        }
+
+        // 선공이 HS하지 않은 경우 && 후공이 동의하지 않은 경우
+        if (turnStates[(int)FirstPlayer] == TurnState.NORMAL)
+        {
+            // 선공의 normal turn (2) 진행
+            while (!isFirstTurnEnd)
+            {
+                yield return null;
+            }
+
+            while (turnStates[(int)SecondPlayer] == TurnState.WAITFORHS)
+            {
+                yield return null;
+            }
+
+            // 후공의 HS 여부 -> 선공의 normal turn (4)
+            if (turnStates[(int)SecondPlayer] == TurnState.HONORSKIP)
+            {
+                TurnInfoSendNetworkAction();
+            }
+            else
+            {
+                // 후공의 normal turn (3) 진행
+            }
+
+        }
+
+        yield return null;
+
+        NetworkManager.Inst.RemoveReceiveDelegate(HSReceiveNetworkAction);
+        isHonorSkipRoutine = false;
+    }
+
+    private void HSReceiveNetworkAction(MyNetworkData.Packet packet)
+    {
+        if (packet.Type != (short)MyNetworkData.PacketType.ROOM_OPPONENT) return;
+
+        var msg = MyNetworkData.MessagePacket.Deserialize(packet.Data);
+
+        if (!msg.message.StartsWith("HS/")) return;
+
+        var msgArr = msg.message.Split(' ');
+
+        switch (msgArr[1], msgArr[2])
+        {
+            // first player 수신
+            case ("first", "agree"): // first의 hs에 동의
+                // 동의시 next: 3 | HONORSKIP | NORMAL
+                turnStates[(int)FirstPlayer] = TurnState.HONORSKIP;
+                nextTotalTurn = 3;
+                nextTurnStates[(int)FirstPlayer] = TurnState.HONORSKIP;
+                nextTurnStates[(int)SecondPlayer] = TurnState.NORMAL;
+                break;
+            case ("first", "reject"): // first의 hs를 거부 -> first가 normal 1턴을 진행
+                // 거부시 now: 2 | NORMAL | WAITFORHS
+                turnStates[(int)FirstPlayer] = TurnState.NORMAL;
+                break;
+            case ("second", "true"): // second의 hs
+                turnStates[(int)SecondPlayer] = TurnState.HONORSKIP;
+                nextTotalTurn = 4;
+                nextTurnStates[(int)FirstPlayer] = TurnState.NORMAL;
+                nextTurnStates[(int)SecondPlayer] = TurnState.HONORSKIP;
+                break;
+            case ("second", "false"):
+                turnStates[(int)SecondPlayer] = TurnState.NORMAL;
+                break;
+            // second player 수신
+            case ("first", "true"): // first의 hs 선언
+                // 동의를 구하기
+                HSSendNetworkAction("first agree");
+                //HSSendNetworkAction("first reject")
+                break;
+            case ("first", "false"): // first가 normal 1턴을 진행 (no HS)
+                // 상대의 턴 종료시 내가 HS할지를 결정
+                HSSendNetworkAction("second true");
+                // HSSendNetworkAction("second false");
+                break;
+        }
+    }
+
+    private void HSSendNetworkAction(string message)
+    {
+        NetworkManager.Inst.SendData(new MyNetworkData.MessagePacket
+        {
+            senderID = NetworkManager.Inst.NetworkId,
+            message = $"HS/ {message}",
+        }, MyNetworkData.PacketType.ROOM_OPPONENT);
     }
 
     private void FirstHSTurn()

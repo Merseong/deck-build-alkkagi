@@ -20,6 +20,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     enum ConnectionStatusEnum
     {
         DISCONNECTED,
+        CONNECTING,
         IDLE,
         ROOM,
     }
@@ -36,6 +37,9 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
             {
                 case ConnectionStatusEnum.DISCONNECTED:
                     testStatusText.text = "Disconnected";
+                    break;
+                case ConnectionStatusEnum.CONNECTING:
+                    testStatusText.text = "Connecting...";
                     break;
                 case ConnectionStatusEnum.IDLE:
                     testStatusText.text = $"Connected, ID: {NetworkId}";
@@ -112,13 +116,14 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
     public void ConnectServer()
     {
-        if (!m_isNetworkMode || ConnectionStatus == ConnectionStatusEnum.DISCONNECTED)
+        if (!m_isNetworkMode || ConnectionStatus != ConnectionStatusEnum.DISCONNECTED)
         {
             return;
         }
 
         m_client = new SocketClient();
         m_client.Connect("127.0.0.1", 3333);
+        ConnectionStatus = ConnectionStatusEnum.CONNECTING;
     }
 
     public void DisconnectServer()
@@ -263,10 +268,10 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
                 CheckMessageEntered(packet);
                 InitServerSyncVar();
                 break;
-            case PacketType.ROOM_OPPONENT:
+            /*case PacketType.ROOM_OPPONENT:
                 var mp = MessagePacket.Deserialize(packet.Data);
                 Debug.LogWarning($"[{mp.senderID}] {mp.message}");
-                break;
+                break;*/
             case PacketType.SYNCVAR_CHANGE:
                 ParseSyncVarPacket(packet);
                 break;
@@ -301,6 +306,8 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
             // arr[1]의 플레이어가 선턴을 잡고 시작함
             Debug.Log($"[room{roomNumber}] game start! with first player {arr[1]}");
             ConnectionStatus = ConnectionStatusEnum.ROOM;
+            GameManager.Inst.isLocalGoFirst = (NetworkId == int.Parse(arr[1]));
+            GameManager.Inst.InitializeTurn();
         }
         else if (arr[0] == "EXIT")
         {

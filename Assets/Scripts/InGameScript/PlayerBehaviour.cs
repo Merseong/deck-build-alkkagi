@@ -221,7 +221,7 @@ public class PlayerBehaviour : MonoBehaviour
         NetworkManager.Inst.SendData(new MyNetworkData.MessagePacket
             {
                 senderID = NetworkManager.Inst.NetworkId,
-                message = "PLAYCARD/ (TODO: 카드, 내는위치, 이후코스트)",
+                message = "PLAYCARD/ (TODO: 카드, 내는위치, stoneId, 이후코스트)",
             }, MyNetworkData.PacketType.ROOM_OPPONENT);
     }
 
@@ -233,13 +233,13 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (!msg.message.StartsWith("PLAYCARD/")) return;
 
-        Debug.Log($"[{NetworkManager.Inst.NetworkId}] PLAYCARD/ ");
+        Debug.Log($"[OPPO] PLAYCARD/ ");
         return; // temp: 일단 끊어둠
 
         // parse message
         var dataArr = msg.message.Split(' ');
         GameManager.Inst.OppoPlayer.PlayCard(new Card(), Vector3.zero); // 카드 ID, 내는 위치를 통해 넣어야 함
-        if (GameManager.Inst.OppoPlayer.Cost != Int16.Parse(dataArr[3]))
+        if (GameManager.Inst.OppoPlayer.Cost != Int16.Parse(dataArr[4]))
         {
             // 상대의 남은 코스트와 내가 계산한 코스트가 안맞음
             Debug.LogError("[OPPO] PLAYCARD cost not matched!");

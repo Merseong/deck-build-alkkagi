@@ -326,6 +326,8 @@ namespace MyNetworkData
             eventArgs.Completed += OnConnected;
             eventArgs.RemoteEndPoint = endPoint;
 
+            InitReceive();
+
             bool pending = m_socket.ConnectAsync(eventArgs);
 
             if (!pending)
@@ -390,7 +392,6 @@ namespace MyNetworkData
             if (e.SocketError == SocketError.Success) // 연결성공
             {
                 Debug.Log("hello network!");
-                InitReceive();
                 StartReceive();
 
                 // Send test data
