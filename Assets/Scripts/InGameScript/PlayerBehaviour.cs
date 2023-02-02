@@ -35,8 +35,13 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
-    [SerializeField] private Card[] deck;
-    [SerializeField] private Card[] hand;
+    [SerializeField] private List<Card> deck;
+    [SerializeField] private List<Card> hand;
+    [SerializeField] private GameObject cardPrefab;
+    [SerializeField] Transform cardSpawnPoint;
+    [SerializeField] Transform handPileLeft;
+    [SerializeField] Transform handPileRight;
+    private int maxHandSize = 7;
 
     [SerializeField] private StoneBehaviour[] stones;
     [SerializeField] private bool shootTokenAvailable;
@@ -120,6 +125,10 @@ public class PlayerBehaviour : MonoBehaviour
     {
         // if(!isLocalPlayer) return;
         stateMachine.DoOperateUpdate();
+        if (Input.GetKeyDown(KeyCode.Keypad1))
+        {
+            DrawCards(1);
+        }
     }
 
     // temp: AppQuit-Disable-Destroy 순이길래 적당히 넣음
@@ -188,6 +197,73 @@ public class PlayerBehaviour : MonoBehaviour
     private void DrawCards(int number)
     {
         // TODO
+        if(deck.Count < number)
+        {
+            Debug.LogError("Card 부족");
+            return;
+        }
+        if (deck.Count + number > 7)
+        {
+            number = 7 - deck.Count;
+        }
+        for (int i = 0; i < number; i++)
+        {
+            Card drawCard = deck[0];
+            deck.RemoveAt(0);
+            var cardObject = Instantiate(cardPrefab, cardSpawnPoint.position, Quaternion.identity);
+            var card = cardObject.GetComponent<Card>();
+            card.Setup(drawCard);
+            hand.Add(card);
+
+            SetOriginOrder();
+        }
+        ArrangeHand(true);
+    }
+    void SetOriginOrder()
+    {
+        int count = hand.Count;
+        for (int i = 0; i < count; i++)
+        {
+            var targetCard = hand[i];
+            targetCard?.GetComponent<Card>().SetOriginOrder(i);
+        }
+    }
+
+    List<RPS> RoundAlignment(Transform leftTr, Transform rightTr, int objCount, float height, Vector3 scale)
+    {
+        float[] objLerps = new float[objCount];
+        List<RPS> results = new List<RPS>(objCount);
+
+        switch (objCount)
+        {
+            case 1: objLerps = new float[] { 0.5f }; break;
+            case 2: objLerps = new float[] { 0.27f, 0.73f }; break;
+            case 3: objLerps = new float[] { 0.1f, 0.5f, 0.9f }; break;
+            default:
+                float interval = 1f / (objCount - 1);
+                for (int i = 0; i < objCount; i++)
+                {
+                    objLerps[i] = interval * i;
+                }
+                break;
+        }
+
+
+        for (int i = 0; i < objCount; i++)
+        {
+            var targetPos = Vector3.Lerp(leftTr.position, rightTr.position, objLerps[i]);
+            var targetRot = Quaternion.identity;
+            if (objCount >= 4)
+            {
+                float curve = Mathf.Sqrt(Mathf.Pow(height, 2) - Mathf.Pow(objLerps[i] - 0.5f, 2));
+                curve = height >= 0 ? curve : -curve;
+                targetPos.z += curve;
+                targetRot = Quaternion.Slerp(leftTr.rotation, rightTr.rotation, objLerps[i]);
+            }
+            results.Add(new RPS(targetPos, targetRot, scale));
+        }
+
+        return results;
     }
 
     // 카드 내기; 하스스톤에서는 카드를 "내다"가 play인듯
@@ -310,9 +386,23 @@ public class PlayerBehaviour : MonoBehaviour
     ///<summary>
     ///Arrange cards in hand regarding hand[]
     ///</summary>
-    private void ArrangeHand()
+    private void ArrangeHand(bool isDrawPhase)
     {
-        Debug.Log("Rearrange Hand!");
+        List<RPS> originCardRPSs = new List<RPS>();
+        originCardRPSs = RoundAlignment(handPileLeft, handPileRight, hand.Count, 0.5f, new Vector3(2.0f, 0.5f, 3.0f));
+
+        var targetCards = hand;
+
+        for (int i = 0; i < targetCards.Count; i++)
+        {
+            var targetCard = targetCards[i];
+
+            targetCard.originRPS = originCardRPSs[i];
+            if(isDrawPhase)
+                targetCard.MoveTransform(targetCard.originRPS, true, 0.7f);
+            else
+                targetCard.MoveTransform(targetCard.originRPS, false, 0.7f);
+        }
     }
 
     private IEnumerator EStoneSelection()
@@ -500,7 +590,7 @@ public class PlayerBehaviour : MonoBehaviour
                 {
                     PlayCard(selectedCard, nearbyPos);
                 }
-                ArrangeHand();
+                ArrangeHand(false);
                 selectedCard = null;
                 GameBoard.UnhightlightPossiblePos();
                 return;

@@ -1,5 +1,98 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &689437316
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 689437317}
+  m_Layer: 0
+  m_Name: CardRight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &689437317
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 689437316}
+  m_LocalRotation: {x: -0, y: 0.13052616, z: -0, w: 0.9914449}
+  m_LocalPosition: {x: 4, y: 0, z: -9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 178128855195758150}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 15, z: 0}
+--- !u!1 &1217822888
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1217822889}
+  m_Layer: 0
+  m_Name: CardSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1217822889
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1217822888}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 7.07, y: 0, z: -9.43}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 178128855195758150}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2031866644
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2031866645}
+  m_Layer: 0
+  m_Name: CardLeft
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2031866645
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031866644}
+  m_LocalRotation: {x: -0, y: -0.13052624, z: -0, w: 0.9914449}
+  m_LocalPosition: {x: -4, y: 0, z: -9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 178128855195758150}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: -15, z: 0}
 --- !u!1 &178128855195758145
 GameObject:
   m_ObjectHideFlags: 0
@@ -30,6 +123,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 178128856140976622}
+  - {fileID: 2031866645}
+  - {fileID: 689437317}
+  - {fileID: 1217822889}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -49,46 +145,40 @@ MonoBehaviour:
   isLocalPlayer: 1
   cancelPanel: {fileID: 0}
   informPanel: {fileID: 0}
-  cost: 0
-  deck: []
+  costTextUi: {fileID: 0}
+  shootTokenImage: {fileID: 0}
+  cost: 10
+  deck:
+  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
+  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
+  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
+  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
+  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
+  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
   hand: []
+  cardPrefab: {fileID: 3721772108986987150, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
+  cardSpawnPoint: {fileID: 1217822889}
+  handPileLeft: {fileID: 2031866645}
+  handPileRight: {fileID: 689437317}
   stones: []
+  shootTokenAvailable: 0
   selectedStone: {fileID: 0}
   selectedCard: {fileID: 0}
+  followedStone: {fileID: 0}
+  isInformOpened: 0
   isDragging: 0
   startOnCancel: 0
+  curDragMagnitude: 0
+  stoneArrowObj: {fileID: 0}
+  gameBoard: {fileID: 0}
   stoneSelectionThreshold: 1
   minShootVelocity: 5
   maxShootVelocity: 22
   velocityMultiplier: 100
   dragEffectObj: {fileID: 178128856140976623}
-  maxDragLimit: 5
-  dragStartColor: {r: 1, g: 1, b: 0, a: 1}
-  dragEndColor: {r: 1, g: 0, b: 0, a: 1}
-  dragColorCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  maxDragLimit: 10
+  Cost1Color: {r: 0, g: 0, b: 0, a: 0}
+  Cost2Color: {r: 0, g: 0, b: 0, a: 0}
   alphaOnCancel: 0.5
   pauseEditorOnShoot: 0
 --- !u!1 &178128856140976616
