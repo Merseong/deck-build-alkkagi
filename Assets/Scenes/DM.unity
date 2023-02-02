@@ -814,7 +814,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 775994638631315117, guid: 79f1642b97c92004a959cb7e00a72221, type: 3}
       propertyPath: m_isNetworkMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 79f1642b97c92004a959cb7e00a72221, type: 3}
@@ -917,6 +917,30 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 897052341}
+    - target: {fileID: 1946412717722897726, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1660.018
+      objectReference: {fileID: 0}
+    - target: {fileID: 1946412717722897726, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 103.995
+      objectReference: {fileID: 0}
+    - target: {fileID: 1946412717722897726, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.000014305
+      objectReference: {fileID: 0}
+    - target: {fileID: 1946412717722897726, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 231
+      objectReference: {fileID: 0}
+    - target: {fileID: 5259673791389285806, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 5259673791389285806, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8785121465290946009, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
