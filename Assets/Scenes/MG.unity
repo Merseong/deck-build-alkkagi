@@ -270,6 +270,7 @@ MonoBehaviour:
   isLocalGoFirst: 0
   isPlayerHonorSkip: 0
   isPlayerConsentHonorSkip: 0
+  totalTurn: 0
   turnStates: 0000000000000000
   nextTurnStates: 
   initialTurnCost: 6
@@ -873,13 +874,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Stone (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6663944191401573521, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
+      propertyPath: followingStone
+      value: 
+      objectReference: {fileID: 3312677705765057702, guid: 3869364b4791ba44ea66661c5967a3ea, type: 3}
     - target: {fileID: 6663944191401573526, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6663944191401573526, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 3.972
       objectReference: {fileID: 0}
     - target: {fileID: 6663944191401573526, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
       propertyPath: m_LocalPosition.y
@@ -887,7 +892,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6663944191401573526, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.38
+      value: -4.15
       objectReference: {fileID: 0}
     - target: {fileID: 6663944191401573526, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
       propertyPath: m_LocalRotation.w

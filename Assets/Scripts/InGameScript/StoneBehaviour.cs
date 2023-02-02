@@ -49,9 +49,12 @@ public class StoneBehaviour : MonoBehaviour
             
             isClicked = false;
 
-            nowParticle.Stop();
-            Destroy(nowParticle.gameObject);
-            nowParticle = null;
+            if (nowParticle.isStopped)
+            {
+                nowParticle.Stop();
+                Destroy(nowParticle.gameObject);
+                nowParticle = null;
+            }
         }
         else
         {
@@ -61,12 +64,19 @@ public class StoneBehaviour : MonoBehaviour
                 nowParticle.Play();
             }
             //속력에 따른 파티클 양 조절
-            var em = nowParticle.emission;
-            em.rateOverDistanceMultiplier = akgRigidbody.velocity.magnitude;
+            
+            ParticleSystem[] nowParticles = nowParticle.gameObject.GetComponentsInChildren<ParticleSystem>();
+            foreach (ParticleSystem now in nowParticles)
+            {
+                var em = now.emission;
+                em.rateOverDistanceMultiplier = akgRigidbody.velocity.magnitude;
+            }
 
             nowPos = transform.position;
             nextPos = Camera.main.ScreenToWorldPoint(nowPos);
             nowParticle.transform.position = Vector3.Lerp(nowParticle.transform.position, nowPos, _ChasingSpeed);
+            float angle = Quaternion.FromToRotation(new Vector3(0,1,0), akgRigidbody.velocity.normalized - new Vector3(0, 0, 1)).eulerAngles.y;
+            nowParticle.transform.rotation = Quaternion.Euler(new Vector3(0,angle-180,0));
         }
     }
 
