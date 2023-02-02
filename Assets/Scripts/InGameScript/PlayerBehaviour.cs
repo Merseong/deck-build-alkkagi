@@ -19,6 +19,7 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private RectTransform informPanel;
     [SerializeField] private TextMeshProUGUI costTextUi;
     [SerializeField] private Image shootTokenImage;
+    [SerializeField] private RectTransform enemyPanel;
 
     [SerializeField] private int cost;
     public int Cost
@@ -375,6 +376,17 @@ public class PlayerBehaviour : MonoBehaviour
         informPanel.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Weight : " + data.stoneWeight.ToString();
         //description
         informPanel.GetChild(3).GetComponent<TextMeshProUGUI>().text = data.description.ToString();
+    }
+
+    private void SetEnemyInfoPanel()
+    {
+        if (isLocalPlayer) return;
+
+        // enemy cost
+        enemyPanel.GetChild(1).GetComponent<TextMeshProUGUI>().text = Cost.ToString();
+
+        // enemy card count
+        enemyPanel.GetChild(3).GetComponent<TextMeshProUGUI>().text = hand.Count.ToString();
     }
 
     private Vector3 ScreenPosToNormalized(Vector3 vec)
