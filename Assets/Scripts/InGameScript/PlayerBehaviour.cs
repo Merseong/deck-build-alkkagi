@@ -335,11 +335,11 @@ public class PlayerBehaviour : MonoBehaviour
     private void ShootStone(Vector3 vec) // vec이 velocity인지 force인지 명확하게 해야함
     {
         // shoot token이 없는 경우, 쏘지 못하게 리셋
-        if (!ShootTokenAvailable)
-        {
-            Debug.LogWarning("공격토큰이 존재하지 않습니다.");
-            return;
-        }
+        // if (!ShootTokenAvailable)
+        // {
+        //     Debug.LogWarning("공격토큰이 존재하지 않습니다.");
+        //     return;
+        // }
 
         if (pauseEditorOnShoot) UnityEditor.EditorApplication.isPaused = true;
 

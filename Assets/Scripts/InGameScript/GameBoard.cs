@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameBoard : MonoBehaviour
 {   
     [SerializeField] private BoardData boardData;
+    [SerializeField] private GameObject guardObject;
     public BoardData BoardData => boardData;
 
     public GameObject putMark;
@@ -13,6 +14,11 @@ public class GameBoard : MonoBehaviour
 
     private static GameObject[] player1PutMarks;
     private static GameObject[] player2PutMarks;
+    [SerializeField] private List<GameObject> localPlayerGuard = new();
+    [SerializeField] private List<GameObject> oppoPlayerGuard = new();
+    [SerializeField] private int guardHorizontalCnt;
+    [SerializeField] private int guardVerticalCnt;
+    
 
     public void Awake()
     {
@@ -35,6 +41,8 @@ public class GameBoard : MonoBehaviour
             player2PutMarks[cnt++] = Instantiate(putMark, putPos, Quaternion.Euler(90,0,0));
             player2PutMarks[cnt-1].SetActive(false);
         }
+
+        SetGuard();
     }
 
     // 올라와있는 스톤 (각 진영별) 체크
@@ -128,6 +136,59 @@ public class GameBoard : MonoBehaviour
         else 
         {
             return true;
+        }
+    }
+
+    private void SetGuard()
+    {
+        if(guardObject == null) return;
+        
+        GameObject go;
+
+        for(int i = (int)(guardVerticalCnt/2)-1; i >= 0 ; i--)
+        {
+            //left local
+            go = Instantiate(guardObject, new Vector3(-(.035f + boardData.width / 2), 0, boardData.height * (0.5f + i - (int)(guardVerticalCnt / 2))/ guardVerticalCnt) * 10f, Quaternion.Euler(0,0,0));
+            go.transform.localScale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.height / guardVerticalCnt / go.transform.localScale.z);
+            go.GetComponent<Guard>().SetSide(true);
+            localPlayerGuard.Add(go);
+
+            //right oppo
+            go = Instantiate(guardObject, new Vector3(-(.035f + boardData.width / 2), 0, boardData.height * (0.5f + i - (int)(guardVerticalCnt / 2))/ guardVerticalCnt) * -10f, Quaternion.Euler(0,0,0));
+            go.transform.localScale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.height / guardVerticalCnt / go.transform.localScale.z);
+            go.GetComponent<Guard>().SetSide(false);
+            oppoPlayerGuard.Add(go);
+        }
+
+        for(int i=guardHorizontalCnt-1; i >=0 ; i--)
+        {
+            //lower local
+            go = Instantiate(guardObject, new Vector3(boardData.width * (i - (float)guardHorizontalCnt / 2 + 0.5f)/ guardHorizontalCnt, 0, .035f + boardData.height / 2) * -10f, Quaternion.Euler(0,90,0));
+            go.transform.localScale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.width / guardHorizontalCnt / go.transform.localScale.z);
+            go.GetComponent<Guard>().SetSide(true);
+            localPlayerGuard.Add(go);
+            
+            //upper oppo
+            go = Instantiate(guardObject, new Vector3(boardData.width * (i - (float)guardHorizontalCnt / 2 + 0.5f)/ guardHorizontalCnt, 0, .035f + boardData.height / 2) * 10f, Quaternion.Euler(0,90,0));
+            go.transform.localScale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.width / guardHorizontalCnt / go.transform.localScale.z);
+            go.GetComponent<Guard>().SetSide(false);
+            oppoPlayerGuard.Add(go);
+
+        }
+
+        for(int i=0; i< guardVerticalCnt/2; i++)
+        {
+            //right local
+            go = Instantiate(guardObject, new Vector3(.035f + boardData.width / 2, 0, boardData.height * (0.5f + i - (int)(guardVerticalCnt / 2))/ guardVerticalCnt) * 10f, Quaternion.Euler(0,0,0));
+            go.transform.localScale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.height / guardVerticalCnt / go.transform.localScale.z);
+            go.GetComponent<Guard>().SetSide(true);
+            localPlayerGuard.Add(go);
+            
+            //left oppo
+            go = Instantiate(guardObject, new Vector3(.035f + boardData.width / 2, 0, boardData.height * (0.5f + i - (int)(guardVerticalCnt / 2))/ guardVerticalCnt) * -10f, Quaternion.Euler(0,0,0));
+            go.transform.localScale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.height / guardVerticalCnt / go.transform.localScale.z);
+            go.GetComponent<Guard>().SetSide(false);
+            oppoPlayerGuard.Add(go);
         }
     }
 }

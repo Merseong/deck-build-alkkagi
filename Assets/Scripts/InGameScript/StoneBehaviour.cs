@@ -30,6 +30,9 @@ public class StoneBehaviour : MonoBehaviour
     public float _ChasingSpeed = 0.1f;
     public bool isClicked = false;
 
+    [SerializeField] private bool isBelongLocalPlayer;
+    public bool IsBelongLocalPlayer => isBelongLocalPlayer;
+
     private void Start()
     {
         boardTransform = GameObject.Find("Board").transform;

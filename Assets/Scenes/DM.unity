@@ -493,9 +493,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boardData: {fileID: 11400000, guid: e5fd9aa4646e76f40a1531880de2b194, type: 2}
+  guardObject: {fileID: 1072273095557792123, guid: c1c9221ddc26bff4ebe4b62d9a4def18, type: 3}
   putMark: {fileID: 4446608909018917832, guid: 70a8ac05b6498334cbc85659a4f15335, type: 3}
   nearbyRadius: 1
   isNullPos: {x: 0, y: 100, z: 0}
+  localPlayerGuard: []
+  oppoPlayerGuard: []
+  guardHorizontalCnt: 3
+  guardVerticalCnt: 4
 --- !u!64 &1227286729
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -569,7 +574,7 @@ Transform:
   m_GameObject: {fileID: 1227286727}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.2, y: 1, z: 1.8}
+  m_LocalScale: {x: 1, y: 1, z: 1.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
