@@ -501,6 +501,8 @@ public class PlayerBehaviour : MonoBehaviour
 
     public void NormalInTouch(Vector3 curScreenTouchPosition)
     {
+        if(isInformOpened) return;
+
         Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
         Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
 
