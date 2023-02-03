@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using System.Linq;
 
 public class PlayerBehaviour : MonoBehaviour
 {
@@ -275,7 +276,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     // 카드 내기; 하스스톤에서는 카드를 "내다"가 play인듯
     // TODO: 위치도 인자로 같이 받아서 하게
-    private void PlayCard(Card card, Vector3 nearbyPos)
+    private void PlayCard(Card card, Vector3 nearbyPos, int oppoStoneId = -1)
     {
         // TODO
         if (card.CardData.cardCost > Cost || !GameBoard.IsPossibleToPut(nearbyPos, 1f))
@@ -287,8 +288,10 @@ public class PlayerBehaviour : MonoBehaviour
         //FIXME : 카드에 맞는 스톤을 런타임에 생성해줘야 함
         followedStone = Instantiate(Stone, nearbyPos, Quaternion.identity);
         selectedCard = null;
-        
-        followedStone.GetComponent<StoneBehaviour>().SetCardData(card.CardData);
+
+        var stoneBehaviour = followedStone.GetComponent<StoneBehaviour>();
+        var stoneId = GameManager.Inst.AddStone(stoneBehaviour, isLocalPlayer, oppoStoneId);
+        stoneBehaviour.SetCardData(card.CardData, stoneId);
 
         hand.Remove(card);
         Destroy(card.gameObject);
@@ -343,9 +346,65 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (pauseEditorOnShoot) UnityEditor.EditorApplication.isPaused = true;
 
+        StartCoroutine(EShootStone());
+
         selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);
         ShootTokenAvailable = false;
         // Debug.Log(vec);
+
+    }
+
+    private IEnumerator EShootStone()
+    {
+        var recorder = GameManager.Inst.rigidbodyRecorder;
+        recorder.StartRecord(Time.time);
+
+        yield return null;
+        bool isAllStoneStop = false;
+
+        while (!isAllStoneStop)
+        {
+            yield return null;
+            if (GameManager.Inst.LocalStones.Values.All(x => !x.isMoving))
+            {
+                continue;
+            }
+            if (GameManager.Inst.OppoStones.Values.All(x => !x.isMoving))
+            {
+                continue;
+            }
+
+            isAllStoneStop = true;
+        }
+
+        var recordList = recorder.EndRecord();
+        var stonePosList = new List<PositionRecord>();
+        var evnetList = new List<EventRecord>();
+
+        // send physics records, stone final poses, event list
+    }
+
+    public struct PositionRecord
+    {
+        public int stoneId;
+        public float xPosition;
+        public float zPosition;
+    }
+
+    // collide, drop out, stone power
+    public struct EventRecord
+    {
+        public float time;
+        public int stoneId;
+        public short eventEnum; // -> EventEnum
+    }
+
+    public enum EventEnum
+    {
+        COLLIDE,
+        DROPOUT,
+        POWER,
+        COUNT,
     }
 
     private void PrepareTurnEnd()
@@ -354,21 +413,6 @@ public class PlayerBehaviour : MonoBehaviour
     }
 
     private void NormalTurnEnd()
-    {
-        // TODO
-    }
-
-    private void ConsentHS()
-    {
-        // TODO
-    }
-
-    private void HonorSkip()
-    {
-        // TODO
-    }
-
-    private void DenyHS()
     {
         // TODO
     }

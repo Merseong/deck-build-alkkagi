@@ -19,11 +19,19 @@ public class StoneBehaviour : MonoBehaviour
     // 파괴 이벤트
     // 타격 이벤트
 
+    [SerializeField] private int stoneId;
     [SerializeField] private Transform boardTransform;
     [SerializeField] private CardData cardData;
     public CardData CardData => cardData;
 
     private AkgRigidbody akgRigidbody;
+    public bool isMoving
+    {
+        get
+        {
+            return akgRigidbody.velocity.magnitude > 0f;
+        }
+    }
     private Vector3 nowPos, nextPos;
     public ParticleSystem followingStone;
     private ParticleSystem nowParticle = null;
@@ -37,6 +45,7 @@ public class StoneBehaviour : MonoBehaviour
     {
         boardTransform = GameObject.Find("Board").transform;
         akgRigidbody = GetComponent<AkgRigidbody>();
+        isBelongLocalPlayer = GameManager.Inst.CurrentPlayer == GameManager.Inst.LocalPlayer;
     }
 
     private void Update()
@@ -83,9 +92,22 @@ public class StoneBehaviour : MonoBehaviour
         }
     }
 
-    public void SetCardData(CardData data)
+    private void OnApplicationQuit()
+    {
+        if (IsBelongLocalPlayer)
+        {
+            GameManager.Inst.LocalStones.Remove(stoneId);
+        }
+        else
+        {
+            GameManager.Inst.OppoStones.Remove(stoneId);
+        }
+    }
+
+    public void SetCardData(CardData data, int id)
     {
         cardData = data;
+        stoneId = id;
     }
 
     private bool CheckStoneDropByTransform()

@@ -16,6 +16,11 @@ public class GameManager : SingletonBehavior<GameManager>
     public PlayerBehaviour OppoPlayer => players[1];
     public PlayerBehaviour CurrentPlayer => players[(int)WhoseTurn];
 
+    // 돌들
+    public Dictionary<int, StoneBehaviour> LocalStones;
+    public Dictionary<int, StoneBehaviour> OppoStones;
+    private int nextLocalStoneId;
+
     // 서버에서 선공이 누구인지 정해줘야함
     public bool isLocalGoFirst;
     PlayerEnum FirstPlayer => isLocalGoFirst ? PlayerEnum.LOCAL: PlayerEnum.OPPO;
@@ -88,6 +93,7 @@ public class GameManager : SingletonBehavior<GameManager>
         //OnTurnEnd += SetNextTurnState;
 
         NetworkManager.Inst.AddReceiveDelegate(TurnInfoReceiveNetworkAction);
+        nextLocalStoneId = isLocalGoFirst ? 0 : 1;
 
         // temp: 서버의 응답 없이도 턴 시작
 
@@ -102,6 +108,31 @@ public class GameManager : SingletonBehavior<GameManager>
         NetworkManager.Inst.RemoveReceiveDelegate(TurnInfoReceiveNetworkAction);
     }
 
+    #region Stone List Control
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="stone"></param>
+    /// <param name="isLocal"></param>
+    /// <param name="stoneId">isLocal이 false인 경우, 반드시 기입</param>
+    public int AddStone(StoneBehaviour stone, bool isLocal, int oppoStoneId = -1)
+    {
+        var returnId = isLocal ? nextLocalStoneId : oppoStoneId;
+        if (isLocal)
+        {
+            LocalStones.Add(nextLocalStoneId, stone);
+            nextLocalStoneId += 2;
+        }
+        else
+        {
+            OppoStones.Add(oppoStoneId, stone);
+        }
+
+        return returnId;
+    }
+    #endregion
+
+    #region Turn Control
     public void InitializeTurn()
     {
         turnStates[(int)FirstPlayer] = TurnState.PREPARE;
@@ -239,6 +270,7 @@ public class GameManager : SingletonBehavior<GameManager>
                 break;
         }
     }
+    #endregion
 
     #region Honor Skip
     bool isInHonorSkipRoutine = false;
