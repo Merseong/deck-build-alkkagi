@@ -78,7 +78,7 @@ public class StoneBehaviour : MonoBehaviour
             nowPos = transform.position;
             nextPos = Camera.main.ScreenToWorldPoint(nowPos);
             nowParticle.transform.position = Vector3.Lerp(nowParticle.transform.position, nowPos, _ChasingSpeed);
-            float angle = Quaternion.FromToRotation(new Vector3(0,1,0), akgRigidbody.velocity.normalized - new Vector3(0, 0, 1)).eulerAngles.y;
+            float angle = Quaternion.FromToRotation(new Vector3(0,0,1), akgRigidbody.velocity.normalized).eulerAngles.y;
             nowParticle.transform.rotation = Quaternion.Euler(new Vector3(0,angle-180,0));
         }
     }
