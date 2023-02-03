@@ -90,6 +90,11 @@ public class GameManager : SingletonBehavior<GameManager>
         NetworkManager.Inst.AddReceiveDelegate(TurnInfoReceiveNetworkAction);
 
         // temp: 서버의 응답 없이도 턴 시작
+
+        // temp: snap test
+        turnStates[(int)FirstPlayer] = TurnState.WAITFORHS;
+        turnStates[(int)SecondPlayer] = TurnState.WAITFORHS;
+        StartCoroutine(EHonorSkipRoutine());
     }
 
     private void OnApplicationQuit()
@@ -148,8 +153,6 @@ public class GameManager : SingletonBehavior<GameManager>
     /// </remarks>
     private void TurnInfoSendNetworkAction()
     {
-        SetNextTurnState();
-
         NetworkManager.Inst.SendData(new MyNetworkData.MessagePacket
         {
             senderID = NetworkManager.Inst.NetworkId,
@@ -171,6 +174,8 @@ public class GameManager : SingletonBehavior<GameManager>
             return;
         }
 
+        SetNextTurnState();
+
         TurnInfoSendNetworkAction();
     }
 
@@ -187,11 +192,13 @@ public class GameManager : SingletonBehavior<GameManager>
         OppoTurnState = OppoNextTurnState;
         totalTurn = nextTotalTurn;
 
+        // 선턴 && 현재 HS턴 && 둘 모두의 State가 WAITFORHS
         if (isLocalGoFirst && totalTurn == 2 && LocalTurnState == OppoTurnState)
         {
             StartCoroutine(EHonorSkipRoutine());
         }
 
+        // TurnState.NORMAL인경우만 내 턴을 시작
         OnTurnStart(LocalTurnState);
     }
 
@@ -218,27 +225,49 @@ public class GameManager : SingletonBehavior<GameManager>
                 break;
             // 4~: 2턴 이후
             default:
-                OppoNormalTurn();
-                totalTurn++;
+                if (LocalTurnState == TurnState.NORMAL)
+                {
+                    LocalNextTurnState = TurnState.WAIT;
+                    OppoNextTurnState = TurnState.NORMAL;
+                }
+                else
+                {
+                    LocalNextTurnState = TurnState.NORMAL;
+                    OppoNextTurnState = TurnState.NORMAL;
+                }
+                nextTotalTurn++;
                 break;
         }
     }
 
-    bool isHonorSkipRoutine = false;
-    bool isFirstTurnEnd = false;
-    bool isSecondHS = false;
+    #region Honor Skip
+    bool isInHonorSkipRoutine = false;
 
     private IEnumerator EHonorSkipRoutine()
     {
-        isHonorSkipRoutine = true;
+        isInHonorSkipRoutine = true;
         NetworkManager.Inst.AddReceiveDelegate(HSReceiveNetworkAction);
-        
+        var askingPanel = IngameUIManager.Inst.AskingPanel;
+
+        /// 물어보기
+        askingPanel.SetAskingPanelString("Do Snap??");
+        askingPanel.SetAskingPanelActions
+            (
+                () =>
+                {
+                    turnStates[(int)FirstPlayer] = TurnState.WAITFORHSCONSENT;
+                },
+                () =>
+                {
+                    turnStates[(int)FirstPlayer] = TurnState.NORMAL;
+                }
+            );
+        askingPanel.SetAskingPanelActive();
+
         // 선공의 HS 여부 선택
         while (turnStates[(int)FirstPlayer] == TurnState.WAITFORHS)
         {
-            /// 물어보기
-            /// turnStates[(int)FirstPlayer] = TurnState.WAITFORHSCONSENT;
-            /// turnStates[(int)FirstPlayer] = TurnState.NORMAL;
+            // wait for answer
             yield return null;
         }
 
@@ -264,32 +293,25 @@ public class GameManager : SingletonBehavior<GameManager>
         if (turnStates[(int)FirstPlayer] == TurnState.NORMAL)
         {
             // 선공의 normal turn (2) 진행
-            while (!isFirstTurnEnd)
+            TurnEnd(false);
+
+            while (totalTurn == 2)
             {
                 yield return null;
             }
 
             while (turnStates[(int)SecondPlayer] == TurnState.WAITFORHS)
             {
+                // wait for answer
                 yield return null;
             }
 
-            // 후공의 HS 여부 -> 선공의 normal turn (4)
-            if (turnStates[(int)SecondPlayer] == TurnState.HONORSKIP)
-            {
-                TurnInfoSendNetworkAction();
-            }
-            else
-            {
-                // 후공의 normal turn (3) 진행
-            }
-
+            // HONORSKIP이든 NORMAL이든 결국 다시 서로 동기화해서 처리해야함
+            TurnInfoSendNetworkAction();
         }
 
-        yield return null;
-
         NetworkManager.Inst.RemoveReceiveDelegate(HSReceiveNetworkAction);
-        isHonorSkipRoutine = false;
+        isInHonorSkipRoutine = false;
     }
 
     private void HSReceiveNetworkAction(MyNetworkData.Packet packet)
@@ -307,34 +329,41 @@ public class GameManager : SingletonBehavior<GameManager>
             // first player 수신
             case ("first", "agree"): // first의 hs에 동의
                 // 동의시 next: 3 | HONORSKIP | NORMAL
-                turnStates[(int)FirstPlayer] = TurnState.HONORSKIP;
                 nextTotalTurn = 3;
                 nextTurnStates[(int)FirstPlayer] = TurnState.HONORSKIP;
                 nextTurnStates[(int)SecondPlayer] = TurnState.NORMAL;
+
+                turnStates[(int)FirstPlayer] = TurnState.HONORSKIP;
                 break;
             case ("first", "reject"): // first의 hs를 거부 -> first가 normal 1턴을 진행
                 // 거부시 now: 2 | NORMAL | WAITFORHS
+                nextTotalTurn = 2;
+                nextTurnStates[(int)FirstPlayer] = TurnState.NORMAL;
+                nextTurnStates[(int)SecondPlayer] = TurnState.WAITFORHS;
+
                 turnStates[(int)FirstPlayer] = TurnState.NORMAL;
                 break;
             case ("second", "true"): // second의 hs
-                turnStates[(int)SecondPlayer] = TurnState.HONORSKIP;
                 nextTotalTurn = 4;
                 nextTurnStates[(int)FirstPlayer] = TurnState.NORMAL;
                 nextTurnStates[(int)SecondPlayer] = TurnState.HONORSKIP;
+
+                turnStates[(int)SecondPlayer] = TurnState.HONORSKIP;
                 break;
             case ("second", "false"):
+                nextTotalTurn = 3;
+                nextTurnStates[(int)FirstPlayer] = TurnState.NORMAL;
+                nextTurnStates[(int)SecondPlayer] = TurnState.HONORSKIP;
+
                 turnStates[(int)SecondPlayer] = TurnState.NORMAL;
                 break;
-            // second player 수신
-            case ("first", "true"): // first의 hs 선언
-                // 동의를 구하기
-                HSSendNetworkAction("first agree");
-                //HSSendNetworkAction("first reject")
+            // second player의 수신
+            case ("first", "true"): // first의 hs 선언에 동의를 구하기
+                StartCoroutine(EHSSecondAsking("Enemy snap ok???", "first agree", "first reject"));
                 break;
-            case ("first", "false"): // first가 normal 1턴을 진행 (no HS)
+            case ("first", "false"): // first가 normal turn (2)을 진행 (no HS)
                 // 상대의 턴 종료시 내가 HS할지를 결정
-                HSSendNetworkAction("second true");
-                // HSSendNetworkAction("second false");
+                StartCoroutine(EHSSecondAsking("Do Snap???", "second true", "second false"));
                 break;
         }
     }
@@ -348,80 +377,33 @@ public class GameManager : SingletonBehavior<GameManager>
         }, MyNetworkData.PacketType.ROOM_OPPONENT);
     }
 
-    private void FirstHSTurn()
+    private IEnumerator EHSSecondAsking(string question, string messageTrue, string messageFalse)
     {
-        switch (LocalTurnState)
+        bool isAnswerSelected = false;
+        var askingPanel = IngameUIManager.Inst.AskingPanel;
+
+        askingPanel.SetAskingPanelString(question);
+        askingPanel.SetAskingPanelActions
+            (
+                () =>
+                {
+                    HSSendNetworkAction(messageTrue);
+                    isAnswerSelected = true;
+                },
+                () =>
+                {
+                    HSSendNetworkAction(messageFalse);
+                    isAnswerSelected = true;
+                }
+            );
+        askingPanel.SetAskingPanelActive();
+
+        while (!isAnswerSelected)
         {
-            case TurnState.HONORSKIP:
-                if (isPlayerHonorSkip)
-                {
-                    LocalNextTurnState = TurnState.WAITFORHSCONSENT;
-                    OppoNextTurnState = TurnState.HSCONSENT;
-                }
-                else
-                {
-                    LocalNormalTurn();
-                }
-                break;
-            case TurnState.HSCONSENT:
-                if (isPlayerConsentHonorSkip)
-                {
-                    LocalNormalTurn();
-                    nextTotalTurn++;
-                }
-                else
-                {
-                    OppoNormalTurn();
-                }
-                break;
-            case TurnState.NORMAL:
-                LocalNextTurnState = TurnState.WAITFORHS;
-                OppoNextTurnState = TurnState.HONORSKIP;
-                nextTotalTurn++;
-                break;
-            default:
-                Debug.LogError("Invalid state!");
-                break;
+            yield return null;
         }
     }
-
-    private void SecondHSTurn()
-    {
-        switch (LocalTurnState)
-        {
-            case TurnState.HONORSKIP:
-                if (isPlayerHonorSkip)
-                {
-                    OppoNormalTurn();
-                    nextTotalTurn++;
-                }
-                else
-                {
-                    LocalNormalTurn();
-                }
-                break;
-            case TurnState.NORMAL:
-                OppoNormalTurn();
-                nextTotalTurn++;
-                break;
-            default:
-                Debug.LogError("Invalid state!");
-                break;
-        }
-    }
-
-    private void LocalNormalTurn()
-    {
-        LocalNextTurnState = TurnState.NORMAL;
-        OppoNextTurnState = TurnState.WAIT;
-    }
-
-    private void OppoNormalTurn()
-    {
-        LocalNextTurnState = TurnState.WAIT;
-        OppoNextTurnState = TurnState.NORMAL;
-    }
-    
+    #endregion
 
     // 아너스킵
     // 게임중 서버 통신

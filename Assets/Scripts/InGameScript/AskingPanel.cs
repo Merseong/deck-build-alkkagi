@@ -26,9 +26,6 @@ public class AskingPanel : MonoBehaviour
         trueButtonAction.Clear();
         falseButtonAction.Clear();
 
-        trueButtonAction.Add(ResetAskingPanel);
-        falseButtonAction.Add(ResetAskingPanel);
-
         transform.GetChild(0).gameObject.SetActive(false);
     }
 
@@ -38,6 +35,7 @@ public class AskingPanel : MonoBehaviour
         {
             action();
         });
+        ResetAskingPanel();
     }
 
     public void InvokeFalseActions()
@@ -46,6 +44,7 @@ public class AskingPanel : MonoBehaviour
         {
             action();
         });
+        ResetAskingPanel();
     }
 
     public void SetAskingPanelString(string asking, string trueString = "True", string falseString = "False")
