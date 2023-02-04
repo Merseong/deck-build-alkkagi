@@ -144,6 +144,59 @@ namespace MyNetworkData
         public SyncVarPacket() { }
     }
 
+
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public class ShootStonePacket : Data<ShootStonePacket>
+    {
+        public int senderID;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 50)]
+        public VelocityRecord[] velocityRecords = new VelocityRecord[50];
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 50)]
+        public PositionRecord[] positionRecords = new PositionRecord[50];
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 50)]
+        public EventRecord[] eventRecords = new EventRecord[50];
+    }
+
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct VelocityRecord
+    {
+        public float time;
+        public int stoneId;
+        public float xVelocity;
+        public float zVelocity;
+    }
+
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct PositionRecord
+    {
+        public int stoneId;
+        public float xPosition;
+        public float zPosition;
+    }
+
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    // collide, drop out, stone power
+    public struct EventRecord
+    {
+        public float time;
+        public int stoneId;
+        public EventEnum eventEnum; // -> EventEnum
+    }
+
+    [Serializable]
+    public enum EventEnum
+    {
+        COLLIDE,
+        DROPOUT,
+        POWER,
+        COUNT,
+    }
+
     public class MessageResolver
     {
         public delegate void CompletedMessageCallback(Packet packet);

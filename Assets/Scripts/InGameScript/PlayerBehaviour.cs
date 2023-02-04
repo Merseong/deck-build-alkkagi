@@ -381,33 +381,10 @@ public class PlayerBehaviour : MonoBehaviour
         }
 
         var recordList = recorder.EndRecord();
-        var stonePosList = new List<PositionRecord>();
-        var evnetList = new List<EventRecord>();
+        var stonePosList = new List<MyNetworkData.PositionRecord>();
+        var evnetList = new List<MyNetworkData.EventRecord>();
 
         // send physics records, stone final poses, event list
-    }
-
-    public struct PositionRecord
-    {
-        public int stoneId;
-        public float xPosition;
-        public float zPosition;
-    }
-
-    // collide, drop out, stone power
-    public struct EventRecord
-    {
-        public float time;
-        public int stoneId;
-        public short eventEnum; // -> EventEnum
-    }
-
-    public enum EventEnum
-    {
-        COLLIDE,
-        DROPOUT,
-        POWER,
-        COUNT,
     }
 
     private void PrepareTurnEnd()

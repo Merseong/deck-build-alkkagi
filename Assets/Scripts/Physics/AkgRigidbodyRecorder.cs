@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MyNetworkData;
 
 public class AkgRigidbodyRecorder
 {
@@ -33,13 +34,5 @@ public class AkgRigidbodyRecorder
     public void PlayRecord(List<VelocityRecord> records)
     {
         // zz
-    }
-
-    public struct VelocityRecord
-    {
-        public float time;
-        public int stoneId;
-        public float xVelocity;
-        public float zVelocity;
     }
 }
