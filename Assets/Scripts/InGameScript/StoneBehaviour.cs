@@ -38,7 +38,7 @@ public class StoneBehaviour : MonoBehaviour
     public float _ChasingSpeed = 0.1f;
     public bool isClicked = false;
 
-    [SerializeField] private bool isBelongLocalPlayer;
+    [SerializeField] private bool isBelongLocalPlayer = true;
     public bool IsBelongLocalPlayer => isBelongLocalPlayer;
 
     private void Start()

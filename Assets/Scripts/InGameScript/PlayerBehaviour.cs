@@ -78,7 +78,7 @@ public class PlayerBehaviour : MonoBehaviour
     private bool isDragging = false;
     private bool reachedAvg = false;
     private bool leftHighEnd = false;
-    [SerializeField] private bool leftLowEnd = false;
+    private bool leftLowEnd = false;
     private bool startOnCancel;
     private Vector3 dragStartPoint;
     private Vector3 dragEndPoint;
@@ -153,11 +153,17 @@ public class PlayerBehaviour : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            if (hit.transform.CompareTag("Board") || hit.transform.CompareTag("PutMarker") || hit.transform.CompareTag("Card"))
+            if (hit.transform.CompareTag("Board") || hit.transform.CompareTag("PutMarker") || hit.transform.CompareTag("Card") || hit.transform.CompareTag("Guard"))
             {
                 return true;
             }
         }
+        return false;
+    }
+
+    private bool IsPlayingCardOnBoard(Vector3 point)
+    {
+        if(point.x < gameBoard.BoardData.width * 5 && point.x > -gameBoard.BoardData.width * 5 && point.z < gameBoard.BoardData.height * 5 && point.z > -gameBoard.BoardData.height * 5) return true;
         return false;
     }
 
@@ -545,31 +551,26 @@ public class PlayerBehaviour : MonoBehaviour
             return;
         }
 
+        if(selectedStone == null)
+        {
+            StoneSelectionAction(true, curScreenTouchPosition);
+        }
+        else
+        {
+            StoneShootAction(curTouchPositionNormalized);
+            return;
+        }
+
         if (selectedCard != null)
         {
             if ((dragStartPoint - curTouchPositionNormalized).magnitude < cardDragThreshold)
             {
                 CardSelectionAction();
-                return;
             }
-            
-            if(IsTouchOnBoard(curScreenTouchPosition))
+            else if(IsTouchOnBoard(curScreenTouchPosition))
             {
                 CardPlayAction(curTouchPositionNormalized);
-                return;
             }
-        }
-
-        if(selectedStone == null)
-        {
-            StoneSelectionAction(true, curScreenTouchPosition);
-            return;
-        }
-
-        if(selectedStone != null)
-        {
-            StoneShootAction(curTouchPositionNormalized);
-            return;
         }
     }
 
@@ -608,7 +609,12 @@ public class PlayerBehaviour : MonoBehaviour
             UICloseAction();
             return;
         }
-        
+
+        if(selectedStone == null)
+        {
+            StoneSelectionAction(false, curScreenTouchPosition);
+        }
+                
         if (selectedCard != null)
         {
             if ((dragStartPoint - curTouchPositionNormalized).magnitude < cardDragThreshold)
@@ -622,12 +628,6 @@ public class PlayerBehaviour : MonoBehaviour
                 CardPlayAction(curTouchPositionNormalized);
                 return;
             }
-        }
-
-        if(selectedStone == null)
-        {
-            StoneSelectionAction(false, curScreenTouchPosition);
-            return;
         }
     }
 
@@ -768,7 +768,7 @@ public class PlayerBehaviour : MonoBehaviour
             }
         }
 
-        // dragEffectObj.endColor = dragEffectObj.startColor = Color.Lerp(Cost1Color, Cost2Color, dragColorCurve.Evaluate(Mathf.Min(moveVec.magnitude, maxDragLimit)/maxDragLimit));
+        //dragEffectObj.endColor = dragEffectObj.startColor = Color.Lerp(Cost1Color, Cost2Color, dragColorCurve.Evaluate(Mathf.Min(moveVec.magnitude, maxDragLimit)/maxDragLimit));
         dragEffectObj.endColor = dragEffectObj.startColor = dragColor;
         stoneArrowObj.GetComponent<MeshRenderer>().material.color = dragEffectObj.startColor;
 
@@ -798,8 +798,19 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void CardDragAction(Vector3 curTouchPositionNormalized)
     {
-        selectedCard.transform.position = curTouchPositionNormalized;
-        GameBoard.HighlightPossiblePos(1, 1f);
+        if(IsPlayingCardOnBoard(curTouchPositionNormalized))
+        {
+            //TODO : 스톤 미리보기 추가해주어야 함
+            selectedCard.GetComponent<MeshRenderer>().enabled = false;
+            GameBoard.HighlightPossiblePos(1, 1f);
+        }
+        else
+        {
+            selectedCard.GetComponent<MeshRenderer>().enabled = true;
+            GameBoard.UnhightlightPossiblePos();
+        }
+        selectedCard.transform.position = new Vector3(curTouchPositionNormalized.x, 5f, curTouchPositionNormalized.z);
+        
     }
 
 
@@ -828,6 +839,7 @@ public class PlayerBehaviour : MonoBehaviour
             if(canShoot && !isOpenStoneInform)
             {
                 //Simply select current stone and move to shooting phase
+                GameManager.Inst.isCancelOpened = true;
                 cancelPanel.gameObject.SetActive(true);
                 Debug.Log("Selected");
                 return;
@@ -845,9 +857,12 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void StoneShootAction(Vector3 curTouchPositionNormalized)
     {
+
+        Debug.Log("dfdfdf");
         dragEndPoint = curTouchPositionNormalized;
         Vector3 moveVec = dragStartPoint - dragEndPoint;
         
+        GameManager.Inst.isCancelOpened = false;
         cancelPanel.gameObject.SetActive(false);
         
         if(isDragging && !startOnCancel) 
@@ -861,12 +876,13 @@ public class PlayerBehaviour : MonoBehaviour
         // 여기넣는게 맞는지 모름
         isDragging = false;
 
-        dragEffectObj.gameObject.SetActive(false);
-        stoneArrowObj.gameObject.SetActive(false);
+        dragEffectObj?.gameObject.SetActive(false);
+        stoneArrowObj?.gameObject.SetActive(false);
     }
 
     private void CardPlayAction(Vector3 curTouchPositionNormalized)
     {
+        selectedCard.GetComponent<MeshRenderer>().enabled = true;
         Vector3 nearbyPos = gameBoard.GiveNearbyPos(curTouchPositionNormalized, 1, 10f);
         if (nearbyPos != gameBoard.isNullPos)
         {
@@ -879,6 +895,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void CardSelectionAction()
     {
+        selectedCard.GetComponent<MeshRenderer>().enabled = true;
         SetInformPanel(selectedCard.CardData);
         informPanel.gameObject.SetActive(true);
         GameBoard.UnhightlightPossiblePos();

@@ -23,6 +23,7 @@ public class Card : MonoBehaviour
 
     void OnMouseOver()
     {
+        if(GameManager.Inst.isCancelOpened) return;
         EnlargeCard(true);
     }
 
@@ -61,15 +62,6 @@ public class Card : MonoBehaviour
             transform.rotation = rps.rot;
             transform.localScale = rps.scale;
         }
-    }
-
-    public void CardMouseOver(Card card)
-    {
-        
-    }
-    public void CardMouseExit(Card card)
-    {
-        
     }
 
     void EnlargeCard(bool isEnlarge)

@@ -8,6 +8,7 @@ TagManager:
   - Card
   - Board
   - PutMarker
+  - Guard
   layers:
   - Default
   - TransparentFX

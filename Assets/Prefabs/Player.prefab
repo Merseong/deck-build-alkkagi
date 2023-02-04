@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 689437316}
   m_LocalRotation: {x: -0, y: 0.13052616, z: -0, w: 0.9914449}
-  m_LocalPosition: {x: 4, y: 0, z: -9}
+  m_LocalPosition: {x: 4, y: 5, z: -9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -55,7 +55,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1217822888}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.07, y: 0, z: -9.43}
+  m_LocalPosition: {x: 7.07, y: 5, z: -9.43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -86,7 +86,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2031866644}
   m_LocalRotation: {x: -0, y: -0.13052624, z: -0, w: 0.9914449}
-  m_LocalPosition: {x: -4, y: 0, z: -9}
+  m_LocalPosition: {x: -4, y: 5, z: -9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -147,6 +147,7 @@ MonoBehaviour:
   informPanel: {fileID: 0}
   costTextUi: {fileID: 0}
   shootTokenImage: {fileID: 0}
+  enemyPanel: {fileID: 0}
   cost: 10
   deck:
   - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
@@ -166,17 +167,16 @@ MonoBehaviour:
   selectedCard: {fileID: 0}
   followedStone: {fileID: 0}
   isInformOpened: 0
-  isDragging: 0
-  startOnCancel: 0
-  curDragMagnitude: 0
-  stoneArrowObj: {fileID: 0}
+  leftLowEnd: 0
   gameBoard: {fileID: 0}
-  stoneSelectionThreshold: 1
+  StoneSelectionActionThreshold: 1
+  cardDragThreshold: 1
   minShootVelocity: 5
   maxShootVelocity: 22
   velocityMultiplier: 100
   dragEffectObj: {fileID: 178128856140976623}
   maxDragLimit: 10
+  maxClippingPercentage: 0
   Cost1Color: {r: 0, g: 0, b: 0, a: 0}
   Cost2Color: {r: 0, g: 0, b: 0, a: 0}
   alphaOnCancel: 0.5

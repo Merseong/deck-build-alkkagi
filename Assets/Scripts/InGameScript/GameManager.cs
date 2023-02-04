@@ -17,8 +17,8 @@ public class GameManager : SingletonBehavior<GameManager>
     public PlayerBehaviour CurrentPlayer => players[(int)WhoseTurn];
 
     // 돌들
-    public Dictionary<int, StoneBehaviour> LocalStones;
-    public Dictionary<int, StoneBehaviour> OppoStones;
+    public Dictionary<int, StoneBehaviour> LocalStones = new();
+    public Dictionary<int, StoneBehaviour> OppoStones = new();
     private int nextLocalStoneId;
 
     // 서버에서 선공이 누구인지 정해줘야함
@@ -31,7 +31,7 @@ public class GameManager : SingletonBehavior<GameManager>
     public bool isPlayerConsentHonorSkip;
     //카드 정보 일람 여부에 대햔 flag
     public bool isInformOpened;
-
+    public bool isCancelOpened;
     // 현재 보드
 
     // 각자 턴의 제어
