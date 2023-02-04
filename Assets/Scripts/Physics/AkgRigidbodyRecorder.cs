@@ -35,4 +35,12 @@ public class AkgRigidbodyRecorder
     {
         // zz
     }
+
+    public struct VelocityRecord
+    {
+        public float time;
+        public int stoneId;
+        public float xVelocity;
+        public float zVelocity;
+    }
 }

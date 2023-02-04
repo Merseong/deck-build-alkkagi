@@ -75,12 +75,15 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private bool isInformOpened = false;
 
     private float curStoneSelectionActionTime;
-    [SerializeField] private bool isDragging = false;
-    [SerializeField] private bool startOnCancel;    
+    private bool isDragging = false;
+    private bool reachedAvg = false;
+    private bool leftHighEnd = false;
+    [SerializeField] private bool leftLowEnd = false;
+    private bool startOnCancel;
     private Vector3 dragStartPoint;
     private Vector3 dragEndPoint;
-    [SerializeField] private float curDragMagnitude;
-    [SerializeField] private ArrowGenerator stoneArrowObj;
+    private float curDragMagnitude;
+    private ArrowGenerator stoneArrowObj;
     
     //FIXME :Temporarily get board script by inspector
     [SerializeField] private GameBoard gameBoard;
@@ -98,6 +101,8 @@ public class PlayerBehaviour : MonoBehaviour
     [Header("DragEffect")]
     [SerializeField] private LineRenderer dragEffectObj;
     [SerializeField] private float maxDragLimit;
+    [SerializeField][Tooltip ("Indicates clipping range plus-minus maxDragLimit's average")][Range(0f, 1.0f)]
+    private float maxClippingPercentage;
     [SerializeField] private Color Cost1Color;
     [SerializeField] private Color Cost2Color;
     // [SerializeField] private AnimationCurve dragColorCurve;
@@ -516,7 +521,7 @@ public class PlayerBehaviour : MonoBehaviour
         Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
 
         //Stone Dragging for shoot
-        if(selectedStone != null && !startOnCancel && !isInformOpened && (TouchManager.Inst.GetTouchDelta().x != 0 || TouchManager.Inst.GetTouchDelta().y != 0))
+        if(selectedStone != null && !startOnCancel && (TouchManager.Inst.GetTouchDelta().x != 0 || TouchManager.Inst.GetTouchDelta().y != 0))
         {
             StoneDragAction(curScreenTouchPosition, curTouchPositionNormalized);
         }
@@ -719,20 +724,40 @@ public class PlayerBehaviour : MonoBehaviour
         }
         else
         {
-            curDragMagnitude = moveVec.magnitude;
-            float avg = (maxShootVelocity + minShootVelocity) / 2;
-            float cur = Mathf.Lerp(minShootVelocity, maxShootVelocity, Mathf.Min(moveVec.magnitude, maxDragLimit) / maxDragLimit);
-            //Decreasing Power
-            if(cur < avg && cur > avg * .8f && Vector3.Dot(deltaVec, moveVec) > 0)
+            float previous = curDragMagnitude;
+            float avg = maxDragLimit / 2;
+            float cur = Mathf.Min(moveVec.magnitude, maxDragLimit);
+
+            if((avg > previous && avg <= cur) || (avg < previous && avg >= cur))
             {
-                Debug.Log("decreasing clip");
+                reachedAvg = true;
+            } 
+            else if(cur <= avg * (1f - maxClippingPercentage))
+            {
+                leftLowEnd = true;
+                reachedAvg = false;
+            }
+            else if(cur >= avg * (1f + maxClippingPercentage))
+            {
+                leftHighEnd = true;
+                reachedAvg = false;
+            }
+            else
+            {
+                leftHighEnd = false;
+                leftLowEnd = false;
+            }
+
+            curDragMagnitude = moveVec.magnitude;
+            //Decreasing Power
+            if(cur < avg && cur > avg * (1f - maxClippingPercentage)  && reachedAvg && (!leftLowEnd || Vector3.Dot(deltaVec, moveVec) > 0))
+            {
                 curDragMagnitude = maxDragLimit / 2;
                 dragColor = Cost1Color;
             }
             //Increasing Power
-            else if(cur > avg && cur < avg * 1.2f && Vector3.Dot(deltaVec, moveVec) < 0)
+            else if(cur > avg && cur < avg * (1f + maxClippingPercentage) && reachedAvg && (!leftHighEnd || Vector3.Dot(deltaVec, moveVec) < 0))
             {
-                Debug.Log("increasing clip");
                 curDragMagnitude = maxDragLimit / 2;
                 dragColor = Cost1Color;
             }

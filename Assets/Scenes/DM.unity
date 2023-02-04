@@ -768,6 +768,10 @@ PrefabInstance:
       propertyPath: shootTokenImage
       value: 
       objectReference: {fileID: 1271156734}
+    - target: {fileID: 178128855195758144, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: maxClippingPercentage
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 178128855195758145, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: m_Name
       value: Player
