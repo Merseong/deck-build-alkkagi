@@ -16,6 +16,9 @@ public class GameManager : SingletonBehavior<GameManager>
     public PlayerBehaviour OppoPlayer => players[1];
     public PlayerBehaviour CurrentPlayer => players[isLocalGoFirst ? 0 : 1];
 
+    // Card List 임시용
+    public List<CardData> CardDatas;
+
     // 돌들
     public Dictionary<int, StoneBehaviour> LocalStones = new();
     public Dictionary<int, StoneBehaviour> OppoStones = new();
@@ -113,6 +116,13 @@ public class GameManager : SingletonBehavior<GameManager>
     {
         NetworkManager.Inst.RemoveReceiveDelegate(TurnInfoReceiveNetworkAction);
     }
+
+    #region Card Data
+    public CardData GetCardDataById(int cardId)
+    {
+        return CardDatas.Find(e => e.CardID == cardId);
+    }
+    #endregion
 
     #region Manager Data Control
     private void ProcessWithCoroutine(Func<bool> predicate, Action job)

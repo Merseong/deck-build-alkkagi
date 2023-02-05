@@ -466,7 +466,13 @@ public class PlayerBehaviour : MonoBehaviour
 
         // parse message
         var dataArr = msg.message.Split(' ');
-        //GameManager.Inst.OppoPlayer.PlayCard(new CardData(), StringToVector3(dataArr[2]), Int16.Parse(dataArr[3])); // 카드 ID, 내는 위치를 통해 넣어야 함
+        // TODO: Oppo의 playcard를 불러야하긴한데
+        PlayCard
+        (
+            GameManager.Inst.GetCardDataById(int.Parse(dataArr[1])),
+            StringToVector3(dataArr[2]),
+            Int16.Parse(dataArr[3])
+        );
         //if (GameManager.Inst.OppoPlayer.Cost != Int16.Parse(dataArr[4]))
         //{
         //    // 상대의 남은 코스트와 내가 계산한 코스트가 안맞음
@@ -477,15 +483,13 @@ public class PlayerBehaviour : MonoBehaviour
 
     private Vector3 StringToVector3(string vec3)
     {
-        var stringList = vec3.Split(",");
-        stringList[0].Remove(0);
-        stringList[2].Remove(0);
-        return new Vector3(float.Parse(stringList[0]), float.Parse(stringList[1]), float.Parse(stringList[2]));
+        var stringList = vec3.Split('|');
+        return new Vector3(float.Parse(stringList[1]), float.Parse(stringList[2]), float.Parse(stringList[3]));
     }
 
     private string Vector3ToString(Vector3 vec3)
     {
-        return $"({vec3.x},{vec3.y},{vec3.z})";
+        return $"|{vec3.x}|{vec3.y}|{vec3.z}|";
     }
 
     private void ShootStone(Vector3 vec) // vec이 velocity인지 force인지 명확하게 해야함
