@@ -45,7 +45,6 @@ public class StoneBehaviour : MonoBehaviour
     {
         boardTransform = GameObject.Find("Board").transform;
         akgRigidbody = GetComponent<AkgRigidbody>();
-        isBelongLocalPlayer = GameManager.Inst.CurrentPlayer == GameManager.Inst.LocalPlayer;
     }
 
     private void Update()
@@ -104,10 +103,11 @@ public class StoneBehaviour : MonoBehaviour
         }
     }
 
-    public void SetCardData(CardData data, int id)
+    public void SetCardData(CardData data, int id, bool isLocalPlayer)
     {
         cardData = data;
         stoneId = id;
+        isBelongLocalPlayer = isLocalPlayer;
     }
 
     private bool CheckStoneDropByTransform()

@@ -14,7 +14,7 @@ public class GameManager : SingletonBehavior<GameManager>
     public PlayerBehaviour[] players;  // 0: local, 1: oppo
     public PlayerBehaviour LocalPlayer => players[0];
     public PlayerBehaviour OppoPlayer => players[1];
-    public PlayerBehaviour CurrentPlayer => players[(int)WhoseTurn];
+    public PlayerBehaviour CurrentPlayer => players[isLocalGoFirst ? 0 : 1];
 
     // 돌들
     public Dictionary<int, StoneBehaviour> LocalStones = new();
@@ -88,25 +88,52 @@ public class GameManager : SingletonBehavior<GameManager>
     public int initialTurnCost = 6;
     public int normalTurnCost = 3;
 
+    private void Awake()
+    {
+        players = new PlayerBehaviour[2];
+        nextLocalStoneId = isLocalGoFirst ? 0 : 1; // 이부분은 네트워크 받고 나서로 해야하긴 함
+    }
+
     public void Start()
     {
         //OnTurnEnd += SetNextTurnState;
 
         NetworkManager.Inst.AddReceiveDelegate(TurnInfoReceiveNetworkAction);
-        nextLocalStoneId = isLocalGoFirst ? 0 : 1;
 
         // temp: 서버의 응답 없이도 턴 시작
 
-        // temp: snap test
+        /*// temp: snap test
         turnStates[(int)FirstPlayer] = TurnState.WAITFORHS;
         turnStates[(int)SecondPlayer] = TurnState.WAITFORHS;
-        StartCoroutine(EHonorSkipRoutine());
+        StartCoroutine(EHonorSkipRoutine()); */
     }
 
     private void OnApplicationQuit()
     {
         NetworkManager.Inst.RemoveReceiveDelegate(TurnInfoReceiveNetworkAction);
     }
+
+    #region Manager Data Control
+    private void ProcessWithCoroutine(Func<bool> predicate, Action job)
+    {
+        StartCoroutine(EProcessLater());
+
+        IEnumerator EProcessLater()
+        {
+            yield return new WaitUntil(predicate);
+            job?.Invoke();
+        }
+    }
+
+    public void SetPlayerData(Action action)
+    {
+        if (players.Length == 0)
+            ProcessWithCoroutine(() => players.Length > 0, action);
+        else
+            action();
+    }
+
+    #endregion
 
     #region Stone List Control
     /// <summary>
@@ -297,6 +324,7 @@ public class GameManager : SingletonBehavior<GameManager>
         askingPanel.SetAskingPanelActive();
 
         // 선공의 HS 여부 선택
+        // 이런 부분들 전부 yield return WaitUntil()로 변경 예정
         while (turnStates[(int)FirstPlayer] == TurnState.WAITFORHS)
         {
             // wait for answer

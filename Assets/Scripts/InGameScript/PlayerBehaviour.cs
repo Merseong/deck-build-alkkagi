@@ -110,6 +110,14 @@ public class PlayerBehaviour : MonoBehaviour
     [Header("DebugTools"), SerializeField]
     private bool pauseEditorOnShoot = false;
 
+    private void Awake()
+    {
+        GameManager.Inst.SetPlayerData(() =>
+        {
+            GameManager.Inst.players[isLocalPlayer ? 0 : 1] = this;
+        });
+    }
+
     private void Start()
     {
         turnActionDic.Add(GameManager.TurnState.PREPARE, new Action<Vector3>[]{PrepareTouchBegin, PrepareInTouch, PrepareTouchEnd});
@@ -396,7 +404,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         var stoneBehaviour = spawnedStone.GetComponent<StoneBehaviour>();
         var stoneId = GameManager.Inst.AddStone(stoneBehaviour, isLocalPlayer, oppoStoneId);
-        stoneBehaviour.SetCardData(card.CardData, stoneId);
+        stoneBehaviour.SetCardData(card.CardData, stoneId, isLocalPlayer);
 
         //temp code
         spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = card.CardData.sprite;
