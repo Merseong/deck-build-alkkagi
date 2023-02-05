@@ -9,7 +9,7 @@ using System.Linq;
 public class PlayerBehaviour : MonoBehaviour
 {
     //Temp
-    public GameObject Stone;
+    public GameObject StonePrefab;
 
     // 나와 적한테 하나씩 붙임
 
@@ -65,7 +65,6 @@ public class PlayerBehaviour : MonoBehaviour
 
     [SerializeField] private StoneBehaviour selectedStone;
     [SerializeField] private Card selectedCard;
-    [SerializeField] private GameObject followedStone;
 
     private StateMachine stateMachine;
     public readonly Dictionary<GameManager.TurnState, Action<Vector3>[]> turnActionDic = new Dictionary<GameManager.TurnState, Action<Vector3>[]>();
@@ -127,7 +126,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         // temp:
         ShootTokenAvailable = true;
-        cost = 10;
+        cost = 9;
     }
 
     private void Update()
@@ -196,6 +195,98 @@ public class PlayerBehaviour : MonoBehaviour
         return null;
     }
 
+    private float GetRadiusFromStoneSize(CardData.StoneSize size)
+    {
+        switch(size)
+        {
+            case CardData.StoneSize.Small:
+                return .5f;
+            
+            case CardData.StoneSize.Medium:
+                return .65f;
+
+            case CardData.StoneSize.Large:
+                return .8f;
+
+            case CardData.StoneSize.SuperLarge:
+                return .95f;
+
+            default:
+                Debug.Log("Invalid Stone Size!");
+                return 1f;
+        }
+    }
+
+    private float GetMassFromStoneWeight(CardData.StoneSize size, CardData.StoneWeight weight)
+    {
+        switch(weight)
+        {
+            case CardData.StoneWeight.Light:
+                switch(size)
+                {
+                    case CardData.StoneSize.Small:
+                        return .110f;
+                    
+                    case CardData.StoneSize.Medium:
+                        return .115f;
+
+                    case CardData.StoneSize.Large:
+                        return .12f;
+
+                    case CardData.StoneSize.SuperLarge:
+                        return .13f;
+
+                    default:
+                        Debug.Log("Invalid Stone Size!");
+                        return 0f;
+                }
+
+            case CardData.StoneWeight.Standard:
+                switch(size)
+                {
+                    case CardData.StoneSize.Small:
+                        return .12f;
+
+                    case CardData.StoneSize.Medium:
+                        return .13f;
+
+                    case CardData.StoneSize.Large:
+                        return .14f;
+
+                    case CardData.StoneSize.SuperLarge:
+                        return .16f;
+
+                    default:
+                        Debug.Log("Invalid Stone Size!");
+                        return 0f;
+                }
+            
+            case CardData.StoneWeight.Heavy:
+                switch(size)
+                {
+                    case CardData.StoneSize.Small:
+                        return .13f;
+
+                    case CardData.StoneSize.Medium:
+                        return .145f;
+
+                    case CardData.StoneSize.Large:
+                        return .16f;
+
+                    case CardData.StoneSize.SuperLarge:
+                        return .19f;
+
+                    default:
+                        Debug.Log("Invalid Stone Size!");
+                        return 0f;
+                }
+
+            default:
+                Debug.LogError("Invalid stone weight!");
+                return 0f;
+        }
+    }
+
     // 여기서부터 액션들
 
     // 이건 사실 액션은 아님
@@ -242,7 +333,7 @@ public class PlayerBehaviour : MonoBehaviour
         ArrangeHand(true);
     }
 
-    void SetOriginOrder()
+    private void SetOriginOrder()
     {
         int count = hand.Count;
         for (int i = 0; i < count; i++)
@@ -285,7 +376,6 @@ public class PlayerBehaviour : MonoBehaviour
             }
             results.Add(new RPS(targetPos, targetRot, scale));
         }
-
         return results;
     }
 
@@ -293,20 +383,25 @@ public class PlayerBehaviour : MonoBehaviour
     // TODO: 위치도 인자로 같이 받아서 하게
     private void PlayCard(Card card, Vector3 nearbyPos, int oppoStoneId = -1)
     {
-        // TODO
-        if (card.CardData.cardCost > Cost || !GameBoard.IsPossibleToPut(nearbyPos, 1f))
+        
+        if (card.CardData.cardCost > Cost || !GameBoard.IsPossibleToPut(nearbyPos, GetRadiusFromStoneSize(card.CardData.stoneSize)))
         {
             return;
         }
 
         // 끌어놓은 위치에 Stone 생성
         //FIXME : 카드에 맞는 스톤을 런타임에 생성해줘야 함
-        followedStone = Instantiate(Stone, nearbyPos, Quaternion.identity);
+        GameObject spawnedStone = Instantiate(StonePrefab, nearbyPos, Quaternion.identity);
         selectedCard = null;
 
-        var stoneBehaviour = followedStone.GetComponent<StoneBehaviour>();
+        var stoneBehaviour = spawnedStone.GetComponent<StoneBehaviour>();
         var stoneId = GameManager.Inst.AddStone(stoneBehaviour, isLocalPlayer, oppoStoneId);
         stoneBehaviour.SetCardData(card.CardData, stoneId);
+
+        //temp code
+        spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = card.CardData.sprite;
+        spawnedStone.transform.localScale = new Vector3(GetRadiusFromStoneSize(card.CardData.stoneSize), .15f, GetRadiusFromStoneSize(card.CardData.stoneSize));
+        spawnedStone.GetComponent<AkgRigidbody>().mass = GetMassFromStoneWeight(card.CardData.stoneSize, card.CardData.stoneWeight);
 
         hand.Remove(card);
         Destroy(card.gameObject);
@@ -440,8 +535,9 @@ public class PlayerBehaviour : MonoBehaviour
     }
 
     ///<summary>
-    ///Arrange cards in hand regarding card index at hand[]
+    ///Arrange cards in hand regarding card index at hand[]<br></br>
     ///</summary>
+    ///<param name = "isDrawPhase">true인 경우 부드럽게 손패로 이동, false일 경우 텀 없이 바로 손패로 이동</param>
     private void ArrangeHand(bool isDrawPhase)
     {
         List<RPS> originCardRPSs = new List<RPS>();
@@ -842,7 +938,7 @@ public class PlayerBehaviour : MonoBehaviour
                 //Simply select current stone and move to shooting phase
                 GameManager.Inst.isCancelOpened = true;
                 cancelPanel.gameObject.SetActive(true);
-                Debug.Log("Selected");
+                // Debug.Log("Selected");
                 return;
             }
             else
@@ -850,7 +946,7 @@ public class PlayerBehaviour : MonoBehaviour
                 //Open Information about selected stone
                 SetInformPanel(selectedStone.CardData);
                 informPanel.gameObject.SetActive(true);
-                Debug.Log("Information");
+                // Debug.Log("Information");
                 return;
             }
         }

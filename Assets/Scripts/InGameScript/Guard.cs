@@ -4,11 +4,18 @@ using UnityEngine;
 
 public class Guard : MonoBehaviour
 {
-
     public void SetSide(bool isBelongLocal)
     {
-        if(isBelongLocal) gameObject.layer = LayerMask.NameToLayer("LocalGuard");
-        else gameObject.layer = LayerMask.NameToLayer("OppoGuard");
+        if(isBelongLocal) 
+        {
+            gameObject.transform.GetComponent<MeshRenderer>().material.color = Color.green;
+            gameObject.layer = LayerMask.NameToLayer("LocalGuard");
+        }
+        else
+        {
+            gameObject.transform.GetComponent<MeshRenderer>().material.color = Color.red;
+            gameObject.layer = LayerMask.NameToLayer("OppoGuard");
+        } 
     }
 
     private void OnCollisionExit(Collision coll)
@@ -19,5 +26,4 @@ public class Guard : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-
 }

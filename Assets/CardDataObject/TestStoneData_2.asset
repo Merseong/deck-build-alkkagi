@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ab37ca60595e43469bbcaf7f2d4c0a7, type: 3}
-  m_Name: TestStoneData
+  m_Name: TestStoneData_2
   m_EditorClassIdentifier: 
-  cardID: 1
-  stoneSize: 1
-  stoneWeight: 2
-  cardCost: 2
+  cardID: 2
+  stoneSize: 2
+  stoneWeight: 1
+  cardCost: 3
   inDeckNumber: 0
-  sprite: {fileID: 21300000, guid: cfa3b542de5540948890c0ca6d4bb6ac, type: 3}
-  description: This is knight stone
+  sprite: {fileID: 21300000, guid: 1ee5876314d68e64983549e6df8bc5f9, type: 3}
+  description: This is a cannonshooter

@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02edbd3a56bd54346a2ac9933a06f574, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Stone: {fileID: 6663944191401573520, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
+  StonePrefab: {fileID: 6663944191401573520, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
   isLocalPlayer: 1
   cancelPanel: {fileID: 0}
   informPanel: {fileID: 0}
@@ -151,8 +151,8 @@ MonoBehaviour:
   cost: 10
   deck:
   - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
-  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
-  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
+  - {fileID: 3721772108986987149, guid: cbe20cb326ac5874aa12a2d99e3ff1bc, type: 3}
+  - {fileID: 3721772108986987149, guid: cbe20cb326ac5874aa12a2d99e3ff1bc, type: 3}
   - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
   - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
   - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
@@ -165,9 +165,7 @@ MonoBehaviour:
   shootTokenAvailable: 0
   selectedStone: {fileID: 0}
   selectedCard: {fileID: 0}
-  followedStone: {fileID: 0}
   isInformOpened: 0
-  leftLowEnd: 0
   gameBoard: {fileID: 0}
   StoneSelectionActionThreshold: 1
   cardDragThreshold: 1
@@ -176,9 +174,9 @@ MonoBehaviour:
   velocityMultiplier: 100
   dragEffectObj: {fileID: 178128856140976623}
   maxDragLimit: 10
-  maxClippingPercentage: 0
-  Cost1Color: {r: 0, g: 0, b: 0, a: 0}
-  Cost2Color: {r: 0, g: 0, b: 0, a: 0}
+  maxClippingPercentage: 0.2
+  Cost1Color: {r: 1, g: 0.89977187, b: 0, a: 1}
+  Cost2Color: {r: 1, g: 0, b: 0, a: 1}
   alphaOnCancel: 0.5
   pauseEditorOnShoot: 0
 --- !u!1 &178128856140976616
