@@ -58,7 +58,7 @@ public class GameManager : SingletonBehavior<GameManager>
     /// 이후는 노말턴 선공 및 후공
     /// </summary>
     [SerializeField] private int totalTurn = 0;
-    private int nextTotalTurn;
+    [SerializeField] private int nextTotalTurn;
     public int TurnCount => totalTurn / 2;
     public PlayerEnum WhoseTurn => (PlayerEnum)((totalTurn + (isLocalGoFirst ? 0 : 1)) % 2);
 
@@ -201,7 +201,7 @@ public class GameManager : SingletonBehavior<GameManager>
         nextTotalTurn = int.Parse(msgArr[1]);
         LocalNextTurnState = (TurnState)int.Parse(msgArr[3]);
         OppoNextTurnState = (TurnState)int.Parse(msgArr[4]);
-        TurnEnd();
+        TurnEnd(totalTurn != nextTotalTurn);
     }
 
     /// <summary>
@@ -252,9 +252,16 @@ public class GameManager : SingletonBehavior<GameManager>
         totalTurn = nextTotalTurn;
 
         // 선턴 && 현재 HS턴 && 둘 모두의 State가 WAITFORHS
-        if (isLocalGoFirst && totalTurn == 2 && LocalTurnState == OppoTurnState)
+        if (totalTurn == 2 && LocalTurnState == OppoTurnState)
         {
-            StartCoroutine(EHonorSkipRoutine());
+            if (isLocalGoFirst)
+            {
+                StartCoroutine(EHonorSkipRoutine());
+            }
+            else
+            {
+                StartCoroutine(EHonorSkipSecondRoutine());
+            }
         }
 
         // TurnState.NORMAL인경우만 내 턴을 시작
@@ -278,9 +285,16 @@ public class GameManager : SingletonBehavior<GameManager>
                 nextTotalTurn++;
                 break;
             // 2: 1턴 선공 (HS or FNORMAL)
-            // 3: 1턴 후공 (HS or normal)
             case 2:
+                nextTurnStates[(int)FirstPlayer] = TurnState.WAIT;
+                nextTurnStates[(int)SecondPlayer] = TurnState.WAITFORHS;
+                nextTotalTurn++;
+                break;
+            // 3: 1턴 후공 (HS or normal)
             case 3:
+                LocalNextTurnState = TurnState.WAIT;
+                OppoNextTurnState = TurnState.NORMAL;
+                nextTotalTurn++;
                 break;
             // 4~: 2턴 이후
             default:
@@ -292,7 +306,7 @@ public class GameManager : SingletonBehavior<GameManager>
                 else
                 {
                     LocalNextTurnState = TurnState.NORMAL;
-                    OppoNextTurnState = TurnState.NORMAL;
+                    OppoNextTurnState = TurnState.WAIT;
                 }
                 nextTotalTurn++;
                 break;
@@ -305,6 +319,8 @@ public class GameManager : SingletonBehavior<GameManager>
 
     private IEnumerator EHonorSkipRoutine()
     {
+        Debug.Log("Start HS Routine");
+
         isInHonorSkipRoutine = true;
         NetworkManager.Inst.AddReceiveDelegate(HSReceiveNetworkAction);
         var askingPanel = IngameUIManager.Inst.AskingPanel;
@@ -320,6 +336,8 @@ public class GameManager : SingletonBehavior<GameManager>
                 () =>
                 {
                     turnStates[(int)FirstPlayer] = TurnState.NORMAL;
+                    nextTurnStates[(int)FirstPlayer] = TurnState.NORMAL;
+                    nextTurnStates[(int)SecondPlayer] = TurnState.WAITFORHS;
                 }
             );
         askingPanel.SetAskingPanelActive();
@@ -354,12 +372,14 @@ public class GameManager : SingletonBehavior<GameManager>
         if (turnStates[(int)FirstPlayer] == TurnState.NORMAL)
         {
             // 선공의 normal turn (2) 진행
-            TurnEnd(false);
+            TurnInfoSendNetworkAction();
 
             while (totalTurn == 2)
             {
                 yield return null;
             }
+
+            HSSendNetworkAction("first false");
 
             while (turnStates[(int)SecondPlayer] == TurnState.WAITFORHS)
             {
@@ -373,6 +393,15 @@ public class GameManager : SingletonBehavior<GameManager>
 
         NetworkManager.Inst.RemoveReceiveDelegate(HSReceiveNetworkAction);
         isInHonorSkipRoutine = false;
+    }
+
+    private IEnumerator EHonorSkipSecondRoutine()
+    {
+        NetworkManager.Inst.AddReceiveDelegate(HSReceiveNetworkAction);
+
+        yield return null;
+
+        // 후에는 hs 끝나면 없애는거까지
     }
 
     private void HSReceiveNetworkAction(MyNetworkData.Packet packet)
@@ -413,8 +442,8 @@ public class GameManager : SingletonBehavior<GameManager>
                 break;
             case ("second", "false"):
                 nextTotalTurn = 3;
-                nextTurnStates[(int)FirstPlayer] = TurnState.NORMAL;
-                nextTurnStates[(int)SecondPlayer] = TurnState.HONORSKIP;
+                nextTurnStates[(int)FirstPlayer] = TurnState.WAIT;
+                nextTurnStates[(int)SecondPlayer] = TurnState.NORMAL;
 
                 turnStates[(int)SecondPlayer] = TurnState.NORMAL;
                 break;
