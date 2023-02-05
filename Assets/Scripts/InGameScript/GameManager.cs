@@ -98,6 +98,7 @@ public class GameManager : SingletonBehavior<GameManager>
     {
         //OnTurnEnd += SetNextTurnState;
 
+        rigidbodyRecorder.InitRecorder();
         NetworkManager.Inst.AddReceiveDelegate(TurnInfoReceiveNetworkAction);
 
         // temp: 서버의 응답 없이도 턴 시작

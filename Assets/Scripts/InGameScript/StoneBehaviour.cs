@@ -20,6 +20,7 @@ public class StoneBehaviour : MonoBehaviour
     // 타격 이벤트
 
     [SerializeField] private int stoneId;
+    public int StoneId => stoneId;
     [SerializeField] private Transform boardTransform;
     [SerializeField] private CardData cardData;
     public CardData CardData => cardData;

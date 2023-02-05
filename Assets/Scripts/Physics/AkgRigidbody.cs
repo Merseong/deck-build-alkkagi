@@ -91,16 +91,31 @@ public class AkgRigidbody : MonoBehaviour
 
         velocity = normalVelocity + tangentialVelocity;
         RecordVelocity();
+        RecordCollideEvent();
     }
 
     private void RecordVelocity()
     {
-        GameManager.Inst.rigidbodyRecorder.AppendVelocity(new AkgRigidbodyRecorder.VelocityRecord
+        if (!TryGetComponent<StoneBehaviour>(out var stone)) return;
+
+        GameManager.Inst.rigidbodyRecorder.AppendVelocity(new MyNetworkData.VelocityRecord
         {
-            stoneId = 0,
+            stoneId = stone.StoneId,
             time = Time.time,
             xVelocity = velocity.x,
             zVelocity = velocity.z,
+        });
+    }
+
+    private void RecordCollideEvent()
+    {
+        if (!TryGetComponent<StoneBehaviour>(out var stone)) return;
+
+        GameManager.Inst.rigidbodyRecorder.AppendEventRecord(new MyNetworkData.EventRecord
+        {
+            stoneId = stone.StoneId,
+            time = Time.time,
+            eventEnum = MyNetworkData.EventEnum.COLLIDE,
         });
     }
 

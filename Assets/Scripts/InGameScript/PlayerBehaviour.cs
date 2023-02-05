@@ -414,20 +414,43 @@ public class PlayerBehaviour : MonoBehaviour
         hand.Remove(card);
         Destroy(card.gameObject);
         SpendCost(card.CardData.cardCost);
-        PlayCardSendNetworkAction(card);
+        PlayCardSendNetworkAction(card, nearbyPos, stoneId);
         ArrangeHand(false);
     }
 
-    // PlayCard 함수에서 사용되는 패킷 전송
-    private void PlayCardSendNetworkAction(Card card)
+    /// <summary>
+    /// CardData만으로도 낼 수 있도록 (enemy에서 사용)
+    /// </summary>
+    /// <param name="cardData"></param>
+    /// <param name="nearbyPos"></param>
+    /// <param name="oppoStoneId"></param>
+    private void PlayCard(CardData cardData, Vector3 nearbyPos, int oppoStoneId = -1)
     {
-        Debug.Log($"[{NetworkManager.Inst.NetworkId}] PLAYCARD/ {card.CardData.CardID}");
-        return; // temp: 일단 끊어둠
+        if (cardData.cardCost > Cost || !GameBoard.IsPossibleToPut(nearbyPos, GetRadiusFromStoneSize(cardData.stoneSize)))
+        {
+            return;
+        }
+
+        GameObject spawnedStone = Instantiate(StonePrefab, nearbyPos, Quaternion.identity);
+        var stoneBehaviour = spawnedStone.GetComponent<StoneBehaviour>();
+        var stoneId = GameManager.Inst.AddStone(stoneBehaviour, isLocalPlayer, oppoStoneId);
+        stoneBehaviour.SetCardData(cardData, stoneId, isLocalPlayer);
+
+        //temp code
+        spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = cardData.sprite;
+        spawnedStone.transform.localScale = new Vector3(GetRadiusFromStoneSize(cardData.stoneSize), .15f, GetRadiusFromStoneSize(cardData.stoneSize));
+        spawnedStone.GetComponent<AkgRigidbody>().mass = GetMassFromStoneWeight(cardData.stoneSize, cardData.stoneWeight);
+    }
+
+    // PlayCard 함수에서 사용되는 패킷 전송
+    private void PlayCardSendNetworkAction(Card card, Vector3 position, int stoneId)
+    {
+        Debug.Log($"[{NetworkManager.Inst.NetworkId}] PLAYCARD/ {card.CardData.CardID} {position} {stoneId} {Cost}");
 
         NetworkManager.Inst.SendData(new MyNetworkData.MessagePacket
             {
                 senderID = NetworkManager.Inst.NetworkId,
-                message = "PLAYCARD/ (TODO: 카드, 내는위치, stoneId, 이후코스트)",
+                message = $"PLAYCARD/ {card.CardData.CardID} {Vector3ToString(position)} {stoneId} {Cost}",
             }, MyNetworkData.PacketType.ROOM_OPPONENT);
     }
 
@@ -439,18 +462,30 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (!msg.message.StartsWith("PLAYCARD/")) return;
 
-        Debug.Log($"[OPPO] PLAYCARD/ ");
-        return; // temp: 일단 끊어둠
+        Debug.Log($"[OPPO] {msg.message}");
 
         // parse message
         var dataArr = msg.message.Split(' ');
-        GameManager.Inst.OppoPlayer.PlayCard(new Card(), Vector3.zero); // 카드 ID, 내는 위치를 통해 넣어야 함
-        if (GameManager.Inst.OppoPlayer.Cost != Int16.Parse(dataArr[4]))
-        {
-            // 상대의 남은 코스트와 내가 계산한 코스트가 안맞음
-            Debug.LogError("[OPPO] PLAYCARD cost not matched!");
-            return;
-        }
+        //GameManager.Inst.OppoPlayer.PlayCard(new CardData(), StringToVector3(dataArr[2]), Int16.Parse(dataArr[3])); // 카드 ID, 내는 위치를 통해 넣어야 함
+        //if (GameManager.Inst.OppoPlayer.Cost != Int16.Parse(dataArr[4]))
+        //{
+        //    // 상대의 남은 코스트와 내가 계산한 코스트가 안맞음
+        //    Debug.LogError("[OPPO] PLAYCARD cost not matched!");
+        //    return;
+        //}
+    }
+
+    private Vector3 StringToVector3(string vec3)
+    {
+        var stringList = vec3.Split(",");
+        stringList[0].Remove(0);
+        stringList[2].Remove(0);
+        return new Vector3(float.Parse(stringList[0]), float.Parse(stringList[1]), float.Parse(stringList[2]));
+    }
+
+    private string Vector3ToString(Vector3 vec3)
+    {
+        return $"({vec3.x},{vec3.y},{vec3.z})";
     }
 
     private void ShootStone(Vector3 vec) // vec이 velocity인지 force인지 명확하게 해야함
@@ -468,8 +503,6 @@ public class PlayerBehaviour : MonoBehaviour
 
         selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);
         ShootTokenAvailable = false;
-        // Debug.Log(vec);
-
     }
 
     private IEnumerator EShootStone()
@@ -483,23 +516,23 @@ public class PlayerBehaviour : MonoBehaviour
         while (!isAllStoneStop)
         {
             yield return null;
-            if (GameManager.Inst.LocalStones.Values.All(x => !x.isMoving))
+            yield return new WaitUntil(() =>
             {
-                continue;
-            }
-            if (GameManager.Inst.OppoStones.Values.All(x => !x.isMoving))
+                return GameManager.Inst.LocalStones.Count == 0 ||
+                    GameManager.Inst.LocalStones.Values.All(x => !x.isMoving);
+            });
+            yield return new WaitUntil(() =>
             {
-                continue;
-            }
+                return GameManager.Inst.OppoStones.Count == 0 ||
+                    GameManager.Inst.OppoStones.Values.All(x => !x.isMoving);
+            });
 
             isAllStoneStop = true;
         }
 
-        var recordList = recorder.EndRecord();
-        var stonePosList = new List<MyNetworkData.PositionRecord>();
-        var evnetList = new List<MyNetworkData.EventRecord>();
-
         // send physics records, stone final poses, event list
+        recorder.EndRecord(out var velocityRecords, out var eventRecords);
+        recorder.SendRecord(velocityRecords, eventRecords);
     }
 
     private void PrepareTurnEnd()
