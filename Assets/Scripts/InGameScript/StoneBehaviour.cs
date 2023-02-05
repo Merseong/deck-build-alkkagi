@@ -51,8 +51,7 @@ public class StoneBehaviour : MonoBehaviour
     private void Update()
     {
         if(!CheckStoneDropByTransform())
-        {   
-            Destroy(nowParticle.gameObject);
+        {
             Destroy(gameObject);
         }
         if (akgRigidbody.velocity == Vector3.zero || !isClicked)
