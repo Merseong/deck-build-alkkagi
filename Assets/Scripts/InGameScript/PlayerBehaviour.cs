@@ -127,6 +127,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         // temp:
         ShootTokenAvailable = true;
+        cost = 10;
     }
 
     private void Update()
@@ -858,26 +859,37 @@ public class PlayerBehaviour : MonoBehaviour
     private void StoneShootAction(Vector3 curTouchPositionNormalized)
     {
 
-        Debug.Log("dfdfdf");
         dragEndPoint = curTouchPositionNormalized;
         Vector3 moveVec = dragStartPoint - dragEndPoint;
         
         GameManager.Inst.isCancelOpened = false;
         cancelPanel.gameObject.SetActive(false);
         
+        dragEffectObj?.gameObject.SetActive(false);
+        stoneArrowObj?.gameObject.SetActive(false);
+        
         if(isDragging && !startOnCancel) 
         {
-            //FIXME: Same velocity for every stone, set min max velocity for shooting (different form dragLimit)
+            int needCost = curDragMagnitude <= maxDragLimit / 2 ? 1 : 2;
+
+            if(cost < needCost)
+            {
+                //Not enough cost for shooting
+                isDragging = false;
+                selectedStone = null;
+                Debug.LogError("You have not enough cost for shooting stone!");
+                return;
+            }
+
+            SpendCost(needCost);
             float VelocityCalc = Mathf.Lerp(minShootVelocity, maxShootVelocity, Mathf.Min(moveVec.magnitude, maxDragLimit) / maxDragLimit) * velocityMultiplier;
             ShootStone( moveVec.normalized * selectedStone.GetComponent<AkgRigidbody>().mass * VelocityCalc);
         }
-        selectedStone = null;
 
         // 여기넣는게 맞는지 모름
         isDragging = false;
 
-        dragEffectObj?.gameObject.SetActive(false);
-        stoneArrowObj?.gameObject.SetActive(false);
+        selectedStone = null;
     }
 
     private void CardPlayAction(Vector3 curTouchPositionNormalized)
@@ -902,4 +914,5 @@ public class PlayerBehaviour : MonoBehaviour
     }
 
 #endregion InputActionSet
+
 }
