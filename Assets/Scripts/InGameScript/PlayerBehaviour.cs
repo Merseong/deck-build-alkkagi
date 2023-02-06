@@ -131,10 +131,6 @@ public class PlayerBehaviour : MonoBehaviour
         stateMachine.OperateEnter();
 
         NetworkManager.Inst.AddReceiveDelegate(PlayCardReceiveNetworkAction);
-
-        // temp:
-        ShootTokenAvailable = true;
-        cost = 9;
     }
 
     private void Update()
@@ -310,7 +306,7 @@ public class PlayerBehaviour : MonoBehaviour
             Cost = GameManager.Inst.normalTurnCost;
     }
 
-    private void DrawCards(int number)
+    public void DrawCards(int number)
     {
         // TODO
         if (hand.Count + number > 7)
@@ -519,7 +515,6 @@ public class PlayerBehaviour : MonoBehaviour
 
         while (!isAllStoneStop)
         {
-            yield return null;
             yield return new WaitUntil(() =>
             {
                 return GameManager.Inst.LocalStones.Count == 0 ||

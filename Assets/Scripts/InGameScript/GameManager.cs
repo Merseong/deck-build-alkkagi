@@ -99,17 +99,10 @@ public class GameManager : SingletonBehavior<GameManager>
 
     public void Start()
     {
-        //OnTurnEnd += SetNextTurnState;
+        OnTurnStart += StartTurnBasis;
 
         rigidbodyRecorder.InitRecorder();
         NetworkManager.Inst.AddReceiveDelegate(TurnInfoReceiveNetworkAction);
-
-        // temp: 서버의 응답 없이도 턴 시작
-
-        /*// temp: snap test
-        turnStates[(int)FirstPlayer] = TurnState.WAITFORHS;
-        turnStates[(int)SecondPlayer] = TurnState.WAITFORHS;
-        StartCoroutine(EHonorSkipRoutine()); */
     }
 
     private void OnApplicationQuit()
@@ -193,7 +186,7 @@ public class GameManager : SingletonBehavior<GameManager>
     #endregion
 
     #region Turn Control
-    public void InitializeTurn()
+    public void InitializeGame()
     {
         turnStates[(int)FirstPlayer] = TurnState.PREPARE;
         turnStates[(int)SecondPlayer] = TurnState.WAIT;
@@ -201,6 +194,19 @@ public class GameManager : SingletonBehavior<GameManager>
         nextTurnStates = new TurnState[2];
         nextTurnStates[(int)FirstPlayer] = TurnState.WAIT;
         nextTurnStates[(int)SecondPlayer] = TurnState.PREPARE;
+
+        LocalPlayer.DrawCards(5);
+        LocalPlayer.ResetCost();
+        LocalPlayer.ShootTokenAvailable = true;
+    }
+
+    private void StartTurnBasis(TurnState turnState)
+    {
+        if (turnState != TurnState.NORMAL) return;
+
+        LocalPlayer.DrawCards(1);
+        LocalPlayer.ResetCost();
+        LocalPlayer.ShootTokenAvailable = true;
     }
 
     /// <remarks>

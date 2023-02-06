@@ -307,7 +307,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
             Debug.Log($"[room{roomNumber}] game start! with first player {arr[1]}");
             ConnectionStatus = ConnectionStatusEnum.ROOM;
             GameManager.Inst.isLocalGoFirst = (NetworkId == int.Parse(arr[1]));
-            GameManager.Inst.InitializeTurn();
+            GameManager.Inst.InitializeGame();
         }
         else if (arr[0] == "EXIT")
         {

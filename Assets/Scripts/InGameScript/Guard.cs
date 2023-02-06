@@ -18,7 +18,7 @@ public class Guard : MonoBehaviour
         } 
     }
 
-    private void OnCollisionExit(Collision coll)
+    private void OnCollisionEnter(Collision coll)
     {
         if(coll.gameObject.CompareTag("Stone")) 
         {
