@@ -17,5 +17,9 @@ MonoBehaviour:
   stoneWeight: 2
   cardCost: 2
   inDeckNumber: 0
-  sprite: {fileID: 21300000, guid: cfa3b542de5540948890c0ca6d4bb6ac, type: 3}
+  idleSprite: {fileID: 21300000, guid: d61ee4ff0539f8d47aa6d667de6e8149, type: 3}
+  readySprite: {fileID: 21300000, guid: 3503212ca68433d4388885e8193277b5, type: 3}
+  shootSprite: {fileID: 21300000, guid: cdffe1c4772b2e749a8936c51247b206, type: 3}
+  hitSprite: {fileID: 0}
+  breakSprite: {fileID: 0}
   description: This is knight stone

@@ -503,6 +503,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         StartCoroutine(EShootStone());
 
+        selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.CardData.shootSprite;
         selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);
         ShootTokenAvailable = false;
     }
@@ -825,6 +826,9 @@ public class PlayerBehaviour : MonoBehaviour
 
         if(isDragging && !isInformOpened)
         {
+            //temp
+            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.CardData.readySprite;
+
             dragEffectObj.gameObject.SetActive(true);
             dragEffectObj.SetPosition(0, curTouchPositionNormalized);
             dragEffectObj.SetPosition(1, curTouchPositionNormalized);
@@ -909,16 +913,18 @@ public class PlayerBehaviour : MonoBehaviour
 
         dragEffectObj.SetPosition(1, dragStartPoint - moveVec.normalized * curDragMagnitude);
         stoneArrowObj.stemLength = curDragMagnitude;
-        
-        if(moveVec.z >= 0) 
+
+        if (moveVec.z >= 0)
         {
             float angle = Mathf.Acos(Vector3.Dot(Vector3.left, moveVec.normalized)) * 180 / Mathf.PI + 180;
             stoneArrowObj.transform.rotation = Quaternion.Euler(90, angle, 0);
+            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, angle+90, 0);
         }
         else
         {
             float angle = Mathf.Acos(Vector3.Dot(Vector3.right, moveVec.normalized)) * 180 / Mathf.PI;
             stoneArrowObj.transform.rotation = Quaternion.Euler(90, angle, 0);
+            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, angle+90, 0);
         }
         
         if(!isDragging)
