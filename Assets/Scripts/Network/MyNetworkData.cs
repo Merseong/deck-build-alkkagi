@@ -202,6 +202,7 @@ namespace MyNetworkData
         COLLIDE,
         DROPOUT,
         POWER,
+        GUARDCOLLIDE,
         COUNT,
     }
 

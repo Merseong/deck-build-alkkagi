@@ -168,6 +168,28 @@ public class GameManager : SingletonBehavior<GameManager>
 
         return returnId;
     }
+
+    public StoneBehaviour FindStone(int id)
+    {
+        StoneBehaviour stone = null;
+        bool found = false;
+
+        if (nextLocalStoneId % 2 == id % 2)
+        {
+            found = LocalStones.TryGetValue(id, out stone);
+        }
+        else
+        {
+            found = OppoStones.TryGetValue(id, out stone);
+        }
+
+        if (!found)
+        {
+            Debug.LogError($"[LOCAL] Find stone failed, no stone with id: {id}");
+        }
+
+        return stone;
+    }
     #endregion
 
     #region Turn Control

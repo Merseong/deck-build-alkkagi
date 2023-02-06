@@ -2,14 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MyNetworkData;
+using System.Linq;
 
 public class AkgRigidbodyRecorder
 {
     private readonly List<VelocityRecord> records = new();
     private readonly List<EventRecord> eventRecords = new();
-    private bool isRecording;
     private float startTime;
+
+    private bool isRecording;
     public bool IsRecording => isRecording;
+
+    private bool isPlaying;
+    public bool IsPlaying => isPlaying;
 
     public void InitRecorder()
     {
@@ -45,10 +50,76 @@ public class AkgRigidbodyRecorder
         eventRecords.Add(eventRecord);
     }
 
-    public void PlayRecord(List<VelocityRecord> records)
+    public IEnumerator EPlayRecord(ShootStonePacket records)
     {
-        // zz
-        Debug.Log(JsonUtility.ToJson(records));
+        isPlaying = true;
+        var vRecords = records.velocityRecords;
+        var pRecords = records.positionRecords;
+        var eRecords = records.eventRecords;
+
+        yield return null;
+        // play vRecords, eRecords
+        var startTime = Time.time;
+        var vrIdx = 0;
+        var erIdx = 0;
+        while (vrIdx < vRecords.Length || erIdx < eRecords.Length)
+        {
+            yield return new WaitUntil(() => vRecords[vrIdx].time <= Time.time - startTime || eRecords[erIdx].time <= Time.time - startTime);
+            if (vrIdx < vRecords.Length)
+            {
+                while (vrIdx < vRecords.Length && vRecords[vrIdx].time <= Time.time - startTime)
+                {
+                    var stone = GameManager.Inst.FindStone(vRecords[vrIdx].stoneId);
+                    stone.GetComponent<AkgRigidbody>().SetVelocity(new Vector3(vRecords[vrIdx].xVelocity, 0, vRecords[vrIdx].zVelocity));
+                    vrIdx++;
+                }
+            }
+            if (erIdx < eRecords.Length)
+            {
+                while (erIdx < eRecords.Length && eRecords[erIdx].time <= Time.time - startTime)
+                {
+                    switch (eRecords[erIdx].eventEnum)
+                    {
+                        case EventEnum.GUARDCOLLIDE:
+                            // stoneId => 충돌한 guard의 번호
+                            // GameBoard.GetGuard(stoneId).destroy(); 같은 느낌으로 해야됨
+                            break;
+                        case EventEnum.DROPOUT:
+                            var stone = GameManager.Inst.FindStone(eRecords[erIdx].stoneId);
+                            // gameboard.dropoutstone(stone) 같은 느낌
+                            break;
+                    }
+                    erIdx++;
+                }
+            }
+        }
+
+        // check pRecords and current stones
+        bool isAllStoneStop = false;
+
+        while (!isAllStoneStop)
+        {
+            yield return new WaitUntil(() =>
+            {
+                return GameManager.Inst.LocalStones.Count == 0 ||
+                    GameManager.Inst.LocalStones.Values.All(x => !x.isMoving);
+            });
+            yield return new WaitUntil(() =>
+            {
+                return GameManager.Inst.OppoStones.Count == 0 ||
+                    GameManager.Inst.OppoStones.Values.All(x => !x.isMoving);
+            });
+
+            isAllStoneStop = true;
+        }
+
+        for (var prIdx = 0; prIdx < pRecords.Length; ++prIdx)
+        {
+            var stone = GameManager.Inst.FindStone(pRecords[prIdx].stoneId);
+            stone.transform.position = new Vector3(pRecords[prIdx].xPosition, 0, pRecords[prIdx].zPosition);
+        }
+
+        isPlaying = false;
     }
 
     public void SendRecord(List<VelocityRecord> records, List<EventRecord> events)
@@ -100,8 +171,12 @@ public class AkgRigidbodyRecorder
 
         var msg = ShootStonePacket.Deserialize(packet.Data);
 
+        msg.velocityRecords = msg.velocityRecords[..msg.velocityCount];
+        msg.positionRecords = msg.positionRecords[..msg.positionCount];
+        msg.eventRecords = msg.eventRecords[..msg.eventCount];
+
         Debug.Log(JsonUtility.ToJson(msg));
 
-        PlayRecord(new List<VelocityRecord>(msg.velocityRecords));
+        GameManager.Inst.StartCoroutine(EPlayRecord(msg));
     }
 }

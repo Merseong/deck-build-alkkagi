@@ -91,7 +91,14 @@ public class AkgRigidbody : MonoBehaviour
 
         velocity = normalVelocity + tangentialVelocity;
         RecordVelocity();
-        RecordCollideEvent();
+        if (other.TryGetComponent<Guard>(out _))
+        {
+            RecordCollideEvent(MyNetworkData.EventEnum.GUARDCOLLIDE);
+        } 
+        else
+        {
+            RecordCollideEvent(MyNetworkData.EventEnum.COLLIDE);
+        }
     }
 
     private void RecordVelocity()
@@ -107,7 +114,7 @@ public class AkgRigidbody : MonoBehaviour
         });
     }
 
-    private void RecordCollideEvent()
+    private void RecordCollideEvent(MyNetworkData.EventEnum eventEnum)
     {
         if (!TryGetComponent<StoneBehaviour>(out var stone)) return;
 
@@ -115,7 +122,7 @@ public class AkgRigidbody : MonoBehaviour
         {
             stoneId = stone.StoneId,
             time = Time.time,
-            eventEnum = MyNetworkData.EventEnum.COLLIDE,
+            eventEnum = eventEnum,
         });
     }
 
