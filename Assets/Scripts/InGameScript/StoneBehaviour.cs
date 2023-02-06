@@ -52,6 +52,7 @@ public class StoneBehaviour : MonoBehaviour
     {
         if(!CheckStoneDropByTransform())
         {
+            RemoveStoneFromGame();
             Destroy(gameObject);
         }
         if (akgRigidbody.velocity == Vector3.zero || !isClicked)
@@ -91,7 +92,7 @@ public class StoneBehaviour : MonoBehaviour
         }
     }
 
-    private void OnApplicationQuit()
+    private void RemoveStoneFromGame()
     {
         if (IsBelongLocalPlayer)
         {

@@ -58,6 +58,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     // temp: 
     [SerializeField]
     private bool m_isNetworkMode;
+    public bool IsNetworkMode => m_isNetworkMode;
     [SerializeField]
     private string m_messageToSend;
 

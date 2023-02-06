@@ -103,6 +103,8 @@ public class GameManager : SingletonBehavior<GameManager>
 
         rigidbodyRecorder.InitRecorder();
         NetworkManager.Inst.AddReceiveDelegate(TurnInfoReceiveNetworkAction);
+
+        if (!NetworkManager.Inst.IsNetworkMode) InitializeGame();
     }
 
     private void OnApplicationQuit()
@@ -196,7 +198,7 @@ public class GameManager : SingletonBehavior<GameManager>
         nextTurnStates[(int)SecondPlayer] = TurnState.PREPARE;
 
         LocalPlayer.DrawCards(5);
-        LocalPlayer.ResetCost();
+        LocalPlayer.ResetCost(30); // temp
         LocalPlayer.ShootTokenAvailable = true;
     }
 

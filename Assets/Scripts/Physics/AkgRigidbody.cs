@@ -66,6 +66,8 @@ public class AkgRigidbody : MonoBehaviour
 
         if (isStatic) return;
 
+        if (GameManager.Inst.rigidbodyRecorder.IsPlaying) return;
+
         AkgRigidbody other = collision.transform.GetComponent<AkgRigidbody>();
         if (other == null) return;
 

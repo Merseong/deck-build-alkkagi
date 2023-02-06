@@ -298,8 +298,10 @@ public class PlayerBehaviour : MonoBehaviour
     {
         Cost -= i;
     }
-    public void ResetCost()
+    public void ResetCost(int resetTo = -1)
     {
+        if (resetTo > 0)
+            Cost = resetTo;
         if (GameManager.Inst.TurnCount == 0)
             Cost = GameManager.Inst.initialTurnCost;
         else
@@ -516,15 +518,11 @@ public class PlayerBehaviour : MonoBehaviour
         while (!isAllStoneStop)
         {
             yield return new WaitUntil(() =>
-            {
-                return GameManager.Inst.LocalStones.Count == 0 ||
-                    GameManager.Inst.LocalStones.Values.All(x => !x.isMoving);
-            });
-            yield return new WaitUntil(() =>
-            {
-                return GameManager.Inst.OppoStones.Count == 0 ||
-                    GameManager.Inst.OppoStones.Values.All(x => !x.isMoving);
-            });
+                (GameManager.Inst.LocalStones.Count == 0 ||
+                GameManager.Inst.LocalStones.Values.All(x => !x.isMoving)) &&
+                (GameManager.Inst.OppoStones.Count == 0 ||
+                GameManager.Inst.OppoStones.Values.All(x => !x.isMoving))
+            );
 
             isAllStoneStop = true;
         }
