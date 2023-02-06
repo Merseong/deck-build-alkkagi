@@ -13,22 +13,58 @@ MonoBehaviour:
   m_Name: Board Data
   m_EditorClassIdentifier: 
   boardID: 1
-  width: 1
-  height: 1.4
+  width: 0.8
+  height: 1.2
   movingDragAccleration: 0
   dragAccleration: 0
   player1CanStone:
-  - x: 2
-    y: 2
-  - x: 0
-    y: 2
-  - x: -2
-    y: 2
-  - x: 2
-    y: 4
-  - x: 0
-    y: 4
-  - x: -2
-    y: 4
-  player2CanStone: []
+  - x: 1
+    y: -1
+  - x: -1
+    y: -1
+  - x: 3
+    y: -1
+  - x: -3
+    y: -1
+  - x: 1
+    y: -3
+  - x: -1
+    y: -3
+  - x: 3
+    y: -3
+  - x: -3
+    y: -3
+  - x: 1
+    y: -5
+  - x: -1
+    y: -5
+  - x: -3
+    y: -5
+  - x: 3
+    y: -5
+  player2CanStone:
+  - x: 1
+    y: 1
+  - x: 3
+    y: 1
+  - x: -1
+    y: 1
+  - x: -3
+    y: 1
+  - x: 1
+    y: 3
+  - x: -1
+    y: 3
+  - x: 3
+    y: 3
+  - x: -3
+    y: 3
+  - x: 1
+    y: 5
+  - x: -1
+    y: 5
+  - x: 3
+    y: 5
+  - x: -3
+    y: 5
   obstacles: []
