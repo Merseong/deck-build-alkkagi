@@ -407,7 +407,7 @@ public class PlayerBehaviour : MonoBehaviour
         stoneBehaviour.SetCardData(card.CardData, stoneId, isLocalPlayer);
 
         //temp code
-        spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = card.CardData.sprite;
+        spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = card.CardData.idleSprite;
         spawnedStone.transform.localScale = new Vector3(GetRadiusFromStoneSize(card.CardData.stoneSize), .15f, GetRadiusFromStoneSize(card.CardData.stoneSize));
         spawnedStone.GetComponent<AkgRigidbody>().mass = GetMassFromStoneWeight(card.CardData.stoneSize, card.CardData.stoneWeight);
 
@@ -437,7 +437,7 @@ public class PlayerBehaviour : MonoBehaviour
         stoneBehaviour.SetCardData(cardData, stoneId, isLocalPlayer);
 
         //temp code
-        spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = cardData.sprite;
+        spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = cardData.idleSprite;
         spawnedStone.transform.localScale = new Vector3(GetRadiusFromStoneSize(cardData.stoneSize), .15f, GetRadiusFromStoneSize(cardData.stoneSize));
         spawnedStone.GetComponent<AkgRigidbody>().mass = GetMassFromStoneWeight(cardData.stoneSize, cardData.stoneWeight);
     }
@@ -553,7 +553,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
         GameManager.Inst.isInformOpened = isInformOpened = true;
         //sprite
-        informPanel.GetChild(0).GetComponent<Image>().sprite = data.sprite;
+        informPanel.GetChild(0).GetComponent<Image>().sprite = data.idleSprite;
         //size
         informPanel.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Size : " + data.stoneSize.ToString();
         //weight

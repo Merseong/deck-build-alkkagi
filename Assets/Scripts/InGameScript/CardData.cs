@@ -29,7 +29,11 @@ public class CardData : ScriptableObject
     // 덱 포함 개수
     public int inDeckNumber;
     // 스프라이트
-    public Sprite sprite;
+    public Sprite idleSprite;
+    public Sprite readySprite;
+    public Sprite shootSprite;
+    public Sprite hitSprite;
+    public Sprite breakSprite;
     // 설명
     public string description;
 }
