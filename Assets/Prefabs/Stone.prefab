@@ -368,7 +368,8 @@ MonoBehaviour:
   followingStone: {fileID: 3312677705765057702, guid: 3869364b4791ba44ea66661c5967a3ea, type: 3}
   _ChasingSpeed: 0.1
   isClicked: 0
-  isBelongLocalPlayer: 0
+  belongingPlayer: 0
+  indirectExitTime: 2
 --- !u!54 &6663944191401573527
 Rigidbody:
   m_ObjectHideFlags: 0
