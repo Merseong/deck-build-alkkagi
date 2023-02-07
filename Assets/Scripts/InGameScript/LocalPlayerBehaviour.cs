@@ -362,8 +362,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     public override int SpawnStone(CardData cardData, Vector3 spawnPosition, int stoneId = -1)
     {
-        if (cardData.cardCost > Cost ||
-            !GameBoard.IsPossibleToPut(spawnPosition, GetRadiusFromStoneSize(cardData.stoneSize)))
+        if (!GameBoard.IsPossibleToPut(spawnPosition, GetRadiusFromStoneSize(cardData.stoneSize)))
         {
             return -1;
         }

@@ -177,10 +177,10 @@ MonoBehaviour:
   velocityMultiplier: 200
   dragEffectObj: {fileID: 178128856140976623}
   maxDragLimit: 10
-  maxClippingPercentage: 0
-  Cost1Color: {r: 0, g: 0, b: 0, a: 0}
-  Cost2Color: {r: 0, g: 0, b: 0, a: 0}
-  alphaOnCancel: 0
+  maxClippingPercentage: 0.2
+  Cost1Color: {r: 1, g: 1, b: 0, a: 1}
+  Cost2Color: {r: 1, g: 0, b: 0, a: 1}
+  alphaOnCancel: 0.7
   pauseEditorOnShoot: 0
 --- !u!1 &178128856140976616
 GameObject:
