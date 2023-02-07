@@ -375,6 +375,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         //temp code
         spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = cardData.idleSprite;
+        if (isLocalRotated)
+            spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
         spawnedStone.transform.localScale = new Vector3(GetRadiusFromStoneSize(cardData.stoneSize), .15f, GetRadiusFromStoneSize(cardData.stoneSize));
         spawnedStone.GetComponent<AkgRigidbody>().mass = GetMassFromStoneWeight(cardData.stoneSize, cardData.stoneWeight);
 
