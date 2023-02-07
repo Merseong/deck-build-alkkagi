@@ -7,6 +7,16 @@ public class OppoPlayerBehaviour : PlayerBehaviour
     [Header("Opponent Settings")]
     private bool test;
 
+    private void Start()
+    {
+        NetworkManager.Inst.AddReceiveDelegate(PlayCardReceiveNetworkAction);    
+    }
+
+    private void OnDisable()
+    {
+        NetworkManager.Inst.RemoveReceiveDelegate(PlayCardReceiveNetworkAction);
+    }
+
     public override void InitPlayer(GameManager.PlayerEnum pEnum)
     {
         base.InitPlayer(pEnum);

@@ -22,6 +22,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     [SerializeField] Transform cardSpawnPoint;
     [SerializeField] Transform handPileLeft;
     [SerializeField] Transform handPileRight;
+    private bool isLocalRotated = false;
+    public bool IsLocalRotated => isLocalRotated;
     private int maxHandSize = 7;
 
     // 이거는 상황 봐서 액션 자체에 대한 클래스를 만들어서 HistoryAction 클래스랑 합칠 수도 있음
@@ -107,6 +109,13 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if (pEnum != GameManager.PlayerEnum.LOCAL)
         {
             Debug.LogError("[LOCAL] player enum not matched!!");
+        }
+
+        if (!GameManager.Inst.isLocalGoFirst)
+        {
+            isLocalRotated = true;
+            transform.Rotate(Vector3.up, 180f);
+            Camera.main.transform.Rotate(Vector3.forward, 180f);
         }
     }
 
@@ -456,7 +465,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private void ArrangeHand(bool isDrawPhase)
     {
         List<RPS> originCardRPSs = new List<RPS>();
-        originCardRPSs = RoundAlignment(handPileLeft, handPileRight, hand.Count, 0.5f, new Vector3(2.0f, 0.5f, 3.0f));
+        originCardRPSs = RoundAlignment(handPileLeft, handPileRight, hand.Count, isLocalRotated ? -0.5f : 0.5f, new Vector3(2.0f, 0.5f, 3.0f));
 
         var targetCards = hand;
 

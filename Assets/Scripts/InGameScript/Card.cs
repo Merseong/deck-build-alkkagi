@@ -73,7 +73,8 @@ public class Card : MonoBehaviour
         } 
         if (isEnlarge)
         {
-            Vector3 enlargePos = new Vector3(originRPS.pos.x, 10.0f, -7f);
+            float enlargeZ = (GameManager.Inst.LocalPlayer as LocalPlayerBehaviour).IsLocalRotated ? 7f : -7f;
+            Vector3 enlargePos = new Vector3(originRPS.pos.x, 10.0f, enlargeZ);
             MoveTransform(new RPS(enlargePos, Quaternion.identity, originRPS.scale * 2), false);
         }
         else
