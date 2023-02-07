@@ -5,6 +5,19 @@ using UnityEngine;
 public class SingletonBehavior<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T _inst;
+
+    public static bool IsEnabled
+    {
+        get
+        {
+            if (_inst)
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+
     public static T Inst
     {
         get

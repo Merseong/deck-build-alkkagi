@@ -155,6 +155,7 @@ public abstract class PlayerBehaviour : MonoBehaviour
     protected Vector3 StringToVector3(string vec3)
     {
         var stringList = vec3.Split('|');
+        Debug.Log(stringList);
         return new Vector3(float.Parse(stringList[1]), float.Parse(stringList[2]), float.Parse(stringList[3]));
     }
 

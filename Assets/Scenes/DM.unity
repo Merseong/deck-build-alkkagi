@@ -191,6 +191,7 @@ MonoBehaviour:
   costTextUi: {fileID: 932349271}
   handCountTextUi: {fileID: 503537530}
   shootTokenImage: {fileID: 887707238}
+  StonePrefab: {fileID: 6663944191401573520, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
 --- !u!1 &274898683
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,7 +340,7 @@ MonoBehaviour:
   CardDatas:
   - {fileID: 11400000, guid: ad9eecbeeeab2e44eb513eee02c0e6da, type: 2}
   - {fileID: 11400000, guid: 4b02e65e8e145fe40a9d3093d27bb20a, type: 2}
-  isLocalGoFirst: 0
+  isLocalGoFirst: 1
   isPlayerHonorSkip: 0
   isPlayerConsentHonorSkip: 0
   isInformOpened: 0
@@ -858,7 +859,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 775994638631315117, guid: 79f1642b97c92004a959cb7e00a72221, type: 3}
       propertyPath: m_isNetworkMode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 79f1642b97c92004a959cb7e00a72221, type: 3}
