@@ -165,7 +165,6 @@ public class GameBoard : MonoBehaviour
     {
         if(guardPrefab == null) return;
         
-        GameObject go;
         Vector3 position;
         Quaternion rotation;
         // Rotated가 true일때, 서로 반대

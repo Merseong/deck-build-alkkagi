@@ -16,6 +16,8 @@ public class AkgRigidbody : MonoBehaviour
 
     new private Rigidbody rigidbody;
 
+    private AkgRigidbody lastCollided;
+
     // TODO: 동기화를 위한 충돌 없이 이동하기 등 (point to point)
     // TODO(?): 각속도
 
@@ -71,6 +73,11 @@ public class AkgRigidbody : MonoBehaviour
         AkgRigidbody other = collision.transform.GetComponent<AkgRigidbody>();
         if (other == null) return;
 
+        // TODO: 아래 두줄중 어느쪽이 옳을지에 대한 생각
+        //if (lastCollided) return;
+        if (lastCollided == other) return;
+        lastCollided = other;
+
         ContactPoint cp = collision.GetContact(0);
         
         Vector3 normal = cp.normal;
@@ -93,14 +100,12 @@ public class AkgRigidbody : MonoBehaviour
 
         velocity = normalVelocity + tangentialVelocity;
         RecordVelocity();
-        if (other.TryGetComponent<Guard>(out _))
-        {
-            RecordCollideEvent(MyNetworkData.EventEnum.GUARDCOLLIDE);
-        } 
-        else
-        {
-            RecordCollideEvent(MyNetworkData.EventEnum.COLLIDE);
-        }
+        RecordCollideEvent(MyNetworkData.EventEnum.COLLIDE);
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        lastCollided = null;
     }
 
     private void RecordVelocity()

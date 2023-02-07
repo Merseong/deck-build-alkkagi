@@ -135,6 +135,9 @@ public class AkgRigidbodyRecorder
 
     private void ShootRecordSendNetworkAction(List<VelocityRecord> _velocityRecords, List<PositionRecord> _positionRecords, List<EventRecord> _eventRecords)
     {
+        _velocityRecords.Sort((n1, n2) => n1.time.CompareTo(n2.time));
+        _eventRecords.Sort((n1, n2) => n1.time.CompareTo(n2.time));
+
         var data = new ShootStonePacket
         {
             senderID = NetworkManager.Inst.NetworkId,

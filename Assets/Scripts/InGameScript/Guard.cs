@@ -5,10 +5,13 @@ using UnityEngine;
 public class Guard : MonoBehaviour
 {
     private int guardId;
+    private bool isBelongLocal;
+    private bool isCollided = false;
     
     public void SetGuardData(int id, bool isLocal)
     {
         guardId = id;
+        isBelongLocal = isLocal;
         SetSide(isLocal);
     }
 
@@ -28,8 +31,10 @@ public class Guard : MonoBehaviour
 
     private void OnCollisionEnter(Collision coll)
     {
-        if(coll.gameObject.CompareTag("Stone")) 
+        if (isCollided) return;
+        if (coll.gameObject.CompareTag("Stone")) 
         {
+            isCollided = true;
             GameManager.Inst.rigidbodyRecorder.AppendEventRecord(new MyNetworkData.EventRecord
             {
                 stoneId = guardId,
@@ -37,7 +42,7 @@ public class Guard : MonoBehaviour
                 eventEnum = MyNetworkData.EventEnum.GUARDCOLLIDE,
             });
 
-            Destroy(this.gameObject);
+            GameManager.Inst.GameBoard.RemoveLocalGuard(guardId);
         }
     }
 }
