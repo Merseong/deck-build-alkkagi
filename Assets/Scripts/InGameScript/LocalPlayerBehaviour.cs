@@ -442,13 +442,17 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     {
         GameManager.Inst.isInformOpened = isInformOpened = true;
         //sprite
-        informPanel.GetChild(0).GetComponent<Image>().sprite = data.idleSprite;
+        informPanel.GetChild(1).GetComponent<Image>().sprite = data.idleSprite;
         //size
-        informPanel.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Size : " + data.stoneSize.ToString();
+        informPanel.GetChild(2).GetComponent<TextMeshProUGUI>().text = data.stoneSize.ToString();
         //weight
-        informPanel.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Weight : " + data.stoneWeight.ToString();
+        informPanel.GetChild(3).GetComponent<TextMeshProUGUI>().text = data.stoneWeight.ToString();
         //description
-        informPanel.GetChild(3).GetComponent<TextMeshProUGUI>().text = data.description.ToString();
+        informPanel.GetChild(4).GetComponent<TextMeshProUGUI>().text = data.description.ToString();
+        //Card name
+        // informPanel.GetChild(5).GetComponent<TextMeshProUGUI>().text = data.cardName.ToString();
+        //cost
+        informPanel.GetChild(6).GetComponent<TextMeshProUGUI>().text = data.cardCost.ToString();
     }
 
 
