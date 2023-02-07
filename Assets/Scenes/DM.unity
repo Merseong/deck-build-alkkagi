@@ -340,7 +340,8 @@ MonoBehaviour:
   CardDatas:
   - {fileID: 11400000, guid: ad9eecbeeeab2e44eb513eee02c0e6da, type: 2}
   - {fileID: 11400000, guid: 4b02e65e8e145fe40a9d3093d27bb20a, type: 2}
-  isLocalGoFirst: 1
+  gameBoard: {fileID: 1227286728}
+  isLocalGoFirst: 0
   isPlayerHonorSkip: 0
   isPlayerConsentHonorSkip: 0
   isInformOpened: 0
@@ -600,7 +601,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boardData: {fileID: 11400000, guid: e5fd9aa4646e76f40a1531880de2b194, type: 2}
-  guardObject: {fileID: 1072273095557792123, guid: c1c9221ddc26bff4ebe4b62d9a4def18, type: 3}
+  guardPrefab: {fileID: 1072273095557792123, guid: c1c9221ddc26bff4ebe4b62d9a4def18, type: 3}
   putMark: {fileID: 4446608909018917832, guid: 70a8ac05b6498334cbc85659a4f15335, type: 3}
   nearbyRadius: 1
   isNullPos: {x: 0, y: 100, z: 0}
@@ -859,7 +860,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 775994638631315117, guid: 79f1642b97c92004a959cb7e00a72221, type: 3}
       propertyPath: m_isNetworkMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 79f1642b97c92004a959cb7e00a72221, type: 3}

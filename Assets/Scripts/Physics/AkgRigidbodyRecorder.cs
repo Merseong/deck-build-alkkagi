@@ -82,11 +82,11 @@ public class AkgRigidbodyRecorder
                     {
                         case EventEnum.GUARDCOLLIDE:
                             // stoneId => 충돌한 guard의 번호
-                            // GameBoard.GetGuard(stoneId).destroy(); 같은 느낌으로 해야됨
+                            GameManager.Inst.GameBoard.RemoveOppoGuard(eRecords[erIdx].stoneId);
                             break;
                         case EventEnum.DROPOUT:
                             var stone = GameManager.Inst.FindStone(eRecords[erIdx].stoneId);
-                            // gameboard.dropoutstone(stone) 같은 느낌
+                            // TODO: gameboard.dropoutstone(stone) 같은 느낌
                             break;
                     }
                     erIdx++;

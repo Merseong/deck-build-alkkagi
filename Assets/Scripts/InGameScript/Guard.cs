@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class Guard : MonoBehaviour
 {
-    public void SetSide(bool isBelongLocal)
+    private int guardId;
+    
+    public void SetGuardData(int id, bool isLocal)
+    {
+        guardId = id;
+        SetSide(isLocal);
+    }
+
+    private void SetSide(bool isBelongLocal)
     {
         if(isBelongLocal) 
         {
@@ -22,7 +30,13 @@ public class Guard : MonoBehaviour
     {
         if(coll.gameObject.CompareTag("Stone")) 
         {
-            //TODO : Synchoronize destroy by network
+            GameManager.Inst.rigidbodyRecorder.AppendEventRecord(new MyNetworkData.EventRecord
+            {
+                stoneId = guardId,
+                time = Time.time,
+                eventEnum = MyNetworkData.EventEnum.GUARDCOLLIDE,
+            });
+
             Destroy(this.gameObject);
         }
     }

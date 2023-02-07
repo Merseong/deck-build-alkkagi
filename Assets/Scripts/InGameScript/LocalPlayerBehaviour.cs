@@ -828,12 +828,12 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         {
             //TODO : 스톤 미리보기 추가해주어야 함
             selectedCard.GetComponent<MeshRenderer>().enabled = false;
-            GameBoard.HighlightPossiblePos(1, 1f);
+            GameManager.Inst.GameBoard.HighlightPossiblePos(GameManager.PlayerEnum.LOCAL, 1f);
         }
         else
         {
             selectedCard.GetComponent<MeshRenderer>().enabled = true;
-            GameBoard.UnhightlightPossiblePos();
+            GameManager.Inst.GameBoard.UnhightlightPossiblePos();
         }
         selectedCard.transform.position = new Vector3(curTouchPositionNormalized.x, 5f, curTouchPositionNormalized.z);
 
@@ -851,7 +851,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         GameManager.Inst.isInformOpened = isInformOpened = false;
         selectedCard = null;
         selectedStone = null;
-        GameBoard.UnhightlightPossiblePos();
+        GameManager.Inst.GameBoard.UnhightlightPossiblePos();
     }
 
     private void StoneSelectionAction(bool canShoot, Vector3 curScreenTouchPosition)
@@ -920,14 +920,14 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private void CardPlayAction(Vector3 curTouchPositionNormalized)
     {
         selectedCard.GetComponent<MeshRenderer>().enabled = true;
-        Vector3 nearbyPos = gameBoard.GiveNearbyPos(curTouchPositionNormalized, 1, 10f);
+        Vector3 nearbyPos = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, 10f);
         if (nearbyPos != gameBoard.isNullPos)
         {
             PlayCard(selectedCard, nearbyPos);
         }
         ArrangeHand(false);
         selectedCard = null;
-        GameBoard.UnhightlightPossiblePos();
+        GameManager.Inst.GameBoard.UnhightlightPossiblePos();
     }
 
     private void CardSelectionAction()
@@ -935,7 +935,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         selectedCard.GetComponent<MeshRenderer>().enabled = true;
         SetInformPanel(selectedCard.CardData);
         informPanel.gameObject.SetActive(true);
-        GameBoard.UnhightlightPossiblePos();
+        GameManager.Inst.GameBoard.UnhightlightPossiblePos();
     }
 
     #endregion InputActionSet

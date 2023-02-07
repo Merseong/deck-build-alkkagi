@@ -5,22 +5,41 @@ using UnityEngine;
 public class GameBoard : MonoBehaviour
 {   
     [SerializeField] private BoardData boardData;
-    [SerializeField] private GameObject guardObject;
+    [SerializeField] private GameObject guardPrefab;
     public BoardData BoardData => boardData;
 
     public GameObject putMark;
     public float nearbyRadius = 10.0f;
     public Vector3 isNullPos = new Vector3(0, 100, 0);
 
-    private static GameObject[] player1PutMarks;
-    private static GameObject[] player2PutMarks;
-    [SerializeField] private List<GameObject> localPlayerGuard = new();
-    [SerializeField] private List<GameObject> oppoPlayerGuard = new();
+    private GameObject[] player1PutMarks;
+    private GameObject[] player2PutMarks;
+    private GameObject[] localPlayerPutMarks
+    {
+        get
+        {
+            if (GameManager.Inst.isLocalGoFirst)
+                return player1PutMarks;
+            else
+                return player2PutMarks;
+        }
+    }
+    private GameObject[] oppoPlayerPutMarks
+    {
+        get
+        {
+            if (GameManager.Inst.isLocalGoFirst)
+                return player2PutMarks;
+            else
+                return player1PutMarks;
+        }
+    }
+    [SerializeField] private Dictionary<int, GameObject> localPlayerGuard = new();
+    [SerializeField] private Dictionary<int, GameObject> oppoPlayerGuard = new();
     [SerializeField] private int guardHorizontalCnt;
     [SerializeField] private int guardVerticalCnt;
-    
 
-    public void Awake()
+    public void InitGameBoard()
     {
         gameObject.transform.localScale = new Vector3(BoardData.width, 1, BoardData.height);
 
@@ -50,41 +69,41 @@ public class GameBoard : MonoBehaviour
     // 떨어짐 판정
 
     // 스톤을 놓을 수 있는 모든 위치 제공
-    public static void HighlightPossiblePos(int player, float stoneRadius)
+    public void HighlightPossiblePos(GameManager.PlayerEnum player, float stoneRadius)
     {
-        if (player == 1)
+        if (player == GameManager.PlayerEnum.LOCAL)
         {
-            for (int i = 0; i < player1PutMarks.Length; i++)
+            for (int i = 0; i < localPlayerPutMarks.Length; i++)
             {
-                if (IsPossibleToPut(player1PutMarks[i].transform.position, stoneRadius))
+                if (IsPossibleToPut(localPlayerPutMarks[i].transform.position, stoneRadius))
                 {
-                    player1PutMarks[i].SetActive(true);
-                    player1PutMarks[i].GetComponent<SpriteRenderer>().color = Color.yellow;
+                    localPlayerPutMarks[i].SetActive(true);
+                    localPlayerPutMarks[i].GetComponent<SpriteRenderer>().color = Color.yellow;
                 }
                 else
                 {
-                    player1PutMarks[i].SetActive(false);
-                    player1PutMarks[i].GetComponent<SpriteRenderer>().color = Color.red;
+                    localPlayerPutMarks[i].SetActive(false);
+                    localPlayerPutMarks[i].GetComponent<SpriteRenderer>().color = Color.red;
                 }
             }
         }
         else
         {
-            for (int i = 0; i < player2PutMarks.Length; i++)
+            for (int i = 0; i < oppoPlayerPutMarks.Length; i++)
             {
-                if (IsPossibleToPut(player2PutMarks[i].transform.position, stoneRadius))
+                if (IsPossibleToPut(oppoPlayerPutMarks[i].transform.position, stoneRadius))
                 {
-                    player2PutMarks[i].GetComponent<SpriteRenderer>().color = Color.yellow;
+                    oppoPlayerPutMarks[i].GetComponent<SpriteRenderer>().color = Color.yellow;
                 }
                 else
                 {
-                    player2PutMarks[i].GetComponent<SpriteRenderer>().color = Color.red;
+                    oppoPlayerPutMarks[i].GetComponent<SpriteRenderer>().color = Color.red;
                 }
             }
         }
     }
 
-    public static void UnhightlightPossiblePos()
+    public void UnhightlightPossiblePos()
     {
         for (int i = 0; i < player1PutMarks.Length; i++)
         {
@@ -97,11 +116,14 @@ public class GameBoard : MonoBehaviour
     }
 
     // 해당 위치 근처에 스톤 놓을 수 있는 위치 제공
-    public Vector3 GiveNearbyPos(Vector3 pos, int player, float stoneRadius)
+    public Vector3 GiveNearbyPos(Vector3 pos, GameManager.PlayerEnum player, float stoneRadius)
     {
-        if (player == 1)
+        var localCanStone = GameManager.Inst.isLocalGoFirst ? BoardData.player1CanStone : BoardData.player2CanStone;
+        var oppoCanStone = GameManager.Inst.isLocalGoFirst ? BoardData.player2CanStone : BoardData.player1CanStone;
+
+        if (player == GameManager.PlayerEnum.LOCAL)
         {
-            foreach (BoardPos boardPos in BoardData.player1CanStone)
+            foreach (BoardPos boardPos in localCanStone)
             {
                 Vector3 nearbyPos = new Vector3(boardPos.x, 0, boardPos.y);
                 // Debug.Log(nearbyPos + ", " + IsPossibleToPut(nearbyPos,stoneRadius));
@@ -113,7 +135,7 @@ public class GameBoard : MonoBehaviour
         }
         else
         {
-            foreach (BoardPos boardPos in BoardData.player2CanStone)
+            foreach (BoardPos boardPos in oppoCanStone)
             {
                 Vector3 nearbyPos = new Vector3(boardPos.x, 0, boardPos.y);
                 if (Vector3.Distance(pos, nearbyPos) <= nearbyRadius && IsPossibleToPut(nearbyPos, stoneRadius))
@@ -141,54 +163,89 @@ public class GameBoard : MonoBehaviour
 
     private void SetGuard()
     {
-        if(guardObject == null) return;
+        if(guardPrefab == null) return;
         
         GameObject go;
-
-        for(int i = (int)(guardVerticalCnt/2)-1; i >= 0 ; i--)
+        Vector3 position;
+        Quaternion rotation;
+        // Rotated가 true일때, 서로 반대
+        var isRotated = (GameManager.Inst.LocalPlayer as LocalPlayerBehaviour).IsLocalRotated;
+        
+        rotation = Quaternion.Euler(0, 0, 0);
+        for (int i = (int)(guardVerticalCnt/2)-1; i >= 0 ; i--)
         {
             //left local
-            go = Instantiate(guardObject, new Vector3(-(.035f + boardData.width / 2), 0, boardData.height * (0.5f + i - (int)(guardVerticalCnt / 2))/ guardVerticalCnt) * 10f, Quaternion.Euler(0,0,0));
-            go.transform.localScale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.height / guardVerticalCnt / go.transform.localScale.z);
-            go.GetComponent<Guard>().SetSide(true);
-            localPlayerGuard.Add(go);
+            position = new Vector3(-(.035f + boardData.width / 2), 0, boardData.height * (0.5f + i - (int)(guardVerticalCnt / 2)) / guardVerticalCnt) * 10f;
+            if (isRotated) AddOppoGuard(position, rotation);
+            else AddLocalGuard(position, rotation);
 
             //right oppo
-            go = Instantiate(guardObject, new Vector3(-(.035f + boardData.width / 2), 0, boardData.height * (0.5f + i - (int)(guardVerticalCnt / 2))/ guardVerticalCnt) * -10f, Quaternion.Euler(0,0,0));
-            go.transform.localScale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.height / guardVerticalCnt / go.transform.localScale.z);
-            go.GetComponent<Guard>().SetSide(false);
-            oppoPlayerGuard.Add(go);
+            position = new Vector3(-(.035f + boardData.width / 2), 0, boardData.height * (0.5f + i - (int)(guardVerticalCnt / 2)) / guardVerticalCnt) * -10f;
+            if (isRotated) AddLocalGuard(position, rotation);
+            else AddOppoGuard(position, rotation);
         }
 
-        for(int i=guardHorizontalCnt-1; i >=0 ; i--)
+        rotation = Quaternion.Euler(0, 90, 0);
+        for (int i=guardHorizontalCnt-1; i >=0 ; i--)
         {
             //lower local
-            go = Instantiate(guardObject, new Vector3(boardData.width * (i - (float)guardHorizontalCnt / 2 + 0.5f)/ guardHorizontalCnt, 0, .035f + boardData.height / 2) * -10f, Quaternion.Euler(0,90,0));
-            go.transform.localScale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.width / guardHorizontalCnt / go.transform.localScale.z);
-            go.GetComponent<Guard>().SetSide(true);
-            localPlayerGuard.Add(go);
-            
+            position = new Vector3(boardData.width * (i - (float)guardHorizontalCnt / 2 + 0.5f) / guardHorizontalCnt, 0, .035f + boardData.height / 2) * -10f;
+            if (isRotated) AddOppoGuard(position, rotation);
+            else AddLocalGuard(position, rotation);
+
             //upper oppo
-            go = Instantiate(guardObject, new Vector3(boardData.width * (i - (float)guardHorizontalCnt / 2 + 0.5f)/ guardHorizontalCnt, 0, .035f + boardData.height / 2) * 10f, Quaternion.Euler(0,90,0));
-            go.transform.localScale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.width / guardHorizontalCnt / go.transform.localScale.z);
-            go.GetComponent<Guard>().SetSide(false);
-            oppoPlayerGuard.Add(go);
+            position = new Vector3(boardData.width * (i - (float)guardHorizontalCnt / 2 + 0.5f) / guardHorizontalCnt, 0, .035f + boardData.height / 2) * 10f;
+            if (isRotated) AddLocalGuard(position, rotation);
+            else AddOppoGuard(position, rotation);
 
         }
 
-        for(int i=0; i< guardVerticalCnt/2; i++)
+        rotation = Quaternion.Euler(0, 0, 0);
+        for (int i=0; i< guardVerticalCnt/2; i++)
         {
             //right local
-            go = Instantiate(guardObject, new Vector3(.035f + boardData.width / 2, 0, boardData.height * (0.5f + i - (int)(guardVerticalCnt / 2))/ guardVerticalCnt) * 10f, Quaternion.Euler(0,0,0));
-            go.transform.localScale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.height / guardVerticalCnt / go.transform.localScale.z);
-            go.GetComponent<Guard>().SetSide(true);
-            localPlayerGuard.Add(go);
-            
+            position = new Vector3(.035f + boardData.width / 2, 0, boardData.height * (0.5f + i - (int)(guardVerticalCnt / 2)) / guardVerticalCnt) * 10f;
+            if (isRotated) AddOppoGuard(position, rotation);
+            else AddLocalGuard(position, rotation);
+
             //left oppo
-            go = Instantiate(guardObject, new Vector3(.035f + boardData.width / 2, 0, boardData.height * (0.5f + i - (int)(guardVerticalCnt / 2))/ guardVerticalCnt) * -10f, Quaternion.Euler(0,0,0));
-            go.transform.localScale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.height / guardVerticalCnt / go.transform.localScale.z);
-            go.GetComponent<Guard>().SetSide(false);
-            oppoPlayerGuard.Add(go);
+            position = new Vector3(.035f + boardData.width / 2, 0, boardData.height * (0.5f + i - (int)(guardVerticalCnt / 2)) / guardVerticalCnt) * -10f;
+            if (isRotated) AddLocalGuard(position, rotation);
+            else AddOppoGuard(position, rotation);
         }
+    }
+
+    public void AddLocalGuard(Vector3 position, Quaternion rotation)
+    {
+        var go = Instantiate(guardPrefab, position, rotation);
+        go.transform.localScale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.height / guardVerticalCnt / go.transform.localScale.z);
+        var idx = localPlayerGuard.Count;
+        go.GetComponent<Guard>().SetGuardData(idx, true);
+        localPlayerGuard.Add(idx, go);
+    }
+
+    public void AddOppoGuard(Vector3 position, Quaternion rotation)
+    {
+        var go = Instantiate(guardPrefab, position, rotation);
+        go.transform.localScale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.height / guardVerticalCnt / go.transform.localScale.z);
+        var idx = oppoPlayerGuard.Count;
+        go.GetComponent<Guard>().SetGuardData(idx, false);
+        oppoPlayerGuard.Add(idx, go);
+    }
+
+    public void RemoveOppoGuard(int id)
+    {
+        oppoPlayerGuard.TryGetValue(id, out var guard);
+        oppoPlayerGuard.Remove(id);
+
+        Destroy(guard);
+    }
+
+    public void RemoveLocalGuard(int id)
+    {
+        localPlayerGuard.TryGetValue(id, out var guard);
+        localPlayerGuard.Remove(id);
+
+        Destroy(guard);
     }
 }

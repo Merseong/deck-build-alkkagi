@@ -22,6 +22,10 @@ public class GameManager : SingletonBehavior<GameManager>
     // 돌들
     public Dictionary<int, StoneBehaviour> AllStones = new();
 
+    // 현재 보드
+    [SerializeField] private GameBoard gameBoard;
+    public GameBoard GameBoard => gameBoard;
+
     // 서버에서 선공이 누구인지 정해줘야함
     public bool isLocalGoFirst;
     PlayerEnum FirstPlayer => isLocalGoFirst ? PlayerEnum.LOCAL: PlayerEnum.OPPO;
@@ -33,7 +37,6 @@ public class GameManager : SingletonBehavior<GameManager>
     //카드 정보 일람 여부에 대햔 flag
     public bool isInformOpened;
     public bool isCancelOpened;
-    // 현재 보드
 
     // 각자 턴의 제어
     // WAIT가 아닌 턴의 종료가 일어나는 PLAYER쪽에서 턴 변경 처리
@@ -160,7 +163,9 @@ public class GameManager : SingletonBehavior<GameManager>
         // inspector에서 직접 설정 필요
         players[0].InitPlayer(PlayerEnum.LOCAL);
         players[1].InitPlayer(PlayerEnum.OPPO);
+        GameBoard.InitGameBoard();
 
+        // Start game
         LocalPlayer.DrawCards(5);
         LocalPlayer.ResetCost(30); // temp
         LocalPlayer.ShootTokenAvailable = true;
