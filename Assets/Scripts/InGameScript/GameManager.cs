@@ -14,15 +14,13 @@ public class GameManager : SingletonBehavior<GameManager>
     public PlayerBehaviour[] players;  // 0: local, 1: oppo
     public PlayerBehaviour LocalPlayer => players[0];
     public PlayerBehaviour OppoPlayer => players[1];
-    public PlayerBehaviour CurrentPlayer => players[isLocalGoFirst ? 0 : 1];
+    public PlayerBehaviour CurrentPlayer => players[(int)WhoseTurn];
 
     // Card List 임시용
     public List<CardData> CardDatas;
 
     // 돌들
-    public Dictionary<int, StoneBehaviour> LocalStones = new();
-    public Dictionary<int, StoneBehaviour> OppoStones = new();
-    private int nextLocalStoneId;
+    public Dictionary<int, StoneBehaviour> AllStones = new();
 
     // 서버에서 선공이 누구인지 정해줘야함
     public bool isLocalGoFirst;
@@ -91,12 +89,6 @@ public class GameManager : SingletonBehavior<GameManager>
     public int initialTurnCost = 6;
     public int normalTurnCost = 3;
 
-    private void Awake()
-    {
-        players = new PlayerBehaviour[2];
-        nextLocalStoneId = isLocalGoFirst ? 0 : 1; // 이부분은 네트워크 받고 나서로 해야하긴 함
-    }
-
     public void Start()
     {
         OnTurnStart += StartTurnBasis;
@@ -141,46 +133,14 @@ public class GameManager : SingletonBehavior<GameManager>
 
     #endregion
 
-    #region Stone List Control
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="stone"></param>
-    /// <param name="isLocal"></param>
-    /// <param name="stoneId">isLocal이 false인 경우, 반드시 기입</param>
-    public int AddStone(StoneBehaviour stone, bool isLocal, int oppoStoneId = -1)
+    #region Stones list control
+    public StoneBehaviour FindStone(int stoneId)
     {
-        var returnId = isLocal ? nextLocalStoneId : oppoStoneId;
-        if (isLocal)
-        {
-            LocalStones.Add(nextLocalStoneId, stone);
-            nextLocalStoneId += 2;
-        }
-        else
-        {
-            OppoStones.Add(oppoStoneId, stone);
-        }
+        var isFound = AllStones.TryGetValue(stoneId, out var stone);
 
-        return returnId;
-    }
-
-    public StoneBehaviour FindStone(int id)
-    {
-        StoneBehaviour stone = null;
-        bool found = false;
-
-        if (nextLocalStoneId % 2 == id % 2)
+        if (!isFound)
         {
-            found = LocalStones.TryGetValue(id, out stone);
-        }
-        else
-        {
-            found = OppoStones.TryGetValue(id, out stone);
-        }
-
-        if (!found)
-        {
-            Debug.LogError($"[LOCAL] Find stone failed, no stone with id: {id}");
+            Debug.LogError($"[GAME] stone id {stoneId} not found");
         }
 
         return stone;
@@ -196,6 +156,10 @@ public class GameManager : SingletonBehavior<GameManager>
         nextTurnStates = new TurnState[2];
         nextTurnStates[(int)FirstPlayer] = TurnState.WAIT;
         nextTurnStates[(int)SecondPlayer] = TurnState.PREPARE;
+
+        // inspector에서 직접 설정 필요
+        players[0].InitPlayer(PlayerEnum.LOCAL);
+        players[1].InitPlayer(PlayerEnum.OPPO);
 
         LocalPlayer.DrawCards(5);
         LocalPlayer.ResetCost(30); // temp

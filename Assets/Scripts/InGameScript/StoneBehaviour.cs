@@ -39,8 +39,8 @@ public class StoneBehaviour : MonoBehaviour
     public float _ChasingSpeed = 0.1f;
     public bool isClicked = false;
 
-    [SerializeField] private bool isBelongLocalPlayer = true;
-    public bool IsBelongLocalPlayer => isBelongLocalPlayer;
+    [SerializeField] private GameManager.PlayerEnum belongingPlayer;
+    public GameManager.PlayerEnum BelongingPlayer => belongingPlayer;
 
     private void Start()
     {
@@ -94,21 +94,14 @@ public class StoneBehaviour : MonoBehaviour
 
     private void RemoveStoneFromGame()
     {
-        if (IsBelongLocalPlayer)
-        {
-            GameManager.Inst.LocalStones.Remove(stoneId);
-        }
-        else
-        {
-            GameManager.Inst.OppoStones.Remove(stoneId);
-        }
+        GameManager.Inst.players[(int)BelongingPlayer].RemoveStone(stoneId);
     }
 
-    public void SetCardData(CardData data, int id, bool isLocalPlayer)
+    public void SetCardData(CardData data, int id, GameManager.PlayerEnum owner)
     {
         cardData = data;
         stoneId = id;
-        isBelongLocalPlayer = isLocalPlayer;
+        belongingPlayer = owner;
     }
 
     private bool CheckStoneDropByTransform()

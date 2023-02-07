@@ -11,7 +11,6 @@ public class AkgRigidbody : MonoBehaviour
     public float mass = 1.0f;
     public float cor = 0.5f;    // 반발계수
 
-    [HideInInspector]
     public Vector3 velocity = Vector3.zero;
     private Vector3 oldVelocity = Vector3.zero;
 
@@ -53,6 +52,7 @@ public class AkgRigidbody : MonoBehaviour
 
         RecordVelocity();
     }
+
     public void SetVelocity(Vector3 vel)
     {
         if (isStatic) return;

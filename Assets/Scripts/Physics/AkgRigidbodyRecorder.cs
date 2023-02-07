@@ -81,12 +81,12 @@ public class AkgRigidbodyRecorder
                     switch (eRecords[erIdx].eventEnum)
                     {
                         case EventEnum.GUARDCOLLIDE:
-                            // stoneId => Ãæµ¹ÇÑ guardÀÇ ¹øÈ£
-                            // GameBoard.GetGuard(stoneId).destroy(); °°Àº ´À³¦À¸·Î ÇØ¾ßµÊ
+                            // stoneId => ì¶©ëŒí•œ guardì˜ ë²ˆí˜¸
+                            // GameBoard.GetGuard(stoneId).destroy(); ê°™ì€ ëŠë‚Œìœ¼ë¡œ í•´ì•¼ë¨
                             break;
                         case EventEnum.DROPOUT:
                             var stone = GameManager.Inst.FindStone(eRecords[erIdx].stoneId);
-                            // gameboard.dropoutstone(stone) °°Àº ´À³¦
+                            // gameboard.dropoutstone(stone) ê°™ì€ ëŠë‚Œ
                             break;
                     }
                     erIdx++;
@@ -101,13 +101,8 @@ public class AkgRigidbodyRecorder
         {
             yield return new WaitUntil(() =>
             {
-                return GameManager.Inst.LocalStones.Count == 0 ||
-                    GameManager.Inst.LocalStones.Values.All(x => !x.isMoving);
-            });
-            yield return new WaitUntil(() =>
-            {
-                return GameManager.Inst.OppoStones.Count == 0 ||
-                    GameManager.Inst.OppoStones.Values.All(x => !x.isMoving);
+                return GameManager.Inst.AllStones.Count == 0 ||
+                    GameManager.Inst.AllStones.Values.All(x => !x.isMoving);
             });
 
             isAllStoneStop = true;
@@ -125,16 +120,7 @@ public class AkgRigidbodyRecorder
     public void SendRecord(List<VelocityRecord> records, List<EventRecord> events)
     {
         var positionRecords = new List<PositionRecord>();
-        foreach (var stone in GameManager.Inst.LocalStones)
-        {
-            positionRecords.Add(new PositionRecord
-            {
-                stoneId = stone.Key,
-                xPosition = stone.Value.transform.position.x,
-                zPosition = stone.Value.transform.position.z,
-            });
-        }
-        foreach (var stone in GameManager.Inst.OppoStones)
+        foreach (var stone in GameManager.Inst.AllStones)
         {
             positionRecords.Add(new PositionRecord
             {

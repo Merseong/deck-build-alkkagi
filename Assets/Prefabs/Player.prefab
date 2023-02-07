@@ -102,7 +102,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 178128855195758150}
-  - component: {fileID: 178128855195758144}
+  - component: {fileID: 178128857093286909}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -129,7 +129,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &178128855195758144
+--- !u!114 &178128857093286909
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,31 +138,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 178128855195758145}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02edbd3a56bd54346a2ac9933a06f574, type: 3}
+  m_Script: {fileID: 11500000, guid: 98aa6b2fbaf4d3c41b045e88ff809fa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: 0
+  cost: 0
+  handCount: 0
+  nextStoneId: 0
+  shootTokenAvailable: 0
+  costTextUi: {fileID: 0}
+  handCountTextUi: {fileID: 0}
+  shootTokenImage: {fileID: 0}
   StonePrefab: {fileID: 6663944191401573520, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
-  isLocalPlayer: 1
   cancelPanel: {fileID: 0}
   informPanel: {fileID: 0}
-  costTextUi: {fileID: 0}
-  shootTokenImage: {fileID: 0}
-  enemyPanel: {fileID: 0}
-  cost: 10
   deck:
   - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
+  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
+  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
+  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
   - {fileID: 3721772108986987149, guid: cbe20cb326ac5874aa12a2d99e3ff1bc, type: 3}
   - {fileID: 3721772108986987149, guid: cbe20cb326ac5874aa12a2d99e3ff1bc, type: 3}
-  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
-  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
-  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
+  - {fileID: 3721772108986987149, guid: cbe20cb326ac5874aa12a2d99e3ff1bc, type: 3}
+  - {fileID: 3721772108986987149, guid: cbe20cb326ac5874aa12a2d99e3ff1bc, type: 3}
   hand: []
   cardPrefab: {fileID: 3721772108986987150, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
   cardSpawnPoint: {fileID: 1217822889}
   handPileLeft: {fileID: 2031866645}
   handPileRight: {fileID: 689437317}
-  stones: []
-  shootTokenAvailable: 0
   selectedStone: {fileID: 0}
   selectedCard: {fileID: 0}
   isInformOpened: 0
@@ -171,13 +174,13 @@ MonoBehaviour:
   cardDragThreshold: 1
   minShootVelocity: 5
   maxShootVelocity: 22
-  velocityMultiplier: 100
+  velocityMultiplier: 200
   dragEffectObj: {fileID: 178128856140976623}
   maxDragLimit: 10
-  maxClippingPercentage: 0.2
-  Cost1Color: {r: 1, g: 0.89977187, b: 0, a: 1}
-  Cost2Color: {r: 1, g: 0, b: 0, a: 1}
-  alphaOnCancel: 0.5
+  maxClippingPercentage: 0
+  Cost1Color: {r: 0, g: 0, b: 0, a: 0}
+  Cost2Color: {r: 0, g: 0, b: 0, a: 0}
+  alphaOnCancel: 0
   pauseEditorOnShoot: 0
 --- !u!1 &178128856140976616
 GameObject:

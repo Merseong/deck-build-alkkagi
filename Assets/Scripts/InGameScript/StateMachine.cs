@@ -6,11 +6,11 @@ using UnityEngine.InputSystem;
 public class StateMachine
 {
     public GameManager.TurnState curState { get; private set; }
-    public PlayerBehaviour player;
+    public LocalPlayerBehaviour player;
     protected bool isInTouch = false;
 
     // 생성자
-    public StateMachine(PlayerBehaviour player, GameManager.TurnState defaultState)
+    public StateMachine(LocalPlayerBehaviour player, GameManager.TurnState defaultState)
     {
         curState = defaultState;
         this.player = player;
