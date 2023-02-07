@@ -355,7 +355,6 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         
         hand.Remove(card);
         RemoveCards(0);
-        SpendCost(card.CardData.cardCost);
         PlayCardSendNetworkAction(card.CardData, nearbyPos, stoneId);
         Destroy(card.gameObject);
         ArrangeHand(false);
@@ -897,7 +896,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         {
             int needCost = curDragMagnitude <= maxDragLimit / 2 ? 1 : 2;
 
-            if (cost < needCost)
+            if(!SpendCost(needCost))
             {
                 //Not enough cost for shooting
                 isDragging = false;
@@ -906,7 +905,6 @@ public class LocalPlayerBehaviour : PlayerBehaviour
                 return;
             }
 
-            SpendCost(needCost);
             float VelocityCalc = Mathf.Lerp(minShootVelocity, maxShootVelocity, Mathf.Min(moveVec.magnitude, maxDragLimit) / maxDragLimit) * velocityMultiplier;
             ShootStone(moveVec.normalized * selectedStone.GetComponent<AkgRigidbody>().mass * VelocityCalc);
         }
@@ -921,10 +919,18 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     {
         selectedCard.GetComponent<MeshRenderer>().enabled = true;
         Vector3 nearbyPos = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, 10f);
-        if (nearbyPos != gameBoard.isNullPos)
+        if (nearbyPos == gameBoard.isNullPos) 
         {
-            PlayCard(selectedCard, nearbyPos);
+            Debug.LogError("Unavailiable place to spawn stone!");
+            return;
         }
+        else if(!SpendCost(selectedCard.CardData.cardCost))
+        {
+            Debug.LogError("Not enough cost to play card!");
+            return;
+        }
+
+        PlayCard(selectedCard, nearbyPos);
         ArrangeHand(false);
         selectedCard = null;
         GameManager.Inst.GameBoard.UnhightlightPossiblePos();

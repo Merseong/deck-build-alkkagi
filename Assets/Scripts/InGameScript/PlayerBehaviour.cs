@@ -89,9 +89,16 @@ public abstract class PlayerBehaviour : MonoBehaviour
     }
 
     #region Cost functions
-    protected void SpendCost(int used)
+
+    ///<summary>
+    ///return true when succesfully spend costs<br></br>return false when current cost is less then parameter
+    ///</summary>
+    ///<param name = "used">Cost to spend</param>
+    protected bool SpendCost(int used)
     {
+        if(Cost < used) return false;
         Cost -= used;
+        return true;
     }
 
     public void ResetCost(int resetTo = -1)
