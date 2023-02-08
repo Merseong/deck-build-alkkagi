@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StoneBehaviour : MonoBehaviour
+public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 {
     // 매칭되는 카드
     // 기본수치
@@ -44,7 +44,8 @@ public class StoneBehaviour : MonoBehaviour
 
     private bool isExiting = false;
     [SerializeField] float indirectExitTime;
-    private void Start()
+
+    private void Awake()
     {
         boardTransform = GameObject.Find("Board").transform;
         akgRigidbody = GetComponent<AkgRigidbody>();
@@ -97,6 +98,7 @@ public class StoneBehaviour : MonoBehaviour
     private void RemoveStoneFromGame()
     {
         GameManager.Inst.players[(int)BelongingPlayer].RemoveStone(stoneId);
+        akgRigidbody.BeforeDestroy();
     }
 
     public void SetCardData(CardData data, int id, GameManager.PlayerEnum owner)
@@ -104,6 +106,14 @@ public class StoneBehaviour : MonoBehaviour
         cardData = data;
         stoneId = id;
         belongingPlayer = owner;
+        if (BelongingPlayer == GameManager.PlayerEnum.LOCAL)
+        {
+            akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.LOCALSTONE;
+        }
+        else
+        {
+            akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.OPPOSTONE;
+        }
     }
 
     private bool CheckStoneDropByTransform()
@@ -156,5 +166,10 @@ public class StoneBehaviour : MonoBehaviour
             yield return null;
         }
         IndirectExit();
+    }
+
+    public void OnCollide(AkgRigidbody collider, Vector3 collidePoint)
+    {
+
     }
 }

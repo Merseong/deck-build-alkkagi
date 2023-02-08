@@ -2,16 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Guard : MonoBehaviour
+[RequireComponent(typeof(AkgRigidbody))]
+public class Guard : MonoBehaviour, AkgRigidbodyInterface
 {
     private int guardId;
     private bool isBelongLocal;
     private bool isCollided = false;
+
+    private AkgRigidbody akgRigidbody;
     
     public void SetGuardData(int id, bool isLocal)
     {
         guardId = id;
         isBelongLocal = isLocal;
+        akgRigidbody = GetComponent<AkgRigidbody>();
+        akgRigidbody.Init(1f);
         SetSide(isLocal);
     }
 
@@ -20,20 +25,26 @@ public class Guard : MonoBehaviour
         if(isBelongLocal) 
         {
             gameObject.transform.GetComponent<MeshRenderer>().material.color = Color.green;
-            gameObject.layer = LayerMask.NameToLayer("LocalGuard");
+            //gameObject.layer = LayerMask.NameToLayer("LocalGuard");
+            akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.LOCALGUARD;
         }
         else
         {
             gameObject.transform.GetComponent<MeshRenderer>().material.color = Color.red;
-            gameObject.layer = LayerMask.NameToLayer("OppoGuard");
+            //gameObject.layer = LayerMask.NameToLayer("OppoGuard");
+            akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.OPPOGUARD;
         } 
     }
 
-    private void OnCollisionEnter(Collision coll)
+    public void OnCollide(AkgRigidbody collider, Vector3 collidePoint)
     {
         if (isCollided) return;
-        if (coll.gameObject.CompareTag("Stone")) 
+        if (collider.gameObject.CompareTag("Stone"))
         {
+            if (collider.GetComponent<StoneBehaviour>().BelongingPlayer != 
+                (isBelongLocal ? GameManager.PlayerEnum.LOCAL : GameManager.PlayerEnum.OPPO))
+                return;
+
             isCollided = true;
             GameManager.Inst.rigidbodyRecorder.AppendEventRecord(new MyNetworkData.EventRecord
             {
@@ -42,6 +53,7 @@ public class Guard : MonoBehaviour
                 eventEnum = MyNetworkData.EventEnum.GUARDCOLLIDE,
             });
 
+            akgRigidbody.BeforeDestroy();
             GameManager.Inst.GameBoard.RemoveLocalGuard(guardId);
         }
     }

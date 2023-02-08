@@ -378,7 +378,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if (isLocalRotated)
             spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
         spawnedStone.transform.localScale = new Vector3(GetRadiusFromStoneSize(cardData.stoneSize), .15f, GetRadiusFromStoneSize(cardData.stoneSize));
-        spawnedStone.GetComponent<AkgRigidbody>().mass = GetMassFromStoneWeight(cardData.stoneSize, cardData.stoneWeight);
+        spawnedStone.GetComponent<AkgRigidbody>().Init(GetMassFromStoneWeight(cardData.stoneSize, cardData.stoneWeight));
 
         return newStoneId;
     }
@@ -911,7 +911,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             }
 
             float VelocityCalc = Mathf.Lerp(minShootVelocity, maxShootVelocity, Mathf.Min(moveVec.magnitude, maxDragLimit) / maxDragLimit) * velocityMultiplier;
-            ShootStone(moveVec.normalized * selectedStone.GetComponent<AkgRigidbody>().mass * VelocityCalc);
+            ShootStone(moveVec.normalized * selectedStone.GetComponent<AkgRigidbody>().Mass * VelocityCalc);
         }
 
         // 여기넣는게 맞는지 모름

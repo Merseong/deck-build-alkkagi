@@ -218,7 +218,11 @@ public class GameBoard : MonoBehaviour
     public void AddLocalGuard(Vector3 position, Quaternion rotation)
     {
         var go = Instantiate(guardPrefab, position, rotation);
-        go.transform.localScale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.height / guardVerticalCnt / go.transform.localScale.z);
+        var scale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.height / guardVerticalCnt / go.transform.localScale.z);
+        go.transform.localScale = scale;
+        go.GetComponent<AkgRigidbody>().rectPoints = rotation == Quaternion.identity ?
+            new Vector4(-scale.x / 2, -scale.z / 2, scale.x / 2, scale.z / 2) :
+            new Vector4(-scale.z / 2, -scale.x / 2, scale.z / 2, scale.x / 2);
         var idx = localPlayerGuard.Count;
         go.GetComponent<Guard>().SetGuardData(idx, true);
         localPlayerGuard.Add(idx, go);
@@ -227,7 +231,11 @@ public class GameBoard : MonoBehaviour
     public void AddOppoGuard(Vector3 position, Quaternion rotation)
     {
         var go = Instantiate(guardPrefab, position, rotation);
-        go.transform.localScale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.height / guardVerticalCnt / go.transform.localScale.z);
+        var scale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.height / guardVerticalCnt / go.transform.localScale.z);
+        go.transform.localScale = scale;
+        go.GetComponent<AkgRigidbody>().rectPoints = rotation == Quaternion.identity ?
+            new Vector4(-scale.x / 2, -scale.z / 2, scale.x / 2, scale.z / 2) :
+            new Vector4(-scale.z / 2, -scale.x / 2, scale.z / 2, scale.x / 2);
         var idx = oppoPlayerGuard.Count;
         go.GetComponent<Guard>().SetGuardData(idx, false);
         oppoPlayerGuard.Add(idx, go);
