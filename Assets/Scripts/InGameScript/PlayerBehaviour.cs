@@ -105,7 +105,7 @@ public abstract class PlayerBehaviour : MonoBehaviour
     {
         if (resetTo > 0)
             Cost = resetTo;
-        if (GameManager.Inst.TurnCount == 0)
+        else if (GameManager.Inst.TurnCount == 0)
             Cost = GameManager.Inst.initialTurnCost;
         else
             Cost = GameManager.Inst.normalTurnCost;

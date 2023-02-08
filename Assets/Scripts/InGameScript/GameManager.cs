@@ -99,7 +99,7 @@ public class GameManager : SingletonBehavior<GameManager>
         rigidbodyRecorder.InitRecorder();
         NetworkManager.Inst.AddReceiveDelegate(TurnInfoReceiveNetworkAction);
 
-        if (!NetworkManager.Inst.IsNetworkMode) InitializeGame();
+        if (!NetworkManager.Inst.IsNetworkMode) InitializeGame(isLocalGoFirst);
     }
 
     private void OnApplicationQuit()
@@ -151,8 +151,10 @@ public class GameManager : SingletonBehavior<GameManager>
     #endregion
 
     #region Turn Control
-    public void InitializeGame()
+    public void InitializeGame(bool localFirst)
     {
+        isLocalGoFirst = localFirst;
+
         turnStates[(int)FirstPlayer] = TurnState.PREPARE;
         turnStates[(int)SecondPlayer] = TurnState.WAIT;
 

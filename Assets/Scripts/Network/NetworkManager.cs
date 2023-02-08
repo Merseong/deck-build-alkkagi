@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using MyNetworkData;
+using UnityEngine.SceneManagement;
 
 public class NetworkManager : SingletonBehavior<NetworkManager>
 {
@@ -22,7 +23,9 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         DISCONNECTED,
         CONNECTING,
         IDLE,
+        MATCHMAKING,
         ROOM,
+        INGAME,
     }
     private ConnectionStatusEnum _connectionStatus;
     private string connectionStatusString;
@@ -42,11 +45,18 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
                     testStatusText.text = "Connecting...";
                     break;
                 case ConnectionStatusEnum.IDLE:
+                    m_networkTestCanvas.SetActive(true);
                     testStatusText.text = $"Connected, ID: {NetworkId}";
+                    break;
+                case ConnectionStatusEnum.MATCHMAKING:
+                    testStatusText.text = $"ID: {NetworkId}, Matchmaking...";
                     break;
                 case ConnectionStatusEnum.ROOM:
                     testStatusText.text = $"Room {roomNumber}, {connectionStatusString}";
                     break;
+                case ConnectionStatusEnum.INGAME:
+                    break;
+
             }
         }
     }
@@ -83,6 +93,8 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     #region Unity functions
     private void Awake()
     {
+        DontDestroyOnLoad(gameObject);
+
         ParsePacket = new ParsePacketDelegate((_) => { });
 
         if (!m_isNetworkMode) return;
@@ -191,10 +203,11 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
     public void EnterGameRoom()
     {
-        if (!m_isNetworkMode)
-        {
-            return;
-        }
+        if (!m_isNetworkMode) return;
+
+        if (ConnectionStatus != ConnectionStatusEnum.IDLE) return;
+
+        ConnectionStatus = ConnectionStatusEnum.MATCHMAKING;
 
         var toSend = new MessagePacket();
         toSend.senderID = networkId;
@@ -266,7 +279,8 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         switch ((PacketType)packet.Type)
         {
             case PacketType.ROOM_CONTROL:
-                CheckMessageEntered(packet);
+                MessagePacket mp = MessagePacket.Deserialize(packet.Data);
+                CheckMessageEntered(mp);
                 InitServerSyncVar();
                 break;
             /*case PacketType.ROOM_OPPONENT:
@@ -279,9 +293,8 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         }
     }
 
-    private void CheckMessageEntered(Packet packet)
+    private void CheckMessageEntered(MessagePacket mp)
     {
-        MessagePacket mp = MessagePacket.Deserialize(packet.Data);
         var arr = mp.message.Split(" ");
         if (arr[0] == "ENTERED")
         {
@@ -290,25 +303,30 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
             Debug.Log($"[room{roomNumber}] room {roomNumber} matched!");
             ConnectionStatus = ConnectionStatusEnum.ROOM;
 
-            // TODO:
-            //  씬 이동, 로딩 작업 진행
-            //
+            StartCoroutine(ELoadScene());
 
-            // 로드 완료 후 서버로 로드 완료 메세지 보냄
-            var toSend = new MessagePacket();
-            toSend.senderID = NetworkId;
-            toSend.message = "LOADED";
-            var sendPacket = new Packet().Pack(PacketType.ROOM_CONTROL, toSend);
-            Client.Send(sendPacket);
+            IEnumerator ELoadScene()
+            {
+                m_networkTestCanvas.SetActive(false);
+                AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(1);
+
+                yield return new WaitUntil(() => asyncLoad.isDone);
+
+                // 로드 완료 후 서버로 로드 완료 메세지 보냄
+                var toSend = new MessagePacket();
+                toSend.senderID = NetworkId;
+                toSend.message = "LOADED";
+                var sendPacket = new Packet().Pack(PacketType.ROOM_CONTROL, toSend);
+                Client.Send(sendPacket);
+            }
         }
         else if (arr[0] == "START")
         {
             connectionStatusString = mp.message;
             // arr[1]의 플레이어가 선턴을 잡고 시작함
             Debug.Log($"[room{roomNumber}] game start! with first player {arr[1]}");
-            ConnectionStatus = ConnectionStatusEnum.ROOM;
-            GameManager.Inst.isLocalGoFirst = (NetworkId == int.Parse(arr[1]));
-            GameManager.Inst.InitializeGame();
+            ConnectionStatus = ConnectionStatusEnum.INGAME;
+            GameManager.Inst.InitializeGame(NetworkId == int.Parse(arr[1]));
         }
         else if (arr[0] == "EXIT")
         {
