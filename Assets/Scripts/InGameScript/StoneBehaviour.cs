@@ -162,7 +162,8 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
                 yield break;
             }
             curTime -= Time.deltaTime;
-            transform.localScale = new Vector3(curTime/indirectExitTime, 1f, curTime/indirectExitTime);
+            float var = GetRadiusFromStoneSize(cardData.stoneSize) * curTime / indirectExitTime;
+            transform.localScale = new Vector3(var, 1f, var);
             yield return null;
         }
         IndirectExit();
@@ -171,5 +172,27 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     public void OnCollide(AkgRigidbody collider, Vector3 collidePoint)
     {
 
+    }
+
+    private float GetRadiusFromStoneSize(CardData.StoneSize size)
+    {
+        switch (size)
+        {
+            case CardData.StoneSize.Small:
+                return .5f;
+
+            case CardData.StoneSize.Medium:
+                return .65f;
+
+            case CardData.StoneSize.Large:
+                return .8f;
+
+            case CardData.StoneSize.SuperLarge:
+                return .95f;
+
+            default:
+                Debug.Log("Invalid Stone Size!");
+                return 1f;
+        }
     }
 }
