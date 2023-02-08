@@ -7,6 +7,7 @@ public class CardData : ScriptableObject
     [SerializeField]
     private int cardID;
     public int CardID => cardID;
+    public string cardName;
     // 크기
     public enum StoneSize
     {
