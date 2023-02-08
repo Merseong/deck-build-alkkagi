@@ -832,7 +832,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         {
             //TODO : 스톤 미리보기 추가해주어야 함
             selectedCard.GetComponent<MeshRenderer>().enabled = false;
-            GameManager.Inst.GameBoard.HighlightPossiblePos(GameManager.PlayerEnum.LOCAL, 1f);
+            GameManager.Inst.GameBoard.HighlightPossiblePos(GameManager.PlayerEnum.LOCAL, GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
         }
         else
         {
@@ -923,7 +923,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private void CardPlayAction(Vector3 curTouchPositionNormalized)
     {
         selectedCard.GetComponent<MeshRenderer>().enabled = true;
-        Vector3 nearbyPos = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, 10f);
+        Vector3 nearbyPos = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
         if (nearbyPos == gameBoard.isNullPos) 
         {
             Debug.LogError("Unavailiable place to spawn stone!");

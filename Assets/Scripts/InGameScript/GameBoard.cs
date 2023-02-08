@@ -126,9 +126,10 @@ public class GameBoard : MonoBehaviour
             foreach (BoardPos boardPos in localCanStone)
             {
                 Vector3 nearbyPos = new Vector3(boardPos.x, 0, boardPos.y);
-                // Debug.Log(nearbyPos + ", " + IsPossibleToPut(nearbyPos,stoneRadius));
+                Debug.Log(nearbyPos + ", " + IsPossibleToPut(nearbyPos,stoneRadius));
                 if (Vector3.Distance(pos, nearbyPos) <= nearbyRadius && IsPossibleToPut(nearbyPos,stoneRadius))
                 {
+                    Debug.Log(nearbyPos);
                     return nearbyPos;
                 }
             }
@@ -150,7 +151,7 @@ public class GameBoard : MonoBehaviour
     // 지정된 위치에 가능한지 판별
     public static bool IsPossibleToPut(Vector3 pos, float stoneRadius)
     {
-        Collider[] hitcolliders = Physics.OverlapSphere(pos, stoneRadius, LayerMask.NameToLayer("Stone"));
+        Collider[] hitcolliders = Physics.OverlapSphere(pos, stoneRadius, (1<<LayerMask.NameToLayer("Stone")));
         if (hitcolliders.Length > 0)
         {
             return false;
