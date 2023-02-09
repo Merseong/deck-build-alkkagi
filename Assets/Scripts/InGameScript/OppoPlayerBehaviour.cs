@@ -48,8 +48,8 @@ public class OppoPlayerBehaviour : PlayerBehaviour
 
         //temp code
         spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = cardData.idleSprite;
-        spawnedStone.transform.localScale = new Vector3(GetRadiusFromStoneSize(cardData.stoneSize), .15f, GetRadiusFromStoneSize(cardData.stoneSize));
-        spawnedStone.GetComponent<AkgRigidbody>().Init(GetMassFromStoneWeight(cardData.stoneSize, cardData.stoneWeight));
+        spawnedStone.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(cardData.stoneSize), .15f, Util.GetRadiusFromStoneSize(cardData.stoneSize));
+        spawnedStone.GetComponent<AkgRigidbody>().Init(Util.GetMassFromStoneWeight(cardData.stoneSize, cardData.stoneWeight));
 
         return newStoneId;
     }

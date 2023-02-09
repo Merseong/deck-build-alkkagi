@@ -30,14 +30,41 @@ public class ParticleManager : SingletonBehavior<ParticleManager>
     {
         GameObject particleToPlay = TryGetFromPool(particle);
 
+        if(particleToPlay == null) yield break;
+
         particleToPlay.transform.position = position;        
         particleToPlay.SetActive(true);
-
-        if(particleToPlay == null) yield break;
+        
         ParticleSystem ps = particleToPlay.GetComponent<ParticleSystem>();
         ps.Play();
         yield return new WaitForSeconds(ps.main.duration + ps.main.startLifetimeMultiplier);
         
+        particleToPlay.SetActive(false);
+    }
+
+    public IEnumerator PlayParticle(GameObject particle, Vector3 position, float startSpeedMult, float rateMult)
+    {
+        GameObject particleToPlay = TryGetFromPool(particle);
+
+        if(particleToPlay == null) yield break;
+
+        particleToPlay.transform.position = position;
+        particleToPlay.SetActive(true);
+
+        ParticleSystem ps = particleToPlay.GetComponent<ParticleSystem>();
+        var em = ps.emission;
+        var main = ps.main;
+        float originalRate = em.rateOverTimeMultiplier;
+        float originalSpeed = main.startSpeedMultiplier;
+        em.rateOverTimeMultiplier = em.rateOverTimeMultiplier * rateMult;
+        main.startSpeedMultiplier = main.startSpeedMultiplier * startSpeedMult;
+
+        ps.Play();
+        yield return new WaitForSeconds(ps.main.duration + ps.main.startLifetimeMultiplier);
+        
+        em.rateOverTimeMultiplier = originalRate;
+        main.startSpeedMultiplier = originalSpeed;
+
         particleToPlay.SetActive(false);
     }
 

@@ -270,7 +270,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     public override int SpawnStone(CardData cardData, Vector3 spawnPosition, int stoneId = -1)
     {
-        if (!GameBoard.IsPossibleToPut(spawnPosition, GetRadiusFromStoneSize(cardData.stoneSize)))
+        if (!GameBoard.IsPossibleToPut(spawnPosition, Util.GetRadiusFromStoneSize(cardData.stoneSize)))
         {
             return -1;
         }
@@ -285,8 +285,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = cardData.idleSprite;
         if (isLocalRotated)
             spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
-        spawnedStone.transform.localScale = new Vector3(GetRadiusFromStoneSize(cardData.stoneSize), .15f, GetRadiusFromStoneSize(cardData.stoneSize));
-        spawnedStone.GetComponent<AkgRigidbody>().Init(GetMassFromStoneWeight(cardData.stoneSize, cardData.stoneWeight));
+        spawnedStone.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(cardData.stoneSize), .15f, Util.GetRadiusFromStoneSize(cardData.stoneSize));
+        spawnedStone.GetComponent<AkgRigidbody>().Init(Util.GetMassFromStoneWeight(cardData.stoneSize, cardData.stoneWeight));
 
         return newStoneId;
     }
@@ -740,7 +740,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         {
             //TODO : 스톤 미리보기 추가해주어야 함
             selectedCard.GetComponent<MeshRenderer>().enabled = false;
-            GameManager.Inst.GameBoard.HighlightPossiblePos(GameManager.PlayerEnum.LOCAL, GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
+            GameManager.Inst.GameBoard.HighlightPossiblePos(GameManager.PlayerEnum.LOCAL, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
         }
         else
         {
@@ -831,7 +831,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private void CardPlayAction(Vector3 curTouchPositionNormalized)
     {
         selectedCard.GetComponent<MeshRenderer>().enabled = true;
-        Vector3 nearbyPos = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
+        Vector3 nearbyPos = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
         if (nearbyPos == gameBoard.isNullPos) 
         {
             Debug.LogError("Unavailiable place to spawn stone!");

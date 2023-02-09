@@ -34,6 +34,14 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
             return akgRigidbody.velocity.magnitude > 0f;
         }
     }
+
+    public float curVelocity
+    {
+        get
+        {
+            return akgRigidbody.velocity.magnitude;
+        }
+    }
     private Vector3 nowPos, nextPos;
     public ParticleSystem followingStone;
     private ParticleSystem nowParticle = null;
@@ -142,13 +150,16 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     private void IndirectExit()
     {
-        Debug.Log("Stone is Indirectly Exited!");
+        // Debug.Log("Stone is Indirectly Exited!");
+
+        //temp particle
+        StartCoroutine(ParticleManager.Inst.PlayParticle(collideParticle, transform.position));
         Destroy(gameObject);
     }
 
     private void DirectExit()
     {
-        Debug.Log("Stone is Directly Exited!");
+        // Debug.Log("Stone is Directly Exited!");
         Destroy(gameObject);
     }
 
@@ -164,7 +175,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
                 yield break;
             }
             curTime -= Time.deltaTime;
-            float var = GetRadiusFromStoneSize(cardData.stoneSize) * curTime / indirectExitTime;
+            float var = Util.GetRadiusFromStoneSize(cardData.stoneSize) * curTime / indirectExitTime;
             transform.Rotate(Vector3.up, Time.deltaTime * indirectExitSpeed);
             transform.localScale = new Vector3(var, 1f, var);
             yield return null;
@@ -174,28 +185,8 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     public void OnCollide(AkgRigidbody collider, Vector3 collidePoint)
     {
-        StartCoroutine(ParticleManager.Inst.PlayParticle(collideParticle, collidePoint));
+        //TODO : should prevent doubly occuring particle between two stone collision
+        StartCoroutine(ParticleManager.Inst.PlayParticle(collideParticle, collidePoint, curVelocity / 20f, curVelocity / 20f));
     }
 
-    private float GetRadiusFromStoneSize(CardData.StoneSize size)
-    {
-        switch (size)
-        {
-            case CardData.StoneSize.Small:
-                return .5f;
-
-            case CardData.StoneSize.Medium:
-                return .65f;
-
-            case CardData.StoneSize.Large:
-                return .8f;
-
-            case CardData.StoneSize.SuperLarge:
-                return .95f;
-
-            default:
-                Debug.Log("Invalid Stone Size!");
-                return 1f;
-        }
-    }
 }
