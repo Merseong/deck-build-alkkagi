@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: TestStoneData
   m_EditorClassIdentifier: 
   cardID: 1
+  cardName: 
   stoneSize: 1
   stoneWeight: 2
   cardCost: 2
@@ -20,6 +21,6 @@ MonoBehaviour:
   idleSprite: {fileID: 21300000, guid: d61ee4ff0539f8d47aa6d667de6e8149, type: 3}
   readySprite: {fileID: 21300000, guid: 3503212ca68433d4388885e8193277b5, type: 3}
   shootSprite: {fileID: 21300000, guid: cdffe1c4772b2e749a8936c51247b206, type: 3}
-  hitSprite: {fileID: 0}
-  breakSprite: {fileID: 0}
+  hitSprite: {fileID: 21300000, guid: 0904623f747a9334998f43b50ab4a95b, type: 3}
+  breakSprite: {fileID: 21300000, guid: 707e524c59621bb47bcd0141aa2a23cd, type: 3}
   description: This is knight stone

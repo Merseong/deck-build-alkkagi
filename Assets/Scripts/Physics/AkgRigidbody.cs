@@ -291,6 +291,16 @@ public class AkgRigidbody : MonoBehaviour
             if (velocity == Vector3.zero)
             {
                 gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = gameObject.GetComponent<StoneBehaviour>().CardData.hitSprite;
+
+                float randnum = UnityEngine.Random.Range(-30.0f, 30.0f);
+                if (GameManager.Inst.isLocalGoFirst)
+                {
+                    gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, randnum, 0);
+                }
+                else 
+                {
+                    gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180+randnum, 0);
+                }
             }
 
             Vector3 otherNormalVelocity = Vector3.Dot(normal, akg.oldVelocity) * normal;
