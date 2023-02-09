@@ -165,6 +165,8 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     private IEnumerator EIndirectExit()
     {
+        transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = CardData.breakSprite;
+
         isExiting = true;
         float curTime = indirectExitTime;
         while(curTime >= 0)

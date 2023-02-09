@@ -341,6 +341,18 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             isAllStoneStop = true;
         }
 
+        foreach (StoneBehaviour stone in GameManager.Inst.AllStones.Values)
+        {
+            stone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = stone.CardData.idleSprite;
+            if (isLocalRotated)
+            {
+                stone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
+            }
+            else
+            {
+                stone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 0, 0);
+            }
+        }
         // send physics records, stone final poses, event list
         recorder.EndRecord(out var velocityRecords, out var eventRecords);
         recorder.SendRecord(velocityRecords, eventRecords);

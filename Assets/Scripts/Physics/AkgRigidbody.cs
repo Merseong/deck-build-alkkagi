@@ -288,6 +288,11 @@ public class AkgRigidbody : MonoBehaviour
         }
         else
         {
+            if (velocity == Vector3.zero)
+            {
+                gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = gameObject.GetComponent<StoneBehaviour>().CardData.hitSprite;
+            }
+
             Vector3 otherNormalVelocity = Vector3.Dot(normal, akg.oldVelocity) * normal;
             normalVelocity = mass * normalVelocity + akg.Mass * otherNormalVelocity + akg.Mass * cor * (otherNormalVelocity - normalVelocity);
             normalVelocity = normalVelocity / (Mass + akg.Mass);
