@@ -23,6 +23,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     public int StoneId => stoneId;
     [SerializeField] private Transform boardTransform;
     [SerializeField] private CardData cardData;
+    [SerializeField] private GameObject collideParticle;
     public CardData CardData => cardData;
 
     private AkgRigidbody akgRigidbody;
@@ -44,11 +45,12 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     private bool isExiting = false;
     [SerializeField] float indirectExitTime;
-
+    [SerializeField] float indirectExitSpeed;
     private void Awake()
     {
         boardTransform = GameObject.Find("Board").transform;
         akgRigidbody = GetComponent<AkgRigidbody>();
+        ParticleManager.Inst.RegisterParticle(collideParticle);
     }
 
     private void Update()
@@ -163,6 +165,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
             }
             curTime -= Time.deltaTime;
             float var = GetRadiusFromStoneSize(cardData.stoneSize) * curTime / indirectExitTime;
+            transform.Rotate(Vector3.up, Time.deltaTime * indirectExitSpeed);
             transform.localScale = new Vector3(var, 1f, var);
             yield return null;
         }
@@ -171,7 +174,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     public void OnCollide(AkgRigidbody collider, Vector3 collidePoint)
     {
-
+        StartCoroutine(ParticleManager.Inst.PlayParticle(collideParticle, collidePoint));
     }
 
     private float GetRadiusFromStoneSize(CardData.StoneSize size)

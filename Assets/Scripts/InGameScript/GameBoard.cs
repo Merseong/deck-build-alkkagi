@@ -126,10 +126,10 @@ public class GameBoard : MonoBehaviour
             foreach (BoardPos boardPos in localCanStone)
             {
                 Vector3 nearbyPos = new Vector3(boardPos.x, 0, boardPos.y);
-                Debug.Log(nearbyPos + ", " + IsPossibleToPut(nearbyPos,stoneRadius));
+                // Debug.Log(nearbyPos + ", " + IsPossibleToPut(nearbyPos,stoneRadius));
                 if (Vector3.Distance(pos, nearbyPos) <= nearbyRadius && IsPossibleToPut(nearbyPos,stoneRadius))
                 {
-                    Debug.Log(nearbyPos);
+                    // Debug.Log(nearbyPos);
                     return nearbyPos;
                 }
             }
