@@ -22,6 +22,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     [SerializeField] Transform cardSpawnPoint;
     [SerializeField] Transform handPileLeft;
     [SerializeField] Transform handPileRight;
+    private GameObject stoneGhost;
     private bool isLocalRotated = false;
     public bool IsLocalRotated => isLocalRotated;
     private int maxHandSize = 7;
@@ -117,6 +118,15 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             transform.Rotate(Vector3.up, 180f);
             Camera.main.transform.Rotate(Vector3.forward, 180f);
         }
+
+        //Init ghost Card
+        stoneGhost = Instantiate(StonePrefab, Vector3.zero, Quaternion.identity);
+        Destroy(stoneGhost.GetComponent<CapsuleCollider>());
+        Destroy(stoneGhost.GetComponent<AkgRigidbody>());
+        Color temp = stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().material.color;
+        temp.a = .6f;
+        stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().material.color = temp;
+        stoneGhost.SetActive(false);
     }
 
     private bool IsTouchOnBoard(Vector3 point)
@@ -449,6 +459,10 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         //Card
         selectedCard = GetCardAroundPoint(curScreenTouchPosition);
+        if(selectedCard != null)
+        {
+            CardDragAction_Begin();
+        }
 
         if (selectedStone == null)
         {
@@ -527,6 +541,10 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         //Card
         selectedCard = GetCardAroundPoint(curScreenTouchPosition);
+        if(selectedCard != null)
+        {
+            CardDragAction_Begin();
+        }
     }
 
     public void PrepareInTouch(Vector3 curScreenTouchPosition)
@@ -647,6 +665,14 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         }
     }
 
+    private void CardDragAction_Begin()
+    {
+        stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedCard.CardData.idleSprite;
+        if (isLocalRotated)
+            stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
+        stoneGhost.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize), .15f, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
+    }
+
     #endregion TouchEndActionSet
 
 
@@ -748,21 +774,32 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private void CardDragAction(Vector3 curTouchPositionNormalized)
     {
+        stoneGhost.transform.position = selectedCard.transform.position = new Vector3(curTouchPositionNormalized.x, 5f, curTouchPositionNormalized.z);
+
         if (IsPlayingCardOnBoard(curTouchPositionNormalized))
         {
             //TODO : 스톤 미리보기 추가해주어야 함
             selectedCard.GetComponent<MeshRenderer>().enabled = false;
+            stoneGhost.SetActive(true);
+
+            gameBoard.ResetMarkState();
             GameManager.Inst.GameBoard.HighlightPossiblePos(GameManager.PlayerEnum.LOCAL, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
+            Transform putMarkTransform = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
+            if(putMarkTransform != null)
+            {                
+                putMarkTransform.GetComponent<SpriteRenderer>().material.color = Color.red;
+                stoneGhost.transform.position = putMarkTransform.position;
+            }
         }
         else
         {
             selectedCard.GetComponent<MeshRenderer>().enabled = true;
+            stoneGhost.SetActive(false);
+
             GameManager.Inst.GameBoard.UnhightlightPossiblePos();
         }
-        selectedCard.transform.position = new Vector3(curTouchPositionNormalized.x, 5f, curTouchPositionNormalized.z);
-
+    
     }
-
 
     #endregion InTouchActionSet
 
@@ -843,10 +880,13 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private void CardPlayAction(Vector3 curTouchPositionNormalized)
     {
         selectedCard.GetComponent<MeshRenderer>().enabled = true;
-        Vector3 nearbyPos = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
-        if (nearbyPos == gameBoard.isNullPos) 
+        stoneGhost.SetActive(false);
+
+        Transform nearPutTransform = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
+        if(nearPutTransform == null)
         {
             Debug.LogError("Unavailiable place to spawn stone!");
+            GameManager.Inst.GameBoard.UnhightlightPossiblePos();
             return;
         }
         else if(!SpendCost(selectedCard.CardData.cardCost))
@@ -855,6 +895,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             return;
         }
 
+        Vector3 nearbyPos = nearPutTransform.position;
         PlayCard(selectedCard, nearbyPos);
         ArrangeHand(false);
         selectedCard = null;
@@ -864,6 +905,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private void CardSelectionAction()
     {
         selectedCard.GetComponent<MeshRenderer>().enabled = true;
+        stoneGhost.SetActive(false);
+
         SetInformPanel(selectedCard.CardData);
         informPanel.gameObject.SetActive(true);
         GameManager.Inst.GameBoard.UnhightlightPossiblePos();

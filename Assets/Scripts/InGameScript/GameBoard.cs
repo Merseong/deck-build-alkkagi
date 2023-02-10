@@ -116,7 +116,7 @@ public class GameBoard : MonoBehaviour
     }
 
     // 해당 위치 근처에 스톤 놓을 수 있는 위치 제공
-    public Vector3 GiveNearbyPos(Vector3 pos, GameManager.PlayerEnum player, float stoneRadius)
+    public Transform GiveNearbyPos(Vector3 pos, GameManager.PlayerEnum player, float stoneRadius)
     {
         var localCanStone = GameManager.Inst.isLocalGoFirst ? BoardData.player1CanStone : BoardData.player2CanStone;
         var oppoCanStone = GameManager.Inst.isLocalGoFirst ? BoardData.player2CanStone : BoardData.player1CanStone;
@@ -130,7 +130,7 @@ public class GameBoard : MonoBehaviour
                 if (Vector3.Distance(pos, nearbyPos) <= nearbyRadius && IsPossibleToPut(nearbyPos,stoneRadius))
                 {
                     // Debug.Log(nearbyPos);
-                    return nearbyPos;
+                    return localPlayerPutMarks[System.Array.IndexOf(localCanStone, boardPos)].transform;
                 }
             }
         }
@@ -141,11 +141,11 @@ public class GameBoard : MonoBehaviour
                 Vector3 nearbyPos = new Vector3(boardPos.x, 0, boardPos.y);
                 if (Vector3.Distance(pos, nearbyPos) <= nearbyRadius && IsPossibleToPut(nearbyPos, stoneRadius))
                 {
-                    return nearbyPos;
+                    return oppoPlayerPutMarks[System.Array.IndexOf(localCanStone, boardPos)].transform;
                 }
             }
         }
-        return isNullPos;
+        return null;
     }
 
     // 지정된 위치에 가능한지 판별
@@ -159,6 +159,14 @@ public class GameBoard : MonoBehaviour
         else 
         {
             return true;
+        }
+    }
+
+    public void ResetMarkState()
+    {
+        foreach(var mark in localPlayerPutMarks)
+        {
+            mark.GetComponent<SpriteRenderer>().material.color = Color.yellow;
         }
     }
 
