@@ -51,7 +51,6 @@ public class GameManager : SingletonBehavior<GameManager>
         WAITFORHSCONSENT,
         NORMAL,
         HONORSKIP,
-        HSCONSENT,
         LENGTH
     }
     private bool isTurnEndSent;
@@ -274,6 +273,8 @@ public class GameManager : SingletonBehavior<GameManager>
                 StartCoroutine(EHonorSkipSecondRoutine());
             }
         }
+
+        (players[0] as LocalPlayerBehaviour).stateMachine.SetState(LocalTurnState);
 
         // TurnState.NORMAL인경우만 내 턴을 시작
         OnTurnStart(LocalTurnState);

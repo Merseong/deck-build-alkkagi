@@ -27,6 +27,7 @@ public class StateMachine
 
         OperateExit();
 
+        //TODO : 코루틴으로 네트워크 처리후에 다음 턴 액션 바인딩되도록 변경
         curState = state;
 
         OperateEnter();

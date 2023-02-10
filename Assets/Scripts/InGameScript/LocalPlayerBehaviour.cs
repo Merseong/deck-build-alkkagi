@@ -35,7 +35,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     [SerializeField] private StoneBehaviour selectedStone;
     [SerializeField] private Card selectedCard;
 
-    private StateMachine stateMachine;
+    public StateMachine stateMachine;
     public readonly Dictionary<GameManager.TurnState, Action<Vector3>[]> turnActionDic = new Dictionary<GameManager.TurnState, Action<Vector3>[]>();
 
     private bool isSelecting;
@@ -82,15 +82,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private void Start()
     {
-        turnActionDic.Add(GameManager.TurnState.PREPARE, new Action<Vector3>[] { PrepareTouchBegin, PrepareInTouch, PrepareTouchEnd });
-        turnActionDic.Add(GameManager.TurnState.WAIT, new Action<Vector3>[] { WaitTouchBegin, WaitInTouch, WaitTouchEnd });
-        turnActionDic.Add(GameManager.TurnState.NORMAL, new Action<Vector3>[] { NormalTouchBegin, NormalInTouch, NormalTouchEnd });
-        turnActionDic.Add(GameManager.TurnState.HONORSKIP, new Action<Vector3>[] { HonorskipTouchBegin, HonorskipInTouch, HonorskipTouchEnd });
-        turnActionDic.Add(GameManager.TurnState.HSCONSENT, new Action<Vector3>[] { HSConsentTouchBegin, HSConsentInTouch, HSConsentTouchEnd });
 
-        //FIXME : Later turn control by GameManager
-        stateMachine = new StateMachine(this, GameManager.TurnState.NORMAL);
-        stateMachine.OperateEnter();
     }
 
     private void Update()
@@ -118,6 +110,16 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             transform.Rotate(Vector3.up, 180f);
             Camera.main.transform.Rotate(Vector3.forward, 180f);
         }
+
+        turnActionDic.Add(GameManager.TurnState.PREPARE, new Action<Vector3>[] { PrepareTouchBegin, PrepareInTouch, PrepareTouchEnd });
+        turnActionDic.Add(GameManager.TurnState.WAIT, new Action<Vector3>[] { WaitTouchBegin, WaitInTouch, WaitTouchEnd });
+        turnActionDic.Add(GameManager.TurnState.WAITFORHS, new Action<Vector3>[] { WaitTouchBegin, WaitInTouch, WaitTouchEnd });
+        turnActionDic.Add(GameManager.TurnState.WAITFORHSCONSENT, new Action<Vector3>[] { WaitTouchBegin, WaitInTouch, WaitTouchEnd });
+        turnActionDic.Add(GameManager.TurnState.NORMAL, new Action<Vector3>[] { NormalTouchBegin, NormalInTouch, NormalTouchEnd });
+        turnActionDic.Add(GameManager.TurnState.HONORSKIP, new Action<Vector3>[] { HonorskipTouchBegin, HonorskipInTouch, HonorskipTouchEnd });
+
+        stateMachine = new StateMachine(this, GameManager.Inst.LocalTurnState);
+        stateMachine.OperateEnter();
 
         //Init ghost Card
         stoneGhost = Instantiate(StonePrefab, Vector3.zero, Quaternion.identity);
