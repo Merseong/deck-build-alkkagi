@@ -387,7 +387,6 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         informPanel.GetChild(6).GetComponent<TextMeshProUGUI>().text = data.cardCost.ToString();
     }
 
-
     private Vector3 ScreenPosToNormalized(Vector3 vec)
     {
         Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(vec);
@@ -395,7 +394,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     }
 
     ///<summary>
-    ///Arrange cards in hand regarding card index at hand[]<br></br>
+    ///Arrange cards in hand regarding card index at hand[]<br/>
     ///</summary>
     ///<param name = "isDrawPhase">true인 경우 부드럽게 손패로 이동, false일 경우 텀 없이 바로 손패로 이동</param>
     private void ArrangeHand(bool isDrawPhase)

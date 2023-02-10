@@ -54,6 +54,10 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     private bool isExiting = false;
     [SerializeField] float indirectExitTime;
     [SerializeField] float indirectExitSpeed;
+
+    // temp:
+    [SerializeField] private GameObject enemySign;
+
     private void Awake()
     {
         boardTransform = GameObject.Find("Board").transform;
@@ -119,10 +123,12 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         if (BelongingPlayer == GameManager.PlayerEnum.LOCAL)
         {
             akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.LOCALSTONE;
+            enemySign.SetActive(false);
         }
         else
         {
             akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.OPPOSTONE;
+            enemySign.SetActive(true);
         }
     }
 
