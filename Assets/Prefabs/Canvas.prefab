@@ -919,6 +919,7 @@ GameObject:
   - component: {fileID: 4882616432524997142}
   - component: {fileID: 7502620530819739551}
   - component: {fileID: 3269199092809594370}
+  - component: {fileID: 984495492866551160}
   m_Layer: 5
   m_Name: AskingPanel
   m_TagString: Untagged
@@ -944,7 +945,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 349.30493}
+  m_AnchoredPosition: {x: 0, y: 1736}
   m_SizeDelta: {x: 0, y: 698.61}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7502620530819739551
@@ -970,6 +971,18 @@ MonoBehaviour:
   askingTextMesh: {fileID: 1898014364530568977}
   trueTextMesh: {fileID: 2238788134359434592}
   falseTextMesh: {fileID: 2348345826107460074}
+--- !u!225 &984495492866551160
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 664944527089571238}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &984495491861303269
 GameObject:
   m_ObjectHideFlags: 0
@@ -1122,7 +1135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &984495492050547765
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1965,7 +1978,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -250, y: 200}
+  m_AnchoredPosition: {x: -1664, y: 3236}
   m_SizeDelta: {x: 300, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1414282568607328608
