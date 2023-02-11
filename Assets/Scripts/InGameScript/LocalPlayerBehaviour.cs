@@ -200,11 +200,14 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             IngameUIManager.Inst.UserAlertPanel.Alert("Hand is full"); // "손패가 가득 찼습니다"
             return;
         }
+        var cardRot = Quaternion.identity;
+        if (IsLocalRotated)
+            cardRot = Quaternion.Euler(0, 180, 0);
         for (int i = 0; i < number; i++)
         {
             Card drawCard = deck[0];
             deck.RemoveAt(0);
-            var cardObject = Instantiate(cardPrefab, cardSpawnPoint.position, Quaternion.identity);
+            var cardObject = Instantiate(cardPrefab, cardSpawnPoint.position, cardRot);
             var card = cardObject.GetComponent<Card>();
             card.Setup(drawCard);
             hand.Add(card);
@@ -255,6 +258,9 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         {
             var targetPos = Vector3.Lerp(leftTr.position, rightTr.position, objLerps[i]);
             var targetRot = Quaternion.identity;
+            if (IsLocalRotated)
+                targetRot = Quaternion.Euler(0, 180, 0);
+
             if (objCount >= 4)
             {
                 float curve = Mathf.Sqrt(Mathf.Pow(height, 2) - Mathf.Pow(objLerps[i] - 0.5f, 2));
@@ -326,6 +332,15 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         {
             Debug.LogWarning("공격토큰이 존재하지 않습니다.");
             IngameUIManager.Inst.UserAlertPanel.Alert("No attack token"); // "공격 토큰이 존재하지 않습니다"
+            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.CardData.idleSprite;
+            if (isLocalRotated)
+            {
+                selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
+            }
+            else
+            {
+                selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 0, 0);
+            }
             return;
         }
 
