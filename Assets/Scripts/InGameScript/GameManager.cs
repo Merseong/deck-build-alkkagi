@@ -69,14 +69,17 @@ public class GameManager : SingletonBehavior<GameManager>
     public TurnState LocalTurnState
     {
         get => turnStates[0];
-        set => turnStates[0] = value;
+        set {
+            turnStates[0] = value;
+            IngameUIManager.Inst.TempCurrentTurnText.text = value.ToString();
+        }
     }
     public TurnState OppoTurnState
     {
         get => turnStates[1];
         set => turnStates[1] = value;
     }
-    public TurnState[] nextTurnStates;
+    public TurnState[] nextTurnStates = { TurnState.PREPARE, TurnState.PREPARE };
     public TurnState LocalNextTurnState
     {
         get => nextTurnStates[0];
@@ -103,9 +106,10 @@ public class GameManager : SingletonBehavior<GameManager>
 #endif
     }
 
-    private void OnApplicationQuit()
+    private void OnDestroy()
     {
-        NetworkManager.Inst.RemoveReceiveDelegate(TurnInfoReceiveNetworkAction);
+        if (NetworkManager.IsEnabled)
+            NetworkManager.Inst.RemoveReceiveDelegate(TurnInfoReceiveNetworkAction);
     }
 
     #region Card Data
@@ -158,10 +162,10 @@ public class GameManager : SingletonBehavior<GameManager>
 
         turnStates[(int)FirstPlayer] = TurnState.PREPARE;
         turnStates[(int)SecondPlayer] = TurnState.WAIT;
-
-        nextTurnStates = new TurnState[2];
         nextTurnStates[(int)FirstPlayer] = TurnState.WAIT;
         nextTurnStates[(int)SecondPlayer] = TurnState.PREPARE;
+
+        IngameUIManager.Inst.TempCurrentTurnText.text = LocalTurnState.ToString();
 
         // inspector에서 직접 설정 필요
         players[0].InitPlayer(PlayerEnum.LOCAL);

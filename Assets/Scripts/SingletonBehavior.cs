@@ -29,12 +29,17 @@ public class SingletonBehavior<T> : MonoBehaviour where T : MonoBehaviour
             _inst = FindObjectOfType<T>();
             if (!_inst)
             {
-                GameObject obj = new GameObject();
+                GameObject obj = new();
                 obj.name = typeof(T).FullName + "_Singleton";
                 DontDestroyOnLoad(obj);
                 _inst = obj.AddComponent<T>();
             }
             return _inst;
         }
+    }
+
+    private void OnDestroy()
+    {
+        _inst = null;
     }
 }

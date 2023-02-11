@@ -110,7 +110,8 @@ public class AkgRigidbody : MonoBehaviour
 
     public void BeforeDestroy()
     {
-        AkgPhysicsManager.Inst.RemoveAkgRigidbody(this);
+        if (AkgPhysicsManager.IsEnabled)
+            AkgPhysicsManager.Inst.RemoveAkgRigidbody(this);
         isForecasting = false;
     }
 

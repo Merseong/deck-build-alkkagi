@@ -15,8 +15,8 @@ public class OppoPlayerBehaviour : PlayerBehaviour
 
     private void OnDestroy()
     {
-        if (!NetworkManager.IsEnabled) return;
-        NetworkManager.Inst.RemoveReceiveDelegate(PlayCardReceiveNetworkAction);
+        if (NetworkManager.IsEnabled)
+            NetworkManager.Inst.RemoveReceiveDelegate(PlayCardReceiveNetworkAction);
     }
 
     public override void InitPlayer(GameManager.PlayerEnum pEnum)
