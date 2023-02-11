@@ -48,6 +48,7 @@ public class AkgPhysicsManager : SingletonBehavior<AkgPhysicsManager>
 
     public void RemoveAkgRigidbody(AkgRigidbody newObject)
     {
+        // Debug.Log($"Remove {newObject.GetInstanceID()}");
         rigidbodies.Remove(newObject);
         rigidbodyCounter = rigidbodies.Count;
     }

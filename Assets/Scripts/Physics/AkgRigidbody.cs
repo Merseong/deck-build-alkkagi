@@ -121,15 +121,13 @@ public class AkgRigidbody : MonoBehaviour
 
     public bool CheckPointCollide(Vector3 point)
     {
-        switch (ColliderType)
+        return ColliderType switch
         {
-            case ColliderTypeEnum.Circle:
-                return Vector3.Distance(transform.position + circleCenter, point) < circleRadius;
-            case ColliderTypeEnum.Rect:
-                return (point.x > transform.position.x + rectPoints.x && point.x < transform.position.x + rectPoints.z &&
-                        point.z > transform.position.z + rectPoints.y && point.z < transform.position.z + rectPoints.w);
-        }
-        return false;
+            ColliderTypeEnum.Circle => Vector3.Distance(transform.position + circleCenter, point) < circleRadius,
+            ColliderTypeEnum.Rect => (point.x > transform.position.x + rectPoints.x && point.x < transform.position.x + rectPoints.z &&
+                                        point.z > transform.position.z + rectPoints.y && point.z < transform.position.z + rectPoints.w),
+            _ => false,
+        };
     }
 
     /// <summary>
@@ -215,6 +213,13 @@ public class AkgRigidbody : MonoBehaviour
         {
             foreach (var targetAkg in candidates)
             {
+                if (!targetAkg)
+                {
+                    Debug.Log(targetAkg.GetInstanceID());
+                    Debug.Break();
+                    return false;
+                }
+
                 if (targetAkg.CheckPointCollide(start + normDir * i))
                 {
                     collideObject = targetAkg;

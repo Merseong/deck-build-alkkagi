@@ -67,6 +67,8 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     private void Update()
     {
+        if (isExiting) return;
+
         if(!CheckStoneDropByTransform())
         {
             RemoveStoneFromGame();
@@ -111,6 +113,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     private void RemoveStoneFromGame()
     {
+        isExiting = true;
         GameManager.Inst.players[(int)BelongingPlayer].RemoveStone(stoneId);
         akgRigidbody.BeforeDestroy();
     }

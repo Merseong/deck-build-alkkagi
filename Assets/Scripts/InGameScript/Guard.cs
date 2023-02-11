@@ -10,7 +10,12 @@ public class Guard : MonoBehaviour, AkgRigidbodyInterface
     private bool isCollided = false;
 
     private AkgRigidbody akgRigidbody;
-    
+
+    private void OnDestroy()
+    {
+        if (akgRigidbody) akgRigidbody.BeforeDestroy();
+    }
+
     public void SetGuardData(int id, bool isLocal)
     {
         guardId = id;
@@ -41,10 +46,6 @@ public class Guard : MonoBehaviour, AkgRigidbodyInterface
         if (isCollided) return;
         if (collider.gameObject.CompareTag("Stone"))
         {
-            if (collider.GetComponent<StoneBehaviour>().BelongingPlayer != 
-                (isBelongLocal ? GameManager.PlayerEnum.LOCAL : GameManager.PlayerEnum.OPPO))
-                return;
-
             isCollided = true;
             GameManager.Inst.rigidbodyRecorder.AppendEventRecord(new MyNetworkData.EventRecord
             {
@@ -53,7 +54,6 @@ public class Guard : MonoBehaviour, AkgRigidbodyInterface
                 eventEnum = MyNetworkData.EventEnum.GUARDCOLLIDE,
             });
 
-            akgRigidbody.BeforeDestroy();
             GameManager.Inst.GameBoard.RemoveLocalGuard(guardId);
         }
     }
