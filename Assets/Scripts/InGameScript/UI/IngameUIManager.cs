@@ -10,4 +10,7 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
 
     [SerializeField] private TextMeshProUGUI tempCurrentTurnText;
     public TextMeshProUGUI TempCurrentTurnText => tempCurrentTurnText;
+
+    [SerializeField] private UserAlertPanel userAlertPanel;
+    public UserAlertPanel UserAlertPanel => userAlertPanel;
 }

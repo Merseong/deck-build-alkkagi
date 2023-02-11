@@ -191,11 +191,13 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if (deck.Count < number)
         {
             Debug.LogError("Card 부족");
+            IngameUIManager.Inst.UserAlertPanel.Alert("No cards in deck"); //"덱에 카드가 부족합니다"
             return;
         }
         if (number == 0)
         {
             Debug.LogError("손패가 가득 찼습니다!");
+            IngameUIManager.Inst.UserAlertPanel.Alert("Hand is full"); // "손패가 가득 찼습니다"
             return;
         }
         for (int i = 0; i < number; i++)
@@ -320,11 +322,12 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private void ShootStone(Vector3 vec) // vec이 velocity인지 force인지 명확하게 해야함
     {
         // shoot token이 없는 경우, 쏘지 못하게 리셋
-        // if (!ShootTokenAvailable)
-        // {
-        //     Debug.LogWarning("공격토큰이 존재하지 않습니다.");
-        //     return;
-        // }
+        if (!ShootTokenAvailable)
+        {
+            Debug.LogWarning("공격토큰이 존재하지 않습니다.");
+            IngameUIManager.Inst.UserAlertPanel.Alert("No attack token"); // "공격 토큰이 존재하지 않습니다"
+            return;
+        }
 
         if (pauseEditorOnShoot) UnityEditor.EditorApplication.isPaused = true;
 
@@ -865,6 +868,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
                 isDragging = false;
                 selectedStone = null;
                 Debug.LogError("You have not enough cost for shooting stone!");
+                IngameUIManager.Inst.UserAlertPanel.Alert("Not enough cost for shooting stone!"); // "코스트가 부족합니다"
                 return;
             }
 
@@ -893,6 +897,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         else if(!SpendCost(selectedCard.CardData.cardCost))
         {
             Debug.LogError("Not enough cost to play card!");
+            IngameUIManager.Inst.UserAlertPanel.Alert("Not enough cost to play card"); // 코스트가 부족합니다
             return;
         }
 
