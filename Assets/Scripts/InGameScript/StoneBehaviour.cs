@@ -51,7 +51,8 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     [SerializeField] private GameManager.PlayerEnum belongingPlayer;
     public GameManager.PlayerEnum BelongingPlayer => belongingPlayer;
 
-    private bool isExiting = false;
+    public bool isExiting = false;
+    public bool isExitingByPlaying = false;
     [SerializeField] float indirectExitTime;
     [SerializeField] float indirectExitSpeed;
 
@@ -67,13 +68,12 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     private void Update()
     {
-        if (isExiting) return;
-
-        if(!CheckStoneDropByTransform())
+        if (!CheckStoneDropByTransform())
         {
             RemoveStoneFromGame();
             StartCoroutine(EIndirectExit());
         }
+
         if (akgRigidbody.velocity == Vector3.zero || !isClicked)
         {
             if (nowParticle == null) return;
@@ -111,9 +111,19 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         }
     }
 
-    private void RemoveStoneFromGame()
+    public void RemoveStoneFromGame()
     {
         isExiting = true;
+        if (!AkgPhysicsManager.Inst.rigidbodyRecorder.IsPlaying)
+            AkgPhysicsManager.Inst.rigidbodyRecorder.AppendEventRecord(new MyNetworkData.EventRecord
+            {
+                stoneId = stoneId,
+                eventEnum = MyNetworkData.EventEnum.DROPOUT,
+                time = Time.time,
+                xPosition = transform.position.x,
+                zPosition = transform.position.z,
+            });
+
         GameManager.Inst.players[(int)BelongingPlayer].RemoveStone(stoneId);
         akgRigidbody.BeforeDestroy();
     }
@@ -137,10 +147,16 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     private bool CheckStoneDropByTransform()
     {
-        if(transform.position.x > boardTransform.transform.position.x + boardTransform.transform.localScale.x * 5f) return false;
-        if(transform.position.x < boardTransform.transform.position.x - boardTransform.transform.localScale.x * 5f) return false;
-        if(transform.position.z > boardTransform.transform.position.z + boardTransform.transform.localScale.z * 5f) return false;
-        if(transform.position.z < boardTransform.transform.position.z - boardTransform.transform.localScale.z * 5f) return false;
+        if (isExiting) return true;
+        if (AkgPhysicsManager.Inst.IsRecordPlaying)
+        {
+            if (isExitingByPlaying) return false;
+            return true;
+        }
+        if (transform.position.x > boardTransform.transform.position.x + boardTransform.transform.localScale.x * 5f) return false;
+        if (transform.position.x < boardTransform.transform.position.x - boardTransform.transform.localScale.x * 5f) return false;
+        if (transform.position.z > boardTransform.transform.position.z + boardTransform.transform.localScale.z * 5f) return false;
+        if (transform.position.z < boardTransform.transform.position.z - boardTransform.transform.localScale.z * 5f) return false;
         return true;
     }
 

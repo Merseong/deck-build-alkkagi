@@ -34,8 +34,7 @@ public class GameBoard : MonoBehaviour
                 return player1PutMarks;
         }
     }
-    [SerializeField] private Dictionary<int, GameObject> localPlayerGuard = new();
-    [SerializeField] private Dictionary<int, GameObject> oppoPlayerGuard = new();
+    [SerializeField] private Dictionary<int, GameObject> playerGuards = new();
     [SerializeField] private int guardHorizontalCnt;
     [SerializeField] private int guardVerticalCnt;
 
@@ -231,9 +230,9 @@ public class GameBoard : MonoBehaviour
         go.GetComponent<AkgRigidbody>().rectPoints = rotation == Quaternion.identity ?
             new Vector4(-scale.x / 2, -scale.z / 2, scale.x / 2, scale.z / 2) :
             new Vector4(-scale.z / 2, -scale.x / 2, scale.z / 2, scale.x / 2);
-        var idx = localPlayerGuard.Count;
+        var idx = playerGuards.Count;
         go.GetComponent<Guard>().SetGuardData(idx, true);
-        localPlayerGuard.Add(idx, go);
+        playerGuards.Add(idx, go);
     }
 
     public void AddOppoGuard(Vector3 position, Quaternion rotation)
@@ -244,23 +243,15 @@ public class GameBoard : MonoBehaviour
         go.GetComponent<AkgRigidbody>().rectPoints = rotation == Quaternion.identity ?
             new Vector4(-scale.x / 2, -scale.z / 2, scale.x / 2, scale.z / 2) :
             new Vector4(-scale.z / 2, -scale.x / 2, scale.z / 2, scale.x / 2);
-        var idx = oppoPlayerGuard.Count;
+        var idx = playerGuards.Count;
         go.GetComponent<Guard>().SetGuardData(idx, false);
-        oppoPlayerGuard.Add(idx, go);
+        playerGuards.Add(idx, go);
     }
 
-    public void RemoveOppoGuard(int id)
+    public void RemoveGuard(int id)
     {
-        oppoPlayerGuard.TryGetValue(id, out var guard);
-        oppoPlayerGuard.Remove(id);
-
-        Destroy(guard);
-    }
-
-    public void RemoveLocalGuard(int id)
-    {
-        localPlayerGuard.TryGetValue(id, out var guard);
-        localPlayerGuard.Remove(id);
+        playerGuards.TryGetValue(id, out var guard);
+        playerGuards.Remove(id);
 
         Destroy(guard);
     }

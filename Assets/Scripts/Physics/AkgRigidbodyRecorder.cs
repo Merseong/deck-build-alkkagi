@@ -64,33 +64,31 @@ public class AkgRigidbodyRecorder
         var erIdx = 0;
         while (vrIdx < vRecords.Length || erIdx < eRecords.Length)
         {
-            yield return new WaitUntil(() => vRecords[vrIdx].time <= Time.time - startTime || eRecords[erIdx].time <= Time.time - startTime);
-            if (vrIdx < vRecords.Length)
+            yield return new WaitUntil(() => vrIdx >= vRecords.Length ||
+                                            vRecords[vrIdx].time <= Time.time - startTime ||
+                                            erIdx >= eRecords.Length ||
+                                            eRecords[erIdx].time <= Time.time - startTime);
+            while (vrIdx < vRecords.Length && vRecords[vrIdx].time <= Time.time - startTime)
             {
-                while (vrIdx < vRecords.Length && vRecords[vrIdx].time <= Time.time - startTime)
-                {
-                    var stone = GameManager.Inst.FindStone(vRecords[vrIdx].stoneId);
-                    stone.GetComponent<AkgRigidbody>().SetVelocity(new Vector3(vRecords[vrIdx].xVelocity, 0, vRecords[vrIdx].zVelocity));
-                    vrIdx++;
-                }
+                var stone = GameManager.Inst.FindStone(vRecords[vrIdx].stoneId);
+                stone.GetComponent<AkgRigidbody>().SetVelocity(new Vector3(vRecords[vrIdx].xVelocity, 0, vRecords[vrIdx].zVelocity));
+                vrIdx++;
             }
-            if (erIdx < eRecords.Length)
+            while (erIdx < eRecords.Length && eRecords[erIdx].time <= Time.time - startTime)
             {
-                while (erIdx < eRecords.Length && eRecords[erIdx].time <= Time.time - startTime)
+                switch (eRecords[erIdx].eventEnum)
                 {
-                    switch (eRecords[erIdx].eventEnum)
-                    {
-                        case EventEnum.GUARDCOLLIDE:
-                            // stoneId => 충돌한 guard의 번호
-                            GameManager.Inst.GameBoard.RemoveOppoGuard(eRecords[erIdx].stoneId);
-                            break;
-                        case EventEnum.DROPOUT:
-                            var stone = GameManager.Inst.FindStone(eRecords[erIdx].stoneId);
-                            // TODO: gameboard.dropoutstone(stone) 같은 느낌
-                            break;
-                    }
-                    erIdx++;
+                    case EventEnum.GUARDCOLLIDE:
+                        // stoneId => 충돌한 guard의 번호
+                        GameManager.Inst.GameBoard.RemoveGuard(eRecords[erIdx].stoneId);
+                        break;
+                    case EventEnum.DROPOUT:
+                        var stone = GameManager.Inst.FindStone(eRecords[erIdx].stoneId);
+                        stone.transform.position = new Vector3(eRecords[erIdx].xPosition, 0, eRecords[erIdx].zPosition);
+                        stone.isExitingByPlaying = true;
+                        break;
                 }
+                erIdx++;
             }
         }
 

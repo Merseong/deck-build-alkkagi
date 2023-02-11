@@ -194,6 +194,8 @@ namespace MyNetworkData
         public float time;
         public int stoneId;
         public EventEnum eventEnum;
+        public float xPosition;
+        public float zPosition;
     }
 
     [Serializable]

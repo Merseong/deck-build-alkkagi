@@ -337,7 +337,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private IEnumerator EShootStone()
     {
-        var recorder = GameManager.Inst.rigidbodyRecorder;
+        var recorder = AkgPhysicsManager.Inst.rigidbodyRecorder;
         recorder.StartRecord(Time.time);
 
         yield return null;

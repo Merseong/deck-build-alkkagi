@@ -47,14 +47,14 @@ public class Guard : MonoBehaviour, AkgRigidbodyInterface
         if (collider.gameObject.CompareTag("Stone"))
         {
             isCollided = true;
-            GameManager.Inst.rigidbodyRecorder.AppendEventRecord(new MyNetworkData.EventRecord
+            AkgPhysicsManager.Inst.rigidbodyRecorder.AppendEventRecord(new MyNetworkData.EventRecord
             {
                 stoneId = guardId,
                 time = Time.time,
                 eventEnum = MyNetworkData.EventEnum.GUARDCOLLIDE,
             });
 
-            GameManager.Inst.GameBoard.RemoveLocalGuard(guardId);
+            GameManager.Inst.GameBoard.RemoveGuard(guardId);
         }
     }
 }

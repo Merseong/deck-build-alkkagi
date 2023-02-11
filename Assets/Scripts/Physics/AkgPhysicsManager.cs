@@ -5,6 +5,15 @@ using System.Linq;
 
 public class AkgPhysicsManager : SingletonBehavior<AkgPhysicsManager>
 {
+    /// <summary>
+    /// 물리 기록용 recorder
+    /// </summary>
+    public readonly AkgRigidbodyRecorder rigidbodyRecorder = new AkgRigidbodyRecorder();
+    public bool IsRecordPlaying => rigidbodyRecorder.IsPlaying;
+
+    /// <summary>
+    /// 충돌 감지용 게임 내의 AkgRigidbody
+    /// </summary>
     private HashSet<AkgRigidbody> rigidbodies;
     [SerializeField] private int rigidbodyCounter = 0;
 
@@ -37,6 +46,7 @@ public class AkgPhysicsManager : SingletonBehavior<AkgPhysicsManager>
     private void Awake()
     {
         rigidbodies = new();
+        rigidbodyRecorder.InitRecorder();
     }
 
     #region Rigidbody List control

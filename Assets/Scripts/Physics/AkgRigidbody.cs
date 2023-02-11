@@ -277,7 +277,7 @@ public class AkgRigidbody : MonoBehaviour
     {
         if (isStatic) return;
 
-        if (GameManager.Inst.rigidbodyRecorder.IsPlaying) return;
+        if (AkgPhysicsManager.Inst.rigidbodyRecorder.IsPlaying) return;
 
         Debug.Log($"Collision/ {transform.position} {point} {akg.velocity}");
 
@@ -324,7 +324,7 @@ public class AkgRigidbody : MonoBehaviour
     {
         if (!TryGetComponent<StoneBehaviour>(out var stone)) return;
 
-        GameManager.Inst.rigidbodyRecorder.AppendVelocity(new MyNetworkData.VelocityRecord
+        AkgPhysicsManager.Inst.rigidbodyRecorder.AppendVelocity(new MyNetworkData.VelocityRecord
         {
             stoneId = stone.StoneId,
             time = Time.time,
@@ -337,7 +337,7 @@ public class AkgRigidbody : MonoBehaviour
     {
         if (!TryGetComponent<StoneBehaviour>(out var stone)) return;
 
-        GameManager.Inst.rigidbodyRecorder.AppendEventRecord(new MyNetworkData.EventRecord
+        AkgPhysicsManager.Inst.rigidbodyRecorder.AppendEventRecord(new MyNetworkData.EventRecord
         {
             stoneId = stone.StoneId,
             time = Time.time,
