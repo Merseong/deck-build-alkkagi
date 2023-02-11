@@ -98,7 +98,9 @@ public class GameManager : SingletonBehavior<GameManager>
         rigidbodyRecorder.InitRecorder();
         NetworkManager.Inst.AddReceiveDelegate(TurnInfoReceiveNetworkAction);
 
+#if UNITY_EDITOR
         if (!NetworkManager.Inst.IsNetworkMode) InitializeGame(isLocalGoFirst);
+#endif
     }
 
     private void OnApplicationQuit()
@@ -233,6 +235,14 @@ public class GameManager : SingletonBehavior<GameManager>
 
     public void TurnEndButtonAction()
     {
+#if UNITY_EDITOR
+        if (!NetworkManager.Inst.IsNetworkMode)
+        {
+            SetNextTurnState();
+            TurnEnd();
+            return;
+        }
+#endif
         if (isTurnEndSent)
         {
             Debug.LogWarning("[ME] Turn end already sent!");
