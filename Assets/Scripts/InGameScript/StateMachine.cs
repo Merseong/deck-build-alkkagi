@@ -14,6 +14,8 @@ public class StateMachine
     {
         curState = defaultState;
         this.player = player;
+        TouchManager.Inst.touchPressAction.started  += TouchBeginAction;
+        TouchManager.Inst.touchPressAction.canceled += TouchEndAction;
     }
 
     // State 전이

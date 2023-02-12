@@ -118,7 +118,6 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         turnActionDic.Add(GameManager.TurnState.HONORSKIP, new Action<Vector3>[] { HonorskipTouchBegin, HonorskipInTouch, HonorskipTouchEnd });
 
         stateMachine = new StateMachine(this, GameManager.Inst.LocalTurnState);
-        stateMachine.OperateEnter();
 
         //Init ghost Card
         stoneGhost = Instantiate(StonePrefab, Vector3.zero, Quaternion.identity);
@@ -326,23 +325,6 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private void ShootStone(Vector3 vec) // vec이 velocity인지 force인지 명확하게 해야함
     {
-        // shoot token이 없는 경우, 쏘지 못하게 리셋
-        if (!ShootTokenAvailable)
-        {
-            Debug.LogWarning("공격토큰이 존재하지 않습니다.");
-            IngameUIManager.Inst.UserAlertPanel.Alert("No attack token"); // "공격 토큰이 존재하지 않습니다"
-            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = GameManager.Inst.stoneAtlas.GetSprite(selectedStone.CardData.cardName + "_Idle");
-            if (isLocalRotated)
-            {
-                selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
-            }
-            else
-            {
-                selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 0, 0);
-            }
-            return;
-        }
-
         if (pauseEditorOnShoot) UnityEditor.EditorApplication.isPaused = true;
 
         StartCoroutine(EShootStone());
@@ -614,17 +596,49 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     public void WaitTouchBegin(Vector3 curScreenTouchPosition)
     {
+        Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
+        Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
+        dragStartPoint = curTouchPositionNormalized;
 
+        //Card
+        selectedCard = GetCardAroundPoint(curScreenTouchPosition);
     }
 
     public void WaitInTouch(Vector3 curScreenTouchPosition)
     {
+        if (isInformOpened) return;
+
+        Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
+        Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
 
     }
 
     public void WaitTouchEnd(Vector3 curScreenTouchPosition)
     {
+        Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
+        Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
 
+        //UI handle
+        if (isInformOpened)
+        {
+            UICloseAction();
+            return;
+        }
+        
+        if (selectedStone == null)
+        {
+            StoneSelectionAction(false, curScreenTouchPosition);
+        }
+
+
+        if (selectedCard != null)
+        {
+            if ((dragStartPoint - curTouchPositionNormalized).magnitude < cardDragThreshold)
+            {
+                CardSelectionAction();
+                return;
+            }
+        }
     }
 
     public void HonorskipTouchBegin(Vector3 curScreenTouchPosition)
@@ -638,21 +652,6 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     }
 
     public void HonorskipTouchEnd(Vector3 curScreenTouchPosition)
-    {
-
-    }
-
-    public void HSConsentTouchBegin(Vector3 curScreenTouchPosition)
-    {
-
-    }
-
-    public void HSConsentInTouch(Vector3 curScreenTouchPosition)
-    {
-
-    }
-
-    public void HSConsentTouchEnd(Vector3 curScreenTouchPosition)
     {
 
     }
@@ -876,6 +875,23 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         {
             int needCost = curDragMagnitude <= maxDragLimit / 2 ? 1 : 2;
 
+            // shoot token이 없는 경우, 쏘지 못하게 리셋
+            if (!ShootTokenAvailable)
+            {
+                Debug.LogWarning("공격토큰이 존재하지 않습니다.");
+                IngameUIManager.Inst.UserAlertPanel.Alert("No attack token"); // "공격 토큰이 존재하지 않습니다"
+                selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = GameManager.Inst.stoneAtlas.GetSprite(selectedStone.CardData.cardName + "_Idle");
+                if (isLocalRotated)
+                {
+                    selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
+                }
+                else
+                {
+                    selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 0, 0);
+                }
+                return;
+            }
+
             if(!SpendCost(needCost))
             {
                 //Not enough cost for shooting
@@ -913,6 +929,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         {
             Debug.LogError("Not enough cost to play card!");
             IngameUIManager.Inst.UserAlertPanel.Alert("Not enough cost to play card"); // 코스트가 부족합니다
+            GameManager.Inst.GameBoard.UnhightlightPossiblePos();
             return;
         }
 
