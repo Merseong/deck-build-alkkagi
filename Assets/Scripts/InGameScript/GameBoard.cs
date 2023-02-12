@@ -150,15 +150,15 @@ public class GameBoard : MonoBehaviour
     // 지정된 위치에 가능한지 판별
     public static bool IsPossibleToPut(Vector3 pos, float stoneRadius)
     {
-        Collider[] hitcolliders = Physics.OverlapSphere(pos, stoneRadius, (1<<LayerMask.NameToLayer("Stone")));
-        if (hitcolliders.Length > 0)
+        var stoneOnBoard = GameManager.Inst.AllStones.Values;
+        foreach (StoneBehaviour stone in stoneOnBoard)
         {
-            return false;
+            if (Vector3.Distance(pos, stone.gameObject.transform.position) <= stoneRadius)
+            {
+                return false;
+            }
         }
-        else 
-        {
-            return true;
-        }
+        return true;
     }
 
     public void ResetMarkState()
