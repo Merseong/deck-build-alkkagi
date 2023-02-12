@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.U2D;
 
 public class GameManager : SingletonBehavior<GameManager>
 {
@@ -18,6 +19,9 @@ public class GameManager : SingletonBehavior<GameManager>
 
     // 돌들
     public Dictionary<int, StoneBehaviour> AllStones = new();
+
+    //아틀라스
+    public SpriteAtlas stoneAtlas;
 
     // 현재 보드
     [SerializeField] private GameBoard gameBoard;

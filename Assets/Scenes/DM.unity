@@ -295,6 +295,7 @@ MonoBehaviour:
   CardDatas:
   - {fileID: 11400000, guid: ad9eecbeeeab2e44eb513eee02c0e6da, type: 2}
   - {fileID: 11400000, guid: 4b02e65e8e145fe40a9d3093d27bb20a, type: 2}
+  stoneAtlas: {fileID: 4343727234628468602, guid: 15417bec6ed96894fa69a9c23e6fd69d, type: 2}
   gameBoard: {fileID: 1500342745}
   isLocalGoFirst: 0
   isPlayerHonorSkip: 0

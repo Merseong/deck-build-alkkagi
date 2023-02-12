@@ -301,7 +301,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         stoneBehaviour.SetCardData(cardData, newStoneId, Player);
 
         //temp code
-        spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = cardData.idleSprite;
+        spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = GameManager.Inst.stoneAtlas.GetSprite(cardData.cardName + "_Idle");
         if (isLocalRotated)
             spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
         spawnedStone.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(cardData.stoneSize), .15f, Util.GetRadiusFromStoneSize(cardData.stoneSize));
@@ -331,7 +331,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         {
             Debug.LogWarning("공격토큰이 존재하지 않습니다.");
             IngameUIManager.Inst.UserAlertPanel.Alert("No attack token"); // "공격 토큰이 존재하지 않습니다"
-            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.CardData.idleSprite;
+            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = GameManager.Inst.stoneAtlas.GetSprite(selectedStone.CardData.cardName + "_Idle");
             if (isLocalRotated)
             {
                 selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
@@ -347,7 +347,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         StartCoroutine(EShootStone());
 
-        selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.CardData.shootSprite;
+        selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = GameManager.Inst.stoneAtlas.GetSprite(selectedStone.CardData.cardName + "_Shoot");
         selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);
         ShootTokenAvailable = false;
     }
@@ -372,7 +372,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         foreach (StoneBehaviour stone in GameManager.Inst.AllStones.Values)
         {
-            stone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = stone.CardData.idleSprite;
+            stone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = GameManager.Inst.stoneAtlas.GetSprite(stone.CardData.cardName + "_Idle");
             if (isLocalRotated)
             {
                 stone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
@@ -391,7 +391,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     {
         GameManager.Inst.isInformOpened = isInformOpened = true;
         //sprite
-        informPanel.GetChild(1).GetComponent<Image>().sprite = data.idleSprite;
+        informPanel.GetChild(1).GetComponent<Image>().sprite = GameManager.Inst.stoneAtlas.GetSprite(data.cardName + "_Idle");
         //size
         informPanel.GetChild(2).GetComponent<TextMeshProUGUI>().text = data.stoneSize.ToString();
         //weight
@@ -672,7 +672,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if (isDragging && !isInformOpened)
         {
             //temp
-            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.CardData.readySprite;
+            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = GameManager.Inst.stoneAtlas.GetSprite(selectedStone.CardData.cardName + "_Ready");
 
             dragEffectObj.gameObject.SetActive(true);
             dragEffectObj.SetPosition(0, curTouchPositionNormalized);
@@ -685,7 +685,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private void CardDragAction_Begin()
     {
-        stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedCard.CardData.idleSprite;
+        stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = GameManager.Inst.stoneAtlas.GetSprite(selectedCard.CardData.cardName + "_Idle");
         if (isLocalRotated)
             stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
         stoneGhost.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize), .15f, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));

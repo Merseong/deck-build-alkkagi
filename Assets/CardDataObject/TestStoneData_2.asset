@@ -13,9 +13,14 @@ MonoBehaviour:
   m_Name: TestStoneData_2
   m_EditorClassIdentifier: 
   cardID: 2
+  cardName: Knight
   stoneSize: 2
   stoneWeight: 1
   cardCost: 3
   inDeckNumber: 0
-  sprite: {fileID: 21300000, guid: 1ee5876314d68e64983549e6df8bc5f9, type: 3}
+  idleSprite: {fileID: 0}
+  readySprite: {fileID: 0}
+  shootSprite: {fileID: 0}
+  hitSprite: {fileID: 0}
+  breakSprite: {fileID: 0}
   description: This is a cannonshooter
