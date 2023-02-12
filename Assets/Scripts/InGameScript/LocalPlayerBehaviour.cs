@@ -87,13 +87,12 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private void Update()
     {
-        stateMachine.DoOperateUpdate();
+        if (stateMachine != null)
+            stateMachine.DoOperateUpdate();
 
         //Temp test code for card draw
         if (Input.GetKeyDown(KeyCode.Q))
-        {
             DrawCards(1);
-        }
     }
 
     public override void InitPlayer(GameManager.PlayerEnum pEnum)
