@@ -296,8 +296,8 @@ public class AkgRigidbody : MonoBehaviour
         {
             if (velocity == Vector3.zero)
             {
-                CardData cardData = gameObject.GetComponent<StoneBehaviour>().CardData;
-                gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = GameManager.Inst.stoneAtlas.GetSprite(cardData.cardName + "_Hit");
+                StoneBehaviour stone = gameObject.GetComponent<StoneBehaviour>();
+                gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = stone.GetSpriteState("Idle");
 
                 float randnum = UnityEngine.Random.Range(-30.0f, 30.0f);
                 if (GameManager.Inst.isLocalGoFirst)

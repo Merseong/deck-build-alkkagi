@@ -145,6 +145,30 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         }
     }
 
+    public virtual Sprite GetSpriteState(string state)
+    {
+        Sprite sprite = GameManager.Inst.stoneAtlas.GetSprite(cardData.cardName + "_" + state);
+        while (sprite == null)
+        {
+            switch (state)
+            {
+                case "Shoot":
+                case "Hit":
+                    state = "Idle";
+                    break;
+                case "Ready":
+                case "Break":
+                    state = "Shoot";
+                    break;
+                default:
+                    state = "Idle";
+                    break;
+            }
+            sprite = GameManager.Inst.stoneAtlas.GetSprite(cardData.cardName + "_" + state);
+        }
+        return sprite;
+    }
+
     private bool CheckStoneDropByTransform()
     {
         if (isExiting) return true;
@@ -190,7 +214,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     private IEnumerator EIndirectExit()
     {
-        transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = CardData.breakSprite;
+        transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = GetSpriteState("Break");
 
         isExiting = true;
         float curTime = indirectExitTime;

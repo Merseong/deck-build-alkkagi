@@ -47,7 +47,7 @@ public class OppoPlayerBehaviour : PlayerBehaviour
         stoneBehaviour.SetCardData(cardData, newStoneId, Player);
 
         //temp code
-        spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = cardData.idleSprite;
+        spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = stoneBehaviour.GetSpriteState("Idle");
         spawnedStone.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(cardData.stoneSize), .15f, Util.GetRadiusFromStoneSize(cardData.stoneSize));
         spawnedStone.GetComponent<AkgRigidbody>().Init(Util.GetMassFromStoneWeight(cardData.stoneSize, cardData.stoneWeight));
 
