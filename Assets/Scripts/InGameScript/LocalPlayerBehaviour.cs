@@ -905,6 +905,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if(nearPutTransform == null)
         {
             Debug.LogError("Unavailiable place to spawn stone!");
+            IngameUIManager.Inst.UserAlertPanel.Alert("Unavailiable place to spawn stone"); // 돌을 놓을 수 있는 위치가 아닙니다
             GameManager.Inst.GameBoard.UnhightlightPossiblePos();
             return;
         }

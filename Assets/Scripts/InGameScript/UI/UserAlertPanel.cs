@@ -10,6 +10,9 @@ public class UserAlertPanel : MonoBehaviour
     private Image panelBackground;
     [SerializeField] private float panelFadeOutDuration = .5f;
 
+    private bool isOnAlert = false;
+    private float localTimer = 0f;
+
     private void Awake()
     {
         panelBackground = GetComponent<Image>();
@@ -27,25 +30,35 @@ public class UserAlertPanel : MonoBehaviour
         textMesh.text = alertContent;
         textMesh.color = textInitColor;
 
+        if (isOnAlert)
+        {
+            localTimer = 0f;
+            return;
+        }
+
         StartCoroutine(EPanelFadeControl(alertDuration));
     }
 
     IEnumerator EPanelFadeControl(float alertDuration)
     {
-        yield return new WaitForSeconds(alertDuration);
-
-        var timer = 0f;
-        while (timer < panelFadeOutDuration)
+        isOnAlert = true;
+        localTimer = 0f;
+        while (localTimer < alertDuration + panelFadeOutDuration)
         {
-            timer += Time.deltaTime;
-            var panelColor = new Color(1, 0.8f, 0.8f, Mathf.Lerp(1, 0, timer / panelFadeOutDuration));
-            var textColor = new Color(1, 0.6f, 0.6f, Mathf.Lerp(1, 0, timer / panelFadeOutDuration));
-            panelBackground.color = panelColor;
-            textMesh.color = textColor;
+            if (localTimer >= alertDuration)
+            {
+                var panelColor = new Color(1, 0.8f, 0.8f, Mathf.Lerp(1, 0, (localTimer - alertDuration) / panelFadeOutDuration));
+                var textColor = new Color(1, 0.6f, 0.6f, Mathf.Lerp(1, 0, (localTimer - alertDuration) / panelFadeOutDuration));
+                panelBackground.color = panelColor;
+                textMesh.color = textColor;
+            }
+
+            localTimer += Time.deltaTime;
             yield return null;
         }
 
         panelBackground.enabled = false;
         textMesh.gameObject.SetActive(false);
+        isOnAlert = false;
     }
 }
