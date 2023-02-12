@@ -144,6 +144,12 @@ public abstract class PlayerBehaviour : MonoBehaviour
     {
         Stones.Remove(stoneId);
         GameManager.Inst.AllStones.Remove(stoneId);
+
+        if (Stones.Count == 0)
+        {
+            // Game over
+            GameManager.Inst.GameOverAction(player);
+        }
     }
 
     public StoneBehaviour FindStone(int stoneId)

@@ -173,6 +173,21 @@ public class GameManager : SingletonBehavior<GameManager>
         LocalPlayer.ShootTokenAvailable = true;
     }
 
+    public void GameOverAction(PlayerEnum loser)
+    {
+        if (loser == PlayerEnum.LOCAL)
+        {
+            Debug.LogError("Game over!");
+            IngameUIManager.Inst.TempCurrentTurnText.text = "LOSE";
+        }
+        else
+        {
+            Debug.Log("You win!");
+            IngameUIManager.Inst.TempCurrentTurnText.text = "WIN";
+        }
+        Debug.Break();
+    }
+
     private void StartTurnBasis(TurnState turnState)
     {
         if (turnState != TurnState.NORMAL) return;
