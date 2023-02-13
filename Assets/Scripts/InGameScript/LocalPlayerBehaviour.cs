@@ -12,9 +12,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     //Temp
     public GameObject StonePrefab;
 
-    //TODO : should move to UIManager
-    [SerializeField] private RectTransform cancelPanel;
-    [SerializeField] private RectTransform informPanel;
+    private RectTransform cancelPanel;
+    private InformationPanel informPanel;
 
     [SerializeField] private List<Card> deck;
     [SerializeField] private List<Card> hand;
@@ -82,7 +81,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private void Start()
     {
-
+        cancelPanel = IngameUIManager.Inst.CancelPanel;
+        informPanel = IngameUIManager.Inst.InformationPanel;
     }
 
     private void Update()
@@ -178,30 +178,6 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     }
 
     // 여기서부터 액션들
-
-    private Sprite GetSpriteState(CardData cardData, string state)
-    {
-        Sprite sprite = GameManager.Inst.stoneAtlas.GetSprite(cardData.cardName + "_" + state);
-        while (sprite == null)
-        {
-            switch (state)
-            {
-                case "Shoot":
-                case "Hit":
-                    state = "Idle";
-                    break;
-                case "Ready":
-                case "Break":
-                    state = "Shoot";
-                    break;
-                default:
-                    state = "Idle";
-                    break;
-            }
-            sprite = GameManager.Inst.stoneAtlas.GetSprite(cardData.cardName + "_" + state);
-        }
-        return sprite;
-    }
 
     public override void DrawCards(int number)
     {
@@ -400,18 +376,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private void SetInformPanel(CardData data)
     {
         GameManager.Inst.isInformOpened = isInformOpened = true;
-        //sprite
-        informPanel.GetChild(1).GetComponent<Image>().sprite = GetSpriteState(data, "Idle");
-        //size
-        informPanel.GetChild(2).GetComponent<TextMeshProUGUI>().text = data.stoneSize.ToString();
-        //weight
-        informPanel.GetChild(3).GetComponent<TextMeshProUGUI>().text = data.stoneWeight.ToString();
-        //description
-        informPanel.GetChild(4).GetComponent<TextMeshProUGUI>().text = data.description.ToString();
-        //Card name
-        // informPanel.GetChild(5).GetComponent<TextMeshProUGUI>().text = data.cardName.ToString();
-        //cost
-        informPanel.GetChild(6).GetComponent<TextMeshProUGUI>().text = data.cardCost.ToString();
+        informPanel.SetInformation(data);
     }
 
     private Vector3 ScreenPosToNormalized(Vector3 vec)
@@ -714,7 +679,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private void CardDragAction_Begin()
     {
-        stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = GetSpriteState(selectedCard.CardData,"Idle");
+        stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = Util.GetSpriteState(selectedCard.CardData,"Idle");
         if (isLocalRotated)
             stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
         stoneGhost.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize), .15f, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));

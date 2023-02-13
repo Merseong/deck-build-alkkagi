@@ -502,6 +502,7 @@ MonoBehaviour:
   velocity: {x: 0, y: 0, z: 0}
   isStatic: 0
   mass: 0.1
+  drag: 1
   cor: 0.5
   colliderType: 0
   circleCenter: {x: 0, y: 0, z: 0}
@@ -524,6 +525,8 @@ MonoBehaviour:
   boardTransform: {fileID: 0}
   cardData: {fileID: 11400000, guid: ad9eecbeeeab2e44eb513eee02c0e6da, type: 2}
   collideParticle: {fileID: 8393250706075246204, guid: be7e4ae1e2e2e6f40b943eb27519abec, type: 3}
+  directExitParticle: {fileID: 143605036211117833, guid: c298094e823c15d4f9cc7d9bacaa6127, type: 3}
+  ownerPlayer: 0
   followingStone: {fileID: 3312677705765057702, guid: 3869364b4791ba44ea66661c5967a3ea, type: 3}
   _ChasingSpeed: 0.1
   isClicked: 0

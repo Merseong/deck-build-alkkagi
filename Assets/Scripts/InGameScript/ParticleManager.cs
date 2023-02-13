@@ -68,6 +68,23 @@ public class ParticleManager : SingletonBehavior<ParticleManager>
         particleToPlay.SetActive(false);
     }
 
+    public IEnumerator PlayParticle(GameObject particle, Vector3 position, Vector3 rotation)
+    {
+        GameObject particleToPlay = TryGetFromPool(particle);
+
+        if(particleToPlay == null) yield break;
+
+        particleToPlay.transform.position = position;
+        particleToPlay.transform.rotation = Quaternion.Euler(0f, Vector3.SignedAngle(Vector3.forward, rotation, Vector3.up), 0f);
+        particleToPlay.SetActive(true); 
+        
+        ParticleSystem ps = particleToPlay.GetComponent<ParticleSystem>();
+        ps.Play();
+        yield return new WaitForSeconds(ps.main.duration + ps.main.startLifetimeMultiplier);
+        
+        particleToPlay.SetActive(false);
+    }
+
     private GameObject TryGetFromPool(GameObject particle)
     {
         foreach(var ps in particleDic[particle])

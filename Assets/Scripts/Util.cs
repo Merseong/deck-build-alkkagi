@@ -110,4 +110,28 @@ public static class Util
                 return 0f;
         }
     }
+    
+    public static Sprite GetSpriteState(CardData cardData, string state)
+    {
+        Sprite sprite = GameManager.Inst.stoneAtlas.GetSprite(cardData.cardName + "_" + state);
+        while (sprite == null)
+        {
+            switch (state)
+            {
+                case "Shoot":
+                case "Hit":
+                    state = "Idle";
+                    break;
+                case "Ready":
+                case "Break":
+                    state = "Shoot";
+                    break;
+                default:
+                    state = "Idle";
+                    break;
+            }
+            sprite = GameManager.Inst.stoneAtlas.GetSprite(cardData.cardName + "_" + state);
+        }
+        return sprite;
+    }
 }

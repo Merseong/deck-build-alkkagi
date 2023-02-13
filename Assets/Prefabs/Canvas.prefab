@@ -1147,7 +1147,7 @@ GameObject:
   - component: {fileID: 8176347448334451560}
   - component: {fileID: 8969840003157641205}
   m_Layer: 5
-  m_Name: cardName
+  m_Name: name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1357,7 +1357,7 @@ GameObject:
   - component: {fileID: 984495491861303264}
   - component: {fileID: 984495491861303267}
   m_Layer: 5
-  m_Name: sizeText
+  m_Name: size
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1491,6 +1491,7 @@ GameObject:
   - component: {fileID: 984495492050547765}
   - component: {fileID: 2614934696413580201}
   - component: {fileID: 1005418396834562893}
+  - component: {fileID: 1999491283}
   m_Layer: 5
   m_Name: InformPanel
   m_TagString: Untagged
@@ -1516,7 +1517,7 @@ RectTransform:
   - {fileID: 984495492061914434}
   - {fileID: 4251927655051163583}
   - {fileID: 8814840361736648369}
-  - {fileID: 3550105372240869753}
+  - {fileID: 4498210667221944924}
   m_Father: {fileID: 984495492558740924}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1563,6 +1564,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1999491283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984495492050547764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4118f89ac7402e49a35097ab44f9a4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Sprite: {fileID: 984495493672041549}
+  cardSize: {fileID: 984495491861303267}
+  cardWeight: {fileID: 984495492061914435}
+  cardDescription: {fileID: 9216127350743106739}
+  cardName: {fileID: 8969840003157641205}
+  cardCost: {fileID: 5908824986939073164}
 --- !u!1 &984495492061914437
 GameObject:
   m_ObjectHideFlags: 0
@@ -1575,7 +1594,7 @@ GameObject:
   - component: {fileID: 984495492061914432}
   - component: {fileID: 984495492061914435}
   m_Layer: 5
-  m_Name: weightText
+  m_Name: weight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1822,6 +1841,8 @@ MonoBehaviour:
   askingPanel: {fileID: 3269199092809594370}
   tempCurrentTurnText: {fileID: 1923932826}
   userAlertPanel: {fileID: 22188226}
+  cancelPanel: {fileID: 984495492826000313}
+  informationPanel: {fileID: 1999491283}
 --- !u!1 &984495492826000312
 GameObject:
   m_ObjectHideFlags: 0
@@ -2046,7 +2067,7 @@ GameObject:
   - component: {fileID: 984495493672041546}
   - component: {fileID: 984495493672041549}
   m_Layer: 5
-  m_Name: CardImage
+  m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2135,18 +2156,19 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 985584832365855254}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3550105372240869753}
-  m_RootOrder: 0
+  m_Children:
+  - {fileID: 3550105372240869753}
+  m_Father: {fileID: 984495492050547765}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -450.00003, y: 850.0001}
+  m_SizeDelta: {x: -1619.9999, y: -3115.6904}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1292049954403370511
 CanvasRenderer:
@@ -3103,7 +3125,7 @@ GameObject:
   - component: {fileID: 947455591903577769}
   - component: {fileID: 9216127350743106739}
   m_Layer: 5
-  m_Name: Description
+  m_Name: description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3452,7 +3474,7 @@ GameObject:
   - component: {fileID: 2646318227751285576}
   - component: {fileID: 5908824986939073164}
   m_Layer: 5
-  m_Name: Cost
+  m_Name: cost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3465,18 +3487,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7467829398744270983}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4498210667221944924}
-  m_Father: {fileID: 984495492050547765}
-  m_RootOrder: 6
+  m_Children: []
+  m_Father: {fileID: 4498210667221944924}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -450, y: 850}
+  m_AnchoredPosition: {x: 0.00012207031, y: -0.00012207031}
   m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2646318227751285576

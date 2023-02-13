@@ -24,6 +24,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     [SerializeField] private Transform boardTransform;
     [SerializeField] private CardData cardData;
     [SerializeField] private GameObject collideParticle;
+    [SerializeField] private GameObject directExitParticle;
     public CardData CardData => cardData;
     public GameManager.PlayerEnum ownerPlayer;
 
@@ -65,6 +66,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         boardTransform = GameObject.Find("Board").transform;
         akgRigidbody = GetComponent<AkgRigidbody>();
         ParticleManager.Inst.RegisterParticle(collideParticle);
+        ParticleManager.Inst.RegisterParticle(directExitParticle);
     }
 
     private void Update()
@@ -204,13 +206,15 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         // Debug.Log("Stone is Indirectly Exited!");
 
         //temp particle
-        StartCoroutine(ParticleManager.Inst.PlayParticle(collideParticle, transform.position));
+        ParticleManager.Inst.StartCoroutine(ParticleManager.Inst.PlayParticle(collideParticle, transform.position));
         Destroy(gameObject);
     }
 
     private void DirectExit()
     {
         // Debug.Log("Stone is Directly Exited!");
+        
+        ParticleManager.Inst.StartCoroutine(ParticleManager.Inst.PlayParticle(directExitParticle, transform.position * 1.1f, -akgRigidbody.velocity));
         Destroy(gameObject);
     }
 

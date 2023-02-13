@@ -13,4 +13,11 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
 
     [SerializeField] private UserAlertPanel userAlertPanel;
     public UserAlertPanel UserAlertPanel => userAlertPanel;
+
+    [SerializeField] private RectTransform cancelPanel;
+    public RectTransform CancelPanel => cancelPanel;
+
+    [SerializeField] private InformationPanel informationPanel;
+    public InformationPanel InformationPanel => informationPanel;
+
 }
