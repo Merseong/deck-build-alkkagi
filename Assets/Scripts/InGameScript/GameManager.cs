@@ -53,6 +53,7 @@ public class GameManager : SingletonBehavior<GameManager>
         WAITFORHSCONSENT,
         NORMAL,
         HONORSKIP,
+        END,
         LENGTH
     }
     private bool isTurnEndSent;
@@ -184,24 +185,30 @@ public class GameManager : SingletonBehavior<GameManager>
 
     public void GameOverAction(PlayerEnum loser)
     {
+        if (LocalTurnState == TurnState.END || OppoTurnState == TurnState.END) return;
+
         if (loser == PlayerEnum.LOCAL)
         {
             Debug.LogError("Game over!");
             IngameUIManager.Inst.TempCurrentTurnText.text = "LOSE";
+            LocalTurnState = TurnState.END;
+            OppoTurnState = TurnState.END;
             StartCoroutine(ERoomExitSendNetworkAction());
         }
         else
         {
             Debug.Log("You win!");
             IngameUIManager.Inst.TempCurrentTurnText.text = "WIN";
+            LocalTurnState = TurnState.END;
+            OppoTurnState = TurnState.END;
         }
         //Debug.Break();
     }
 
     private IEnumerator ERoomExitSendNetworkAction()
     {
-        // 3초 후 전송
-        yield return new WaitForSeconds(3f);
+        // 2초 후 전송
+        yield return new WaitForSeconds(2f);
 
         NetworkManager.Inst.SendData(new MyNetworkData.MessagePacket
         {
