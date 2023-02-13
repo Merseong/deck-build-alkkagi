@@ -12,6 +12,7 @@ public class AkgRigidbody : MonoBehaviour
 
     [SerializeField] private bool isStatic = false;
     [SerializeField] private float mass = 1.0f;
+    [SerializeField] private float drag = 1f;
     public float Mass => mass;
     [Tooltip("반발계수")]
     [SerializeField] private float cor = 0.5f;
@@ -46,6 +47,8 @@ public class AkgRigidbody : MonoBehaviour
         {
             mass = 0;
         }
+        drag = AkgPhysics.movingDragAccleration;
+
         collidableList = new AkgRigidbody[collidableForecastLimit];
         collidedList = new();
         AkgPhysicsManager.Inst.AddAkgRigidbody(this);
@@ -65,7 +68,7 @@ public class AkgRigidbody : MonoBehaviour
         float speed = velocity.magnitude;
         if (speed > AkgPhysics.dragThreshold)
         {
-            velocity = Mathf.Max(speed - Time.deltaTime * AkgPhysics.movingDragAccleration, 0) * velocity.normalized;
+            velocity = Mathf.Max(speed - Time.deltaTime * drag, 0) * velocity.normalized;
         }
         else if (speed > 0)
         {
@@ -118,6 +121,11 @@ public class AkgRigidbody : MonoBehaviour
     public void Move(Vector3 next)
     {
         transform.position += next;
+    }
+
+    public void SetDrag(float newDrag)
+    {
+        drag = newDrag;
     }
 
     public bool CheckPointCollide(Vector3 point)

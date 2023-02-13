@@ -125,6 +125,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
             });
 
         GameManager.Inst.players[(int)BelongingPlayer].RemoveStone(stoneId);
+        akgRigidbody.SetDrag(0);
         akgRigidbody.BeforeDestroy();
     }
 
