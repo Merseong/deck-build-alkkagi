@@ -346,6 +346,7 @@ public class AkgRigidbody : MonoBehaviour
         });
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         GUI.color = velocity.magnitude >= AkgPhysics.dragThreshold ? Color.red : Color.blue;
@@ -360,4 +361,5 @@ public class AkgRigidbody : MonoBehaviour
                 break;
         }
     }
+#endif
 }

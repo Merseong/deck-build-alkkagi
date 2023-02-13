@@ -351,7 +351,9 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private void ShootStone(Vector3 vec) // vec이 velocity인지 force인지 명확하게 해야함
     {
+#if UNITY_EDITOR
         if (pauseEditorOnShoot) UnityEditor.EditorApplication.isPaused = true;
+#endif
 
         StartCoroutine(EShootStone());
 
