@@ -31,10 +31,18 @@ public class SingletonBehavior<T> : MonoBehaviour where T : MonoBehaviour
             {
                 GameObject obj = new();
                 obj.name = typeof(T).FullName + "_Singleton";
-                DontDestroyOnLoad(obj);
                 _inst = obj.AddComponent<T>();
             }
             return _inst;
+        }
+    }
+
+    protected virtual void Awake()
+    {
+        if (_inst != null && _inst != this)
+        {
+            Destroy(gameObject);
+            return;
         }
     }
 

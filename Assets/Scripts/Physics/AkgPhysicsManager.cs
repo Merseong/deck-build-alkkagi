@@ -43,8 +43,9 @@ public class AkgPhysicsManager : SingletonBehavior<AkgPhysicsManager>
         { AkgLayerMaskEnum.OPPOGUARD,       0b_0_00000 },
     };
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         rigidbodies = new();
         rigidbodyRecorder.InitRecorder();
     }

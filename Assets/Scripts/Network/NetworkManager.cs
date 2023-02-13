@@ -13,10 +13,18 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     SocketClient m_client;
     private SocketClient Client => m_client;
 
-    [SerializeField]
-    private int networkId = -1;
+    [SerializeField] private bool m_isNetworkMode;
+    public bool IsNetworkMode => m_isNetworkMode;
+
+    [Header("Server info")]
+    [SerializeField] private string host = "127.0.0.1";
+    [SerializeField] private int port = 3333;
+
+
+    [Header("Connection info")]
+    [SerializeField] private int networkId = -1;
     public int NetworkId => networkId;
-    private int roomNumber = -1;
+    [SerializeField] private int roomNumber = -1;
     
     enum ConnectionStatusEnum
     {
@@ -27,8 +35,8 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         ROOM,
         INGAME,
     }
-    private ConnectionStatusEnum _connectionStatus;
-    private string connectionStatusString;
+    [SerializeField] private ConnectionStatusEnum _connectionStatus;
+    [SerializeField] private string connectionStatusString;
     private ConnectionStatusEnum ConnectionStatus
     {
         get => _connectionStatus;
@@ -65,12 +73,8 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     private ParsePacketDelegate ParsePacket;
     // temp: 만일 delegate의 삭제가 이름 순서로 이루어지면, 별도의 List<delegate>로 만들어 관리해야할듯
 
-    // temp: 
-    [SerializeField]
-    private bool m_isNetworkMode;
-    public bool IsNetworkMode => m_isNetworkMode;
-    [SerializeField]
-    private string m_messageToSend;
+    [Header("Other data")]
+    [SerializeField] private string m_messageToSend;
 
     // temp: canvas
     [SerializeField]
@@ -91,11 +95,13 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     public Dictionary<uint, (byte[] data, Action callback)> SyncVarDict => syncVarDict;
 
     #region Unity functions
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         DontDestroyOnLoad(gameObject);
 
-        ParsePacket = new ParsePacketDelegate((_) => { });
+        RefreshReceiveDelegate();
 
         if (!m_isNetworkMode) return;
 
@@ -105,12 +111,6 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         // syncVarDataDict = new Dictionary<uint, byte[]>();
         // syncVarActionDict = new Dictionary<uint, Action>();
         syncVarDict = new Dictionary<uint, (byte[], Action)>();
-    }
-
-    private void Start()
-    {
-        ParsePacket += BasicProcessPacket;
-        ParsePacket += ParsePacketAction;
     }
 
     private void LateUpdate()
@@ -127,6 +127,12 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     }
     #endregion
 
+    public void RefreshUI(bool hideCanvas = false)
+    {
+        m_networkTestCanvas.SetActive(m_isNetworkMode);
+        if (hideCanvas) m_networkTestCanvas.SetActive(false);
+    }
+
     public void ConnectServer()
     {
         if (!m_isNetworkMode || ConnectionStatus != ConnectionStatusEnum.DISCONNECTED)
@@ -135,7 +141,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         }
 
         m_client = new SocketClient();
-        m_client.Connect("127.0.0.1", 3333);
+        m_client.Connect(host, port);
         ConnectionStatus = ConnectionStatusEnum.CONNECTING;
     }
 
@@ -196,6 +202,13 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     public void RemoveReceiveDelegate(ParsePacketDelegate func)
     {
         ParsePacket -= func;
+    }
+
+    public void RefreshReceiveDelegate()
+    {
+        ParsePacket = new ParsePacketDelegate((_) => { });
+        ParsePacket += BasicProcessPacket;
+        ParsePacket += ParsePacketAction;
     }
     #endregion
 
@@ -328,7 +341,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
             ConnectionStatus = ConnectionStatusEnum.INGAME;
             GameManager.Inst.InitializeGame(NetworkId == int.Parse(arr[1]));
         }
-        else if (arr[0] == "EXIT")
+        else if (arr[0] == "EXIT/")
         {
             Debug.Log($"[room{roomNumber}] room breaked! by {arr[1]}");
             ConnectionStatus = ConnectionStatusEnum.IDLE;

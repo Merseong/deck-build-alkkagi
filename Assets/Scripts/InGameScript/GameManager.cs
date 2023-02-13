@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.U2D;
+using UnityEngine.SceneManagement;
 
 public class GameManager : SingletonBehavior<GameManager>
 {
@@ -99,6 +100,7 @@ public class GameManager : SingletonBehavior<GameManager>
     {
         OnTurnStart += StartTurnBasis;
         NetworkManager.Inst.AddReceiveDelegate(TurnInfoReceiveNetworkAction);
+        NetworkManager.Inst.AddReceiveDelegate(RoomExitReceiveNetworkAction);
 
 #if UNITY_EDITOR
         if (!NetworkManager.Inst.IsNetworkMode) InitializeGame(isLocalGoFirst);
@@ -108,7 +110,10 @@ public class GameManager : SingletonBehavior<GameManager>
     private void OnDestroy()
     {
         if (NetworkManager.IsEnabled)
+        {
             NetworkManager.Inst.RemoveReceiveDelegate(TurnInfoReceiveNetworkAction);
+            NetworkManager.Inst.RemoveReceiveDelegate(RoomExitReceiveNetworkAction);
+        }
     }
 
     #region Card Data
@@ -183,13 +188,57 @@ public class GameManager : SingletonBehavior<GameManager>
         {
             Debug.LogError("Game over!");
             IngameUIManager.Inst.TempCurrentTurnText.text = "LOSE";
+            StartCoroutine(ERoomExitSendNetworkAction());
         }
         else
         {
             Debug.Log("You win!");
             IngameUIManager.Inst.TempCurrentTurnText.text = "WIN";
         }
-        Debug.Break();
+        //Debug.Break();
+    }
+
+    private IEnumerator ERoomExitSendNetworkAction()
+    {
+        // 3초 후 전송
+        yield return new WaitForSeconds(3f);
+
+        NetworkManager.Inst.SendData(new MyNetworkData.MessagePacket
+        {
+            senderID = NetworkManager.Inst.NetworkId,
+            message = $"BREAK",
+        }, MyNetworkData.PacketType.ROOM_CONTROL);
+    }
+
+    private void RoomExitReceiveNetworkAction(MyNetworkData.Packet packet)
+    {
+        if (packet.Type != (short)MyNetworkData.PacketType.ROOM_CONTROL) return;
+
+        var msg = MyNetworkData.MessagePacket.Deserialize(packet.Data);
+
+        if (msg.senderID != 0) return;
+        if (!msg.message.StartsWith("EXIT/")) return;
+
+        GameObject resultContainer = new();
+        resultContainer.name = "ResultContainer";
+        var container = resultContainer.AddComponent<ResultContainer>();
+
+        var msgArr = msg.message.Split(" ");
+
+        switch (msgArr[2])
+        {
+            case "W":
+                container.isLocalWin = true;
+                break;
+            case "L":
+                container.isLocalWin = false;
+                break;
+            default:
+                break;
+        }
+
+        NetworkManager.Inst.RemoveReceiveDelegate(RoomExitReceiveNetworkAction);
+        SceneManager.LoadScene(2); // load result scene
     }
 
     private void StartTurnBasis(TurnState turnState)

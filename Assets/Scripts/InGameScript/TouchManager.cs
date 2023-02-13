@@ -13,8 +13,10 @@ public class TouchManager : SingletonBehavior<TouchManager>
     private InputAction touchStartPositionAction;
     private InputAction primaryTouchPressAction;
     private InputAction touchDeltaAction;
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         playerInput = GetComponent<PlayerInput>();
         touchPositionAction = playerInput.actions["TouchPosition"];
         touchStartPositionAction = playerInput.actions["TouchStartPosition"];
