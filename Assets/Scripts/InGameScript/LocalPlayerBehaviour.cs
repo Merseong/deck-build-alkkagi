@@ -324,7 +324,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         stoneBehaviour.SetCardData(cardData, newStoneId, Player);
 
         //temp code
-
+        spawnedStone.GetComponent<StoneBehaviour>().ownerPlayer = GameManager.PlayerEnum.LOCAL;
         spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = stoneBehaviour.GetSpriteState("Idle");
         if (isLocalRotated)
             spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
@@ -690,6 +690,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private void StoneDragAction_Begin(Vector3 curScreenTouchPosition, Vector3 curTouchPositionNormalized)
     {
+        if(selectedStone.ownerPlayer == GameManager.PlayerEnum.OPPO) return;
+
         bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, curScreenTouchPosition, null);
         isDragging = !isTouchOnCancel;
 
@@ -725,6 +727,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private void StoneDragAction(Vector3 curScreenTouchPosition, Vector3 curTouchPositionNormalized)
     {
+        if(selectedStone.ownerPlayer == GameManager.PlayerEnum.OPPO) return;
+
         bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, curScreenTouchPosition, null);
         isDragging = !isTouchOnCancel;
 
@@ -868,7 +872,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if (selectedStone != null)
         {
             selectedStone.isClicked = true;
-            if (canShoot && !isOpenStoneInform)
+            if (canShoot && !isOpenStoneInform && selectedStone.ownerPlayer == GameManager.PlayerEnum.LOCAL)
             {
                 //Simply select current stone and move to shooting phase
                 GameManager.Inst.isCancelOpened = true;
@@ -899,6 +903,14 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         dragEffectObj?.gameObject.SetActive(false);
         stoneArrowObj?.gameObject.SetActive(false);
 
+        if(moveVec.sqrMagnitude == 0)
+        {
+            IngameUIManager.Inst.UserAlertPanel.Alert("You need to drag stone for shot!");
+            isDragging = false;
+            selectedStone = null;
+            return;
+        }
+
         if (isDragging && !startOnCancel)
         {
             int needCost = curDragMagnitude <= maxDragLimit / 2 ? 1 : 2;
@@ -917,6 +929,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
                 {
                     selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 0, 0);
                 }
+                isDragging = false;
+                selectedStone = null;
                 return;
             }
 
