@@ -22,7 +22,7 @@ public abstract class PlayerBehaviour : MonoBehaviour
             if (value < 0)
                 Debug.LogError("Cost is less than 0! Fix this!");
 
-            costTextUi.text = value.ToString();
+            IngameUIManager.Inst.CostPanel.SetCost(value);
             cost = value;
         }
     }
@@ -36,9 +36,9 @@ public abstract class PlayerBehaviour : MonoBehaviour
             if (value < 0)
                 Debug.LogError("Hand Count is less than 0! Fix this!");
 
-            if (handCountTextUi != null)
+            if (IngameUIManager.Inst.HandCountText != null)
             {
-                handCountTextUi.text = value.ToString();
+                IngameUIManager.Inst.HandCountText.text = value.ToString();
             }
             handCount = value;
         }
@@ -57,14 +57,9 @@ public abstract class PlayerBehaviour : MonoBehaviour
             shootTokenAvailable = value;
 
             ColorUtility.TryParseHtmlString(value ? "#C0FFBD" : "#FF8D91", out Color color);
-            shootTokenImage.color = color;
+            IngameUIManager.Inst.ShootTokenImage.color = color;
         }
     }
-
-    //TODO : should move to UIManager
-    [SerializeField] private TextMeshProUGUI costTextUi;
-    [SerializeField] private TextMeshProUGUI handCountTextUi;
-    [SerializeField] protected Image shootTokenImage;
 
     public virtual void InitPlayer(GameManager.PlayerEnum pEnum)
     {
@@ -104,11 +99,21 @@ public abstract class PlayerBehaviour : MonoBehaviour
     public void ResetCost(int resetTo = -1)
     {
         if (resetTo > 0)
+        {
+            IngameUIManager.Inst.CostPanel.ResetCost(resetTo);
             Cost = resetTo;
+        }
         else if (GameManager.Inst.TurnCount == 0)
+        {
+            IngameUIManager.Inst.CostPanel.ResetCost(GameManager.Inst.initialTurnCost);
             Cost = GameManager.Inst.initialTurnCost;
+        }
         else
+        {
+            IngameUIManager.Inst.CostPanel.ResetCost(GameManager.Inst.normalTurnCost);
             Cost = GameManager.Inst.normalTurnCost;
+        }
+            
     }
     #endregion
 

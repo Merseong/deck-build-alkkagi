@@ -108,6 +108,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             isLocalRotated = true;
             transform.Rotate(Vector3.up, 180f);
             Camera.main.transform.Rotate(Vector3.forward, 180f);
+            Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, 1f);
         }
 
         turnActionDic.Add(GameManager.TurnState.PREPARE, new Action<Vector3>[] { PrepareTouchBegin, PrepareInTouch, PrepareTouchEnd });
@@ -425,7 +426,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private IEnumerator EShootTokenAlert()
     {
         float time;
-        RectTransform alertRect = shootTokenImage.transform.GetChild(0).GetComponent<RectTransform>();
+        RectTransform alertRect = IngameUIManager.Inst.ShootTokenImage.transform.GetChild(0).GetComponent<RectTransform>();
         alertRect.gameObject.SetActive(true);
 
         while (isDragging)

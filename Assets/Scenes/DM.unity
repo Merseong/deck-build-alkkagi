@@ -188,9 +188,6 @@ MonoBehaviour:
   handCount: 0
   nextStoneId: 0
   shootTokenAvailable: 0
-  costTextUi: {fileID: 932349271}
-  handCountTextUi: {fileID: 503537530}
-  shootTokenImage: {fileID: 887707238}
   StonePrefab: {fileID: 6663944191401573520, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
 --- !u!1 &274898683
 GameObject:
@@ -323,28 +320,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &503537530 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 918016474, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
-  m_PrefabInstance: {fileID: 984495492866551158}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &887707238 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 440359083, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
-  m_PrefabInstance: {fileID: 984495492866551158}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &897052339
 GameObject:
   m_ObjectHideFlags: 0
@@ -422,24 +397,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 897052339}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 18.52, z: 0}
+  m_LocalPosition: {x: 0, y: 18.52, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!114 &932349271 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 829460322, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
-  m_PrefabInstance: {fileID: 984495492866551158}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &995343457
 GameObject:
   m_ObjectHideFlags: 0
@@ -682,6 +646,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 689437317, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -10.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1217822889, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -10.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031866645, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -10.5
+      objectReference: {fileID: 0}
     - target: {fileID: 178128855195758145, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: m_Name
       value: Player
