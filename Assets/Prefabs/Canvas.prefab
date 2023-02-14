@@ -2970,6 +2970,39 @@ MonoBehaviour:
   costText: {fileID: 51837017}
   costTextBackground: {fileID: 7354582962282333413}
   gaugeParent: {fileID: 2347928522570666377}
+  emphasizeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -0.017688721
+      outSlope: -0.017688721
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.53333336
+    - serializedVersion: 3
+      time: 0.5
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.42857137
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: -0.007861455
+      outSlope: -0.007861455
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.6
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &3471889836628148160
 GameObject:
   m_ObjectHideFlags: 0

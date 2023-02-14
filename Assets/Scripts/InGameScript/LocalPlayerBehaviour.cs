@@ -497,6 +497,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
         Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
 
+        IngameUIManager.Inst.CostPanel.CostEmphasize(0);
+
         //UI handle
         if (isInformOpened)
         {
@@ -559,6 +561,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     {
         Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
         Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
+
+        IngameUIManager.Inst.CostPanel.CostEmphasize(0);
 
         //UI handle
         if (isInformOpened)
@@ -675,6 +679,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
             stoneArrowObj = selectedStone.transform.GetChild(0).GetComponent<ArrowGenerator>();
             stoneArrowObj.gameObject.SetActive(true);
+
+            IngameUIManager.Inst.CostPanel.CostEmphasize(1);
         }
     }
 
@@ -684,6 +690,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if (isLocalRotated)
             stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
         stoneGhost.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize), .15f, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
+
+        IngameUIManager.Inst.CostPanel.CostEmphasize(selectedCard.CardData.cardCost);
     }
 
     #endregion TouchEndActionSet
@@ -743,17 +751,24 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             {
                 curDragMagnitude = maxDragLimit / 2;
                 dragColor = Cost1Color;
+                IngameUIManager.Inst.CostPanel.CostEmphasize(1);
             }
             //Increasing Power
             else if (cur > avg && cur < avg * (1f + maxClippingPercentage) && reachedAvg && (!leftHighEnd || Vector3.Dot(deltaVec, moveVec) < 0))
             {
                 curDragMagnitude = maxDragLimit / 2;
                 dragColor = Cost1Color;
+                IngameUIManager.Inst.CostPanel.CostEmphasize(1);
             }
+            else if (moveVec.magnitude > maxDragLimit / 2)
+            {
+                dragColor = Cost2Color;
+                IngameUIManager.Inst.CostPanel.CostEmphasize(2);
+            } 
             else
             {
-                if (moveVec.magnitude > maxDragLimit / 2) dragColor = Cost2Color;
-                else dragColor = Cost1Color;
+                dragColor = Cost1Color;
+                IngameUIManager.Inst.CostPanel.CostEmphasize(1);
             }
         }
 

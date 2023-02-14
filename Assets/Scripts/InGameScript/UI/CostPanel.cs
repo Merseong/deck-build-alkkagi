@@ -10,10 +10,56 @@ public class CostPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI costText;
     [SerializeField] private Image costTextBackground;
     [SerializeField] private Transform gaugeParent;
+    [SerializeField] private AnimationCurve emphasizeCurve;
 
     private int curMaxCost;
-
+    private int curCostCnt;
     private List<GameObject> gaugeList = new();
+    private int curEmphasized;
+    private bool isEmphasized = false;
+    
+
+    public void CostEmphasize(int tot)
+    {
+        if(tot > curCostCnt)
+        {
+            costTextBackground.color = Color.red;
+            return;
+        }
+    
+        costTextBackground.color = Color.green;
+        
+        if(curEmphasized != tot)
+        {
+            SetCost(curCostCnt);
+        }
+        curEmphasized = tot;
+
+        if(isEmphasized)
+        {    
+            return;
+        }
+
+        StartCoroutine(ECostEmphasize());
+    }
+
+    private IEnumerator ECostEmphasize()
+    {
+        isEmphasized = true;
+        float curTime = 0;
+        while(curEmphasized != 0)
+        {
+            for(int i=curCostCnt-1; i>curCostCnt - curEmphasized - 1; i--)
+            {   
+                gaugeList[i].GetComponent<Image>().color = Color.Lerp(Color.green, Color.gray, emphasizeCurve.Evaluate(curTime % 1.0f));
+            }
+            curTime += Time.deltaTime;
+            yield return null;
+        }
+
+        SetCost(curCostCnt);
+        isEmphasized = false;
+    }
 
     public void SetCost(int cost)
     {
@@ -53,11 +99,13 @@ public class CostPanel : MonoBehaviour
                 gaugeList[i].GetComponent<Image>().color = Color.green;
             }
         }
+        curCostCnt = cost;
     }
 
     public void ResetCost(int cost)
     {
         curMaxCost = cost;
+        curCostCnt = cost;
 
         if(cost > gaugeList.Count)
         {
