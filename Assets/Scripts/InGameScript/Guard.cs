@@ -7,7 +7,7 @@ public class Guard : MonoBehaviour, AkgRigidbodyInterface
 {
     private int guardId;
     private bool isBelongLocal;
-    private bool isCollided = false;
+    private bool isAlreadyCollided = false;
 
     private AkgRigidbody akgRigidbody;
 
@@ -41,12 +41,12 @@ public class Guard : MonoBehaviour, AkgRigidbodyInterface
         } 
     }
 
-    public void OnCollide(AkgRigidbody collider, Vector3 collidePoint)
+    public void OnCollide(AkgRigidbody collider, Vector3 collidePoint, bool isCollided)
     {
-        if (isCollided) return;
+        if (isAlreadyCollided) return;
         if (collider.gameObject.CompareTag("Stone"))
         {
-            isCollided = true;
+            isAlreadyCollided = true;
             AkgPhysicsManager.Inst.rigidbodyRecorder.AppendEventRecord(new MyNetworkData.EventRecord
             {
                 stoneId = guardId,

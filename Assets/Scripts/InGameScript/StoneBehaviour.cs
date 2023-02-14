@@ -240,10 +240,14 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         IndirectExit();
     }
 
-    public void OnCollide(AkgRigidbody collider, Vector3 collidePoint)
+    public void OnCollide(AkgRigidbody collider, Vector3 collidePoint, bool isCollided)
     {
         //TODO : should prevent doubly occuring particle between two stone collision
         StartCoroutine(ParticleManager.Inst.PlayParticle(collideParticle, collidePoint, curVelocity / 20f, curVelocity / 20f));
+        if (isCollided)
+        {
+            // if collided, change sprite to collided
+        }
     }
 
 }
