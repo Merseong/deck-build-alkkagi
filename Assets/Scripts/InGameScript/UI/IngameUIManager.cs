@@ -23,6 +23,8 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
 
     [SerializeField] private TextMeshProUGUI deckCountText;
     public TextMeshProUGUI DeckCountText => deckCountText;
+    [SerializeField] private TextMeshProUGUI turnEndButtonText;
+    public TextMeshProUGUI TurnEndButtonText => turnEndButtonText;
 
     [SerializeField] private RectTransform cancelPanel;
     public RectTransform CancelPanel => cancelPanel;
@@ -40,4 +42,5 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
     public RectTransform ShootReadyEmphasizeUI => shootReadyEmphasizeUI;
     [SerializeField] private NotificationPanel notificationPanel;
     public NotificationPanel NotificationPanel => notificationPanel;
+
 }

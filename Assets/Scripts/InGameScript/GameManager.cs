@@ -181,6 +181,7 @@ public class GameManager : SingletonBehavior<GameManager>
         LocalPlayer.DrawCards(5);
         LocalPlayer.ResetCost(30); // temp
         LocalPlayer.ShootTokenAvailable = true;
+        IngameUIManager.Inst.TurnEndButtonText.text = localFirst ? "Batch End" : "Oppo Batch";
     }
 
     public void GameOverAction(PlayerEnum loser)
@@ -257,6 +258,7 @@ public class GameManager : SingletonBehavior<GameManager>
         LocalPlayer.ShootTokenAvailable = true;
 
         IngameUIManager.Inst.NotificationPanel.Show("My Turn!");
+
     }
 
     /// <remarks>
@@ -374,24 +376,28 @@ public class GameManager : SingletonBehavior<GameManager>
             case 0:
                 nextTurnStates[(int)FirstPlayer] = TurnState.WAIT;
                 nextTurnStates[(int)SecondPlayer] = TurnState.PREPARE;
+                IngameUIManager.Inst.TurnEndButtonText.text = !isLocalGoFirst ? "Batch End" : "Oppo Batch";
                 nextTotalTurn++;
                 break;
             // 준비턴 후공 종료시
             case 1:
                 nextTurnStates[(int)FirstPlayer] = TurnState.WAITFORHS;
                 nextTurnStates[(int)SecondPlayer] = TurnState.WAITFORHS;
+                IngameUIManager.Inst.TurnEndButtonText.text = isLocalGoFirst ? "Honor Skip" : "Wait";
                 nextTotalTurn++;
                 break;
             // 2: 1턴 선공 (HS or FNORMAL)
             case 2:
                 nextTurnStates[(int)FirstPlayer] = TurnState.WAIT;
                 nextTurnStates[(int)SecondPlayer] = TurnState.WAITFORHS;
+                IngameUIManager.Inst.TurnEndButtonText.text = !isLocalGoFirst ? "Honor Skip" : "Wait";
                 nextTotalTurn++;
                 break;
             // 3: 1턴 후공 (HS or normal)
             case 3:
                 LocalNextTurnState = TurnState.WAIT;
                 OppoNextTurnState = TurnState.NORMAL;
+                IngameUIManager.Inst.TurnEndButtonText.text = "Oppo Turn";
                 nextTotalTurn++;
                 break;
             // 4~: 2턴 이후
@@ -400,11 +406,13 @@ public class GameManager : SingletonBehavior<GameManager>
                 {
                     LocalNextTurnState = TurnState.WAIT;
                     OppoNextTurnState = TurnState.NORMAL;
+                    IngameUIManager.Inst.TurnEndButtonText.text = "Oppo Turn";
                 }
                 else
                 {
                     LocalNextTurnState = TurnState.NORMAL;
                     OppoNextTurnState = TurnState.WAIT;
+                    IngameUIManager.Inst.TurnEndButtonText.text = "Turn End";
                 }
                 nextTotalTurn++;
                 break;
