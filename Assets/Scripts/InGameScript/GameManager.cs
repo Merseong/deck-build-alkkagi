@@ -255,6 +255,8 @@ public class GameManager : SingletonBehavior<GameManager>
         LocalPlayer.DrawCards(1);
         LocalPlayer.ResetCost();
         LocalPlayer.ShootTokenAvailable = true;
+
+        IngameUIManager.Inst.NotificationPanel.Show("My Turn!");
     }
 
     /// <remarks>
