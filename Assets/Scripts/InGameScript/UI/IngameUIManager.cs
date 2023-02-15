@@ -21,6 +21,9 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
     [SerializeField] private TextMeshProUGUI handCountText;
     public TextMeshProUGUI HandCountText => handCountText;
 
+    [SerializeField] private TextMeshProUGUI deckCountText;
+    public TextMeshProUGUI DeckCountText => deckCountText;
+
     [SerializeField] private RectTransform cancelPanel;
     public RectTransform CancelPanel => cancelPanel;
 
@@ -30,4 +33,9 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
     [SerializeField] private CostPanel costPanel;
     public CostPanel CostPanel => costPanel;
 
+    [SerializeField] private Transform handCardTransform;
+    public Transform HandCardTransform => handCardTransform;
+
+    [SerializeField] private RectTransform shootReadyEmphasizeUI;
+    public RectTransform ShootReadyEmphasizeUI => shootReadyEmphasizeUI;
 }

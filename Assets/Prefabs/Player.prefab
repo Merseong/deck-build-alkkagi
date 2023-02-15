@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 689437316}
   m_LocalRotation: {x: -0, y: 0.13052616, z: -0, w: 0.9914449}
-  m_LocalPosition: {x: 4, y: 5, z: -9}
+  m_LocalPosition: {x: 3, y: 5, z: -10.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -55,7 +55,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1217822888}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.07, y: 5, z: -9.43}
+  m_LocalPosition: {x: 7.07, y: 5, z: -10.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -86,7 +86,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2031866644}
   m_LocalRotation: {x: -0, y: -0.13052624, z: -0, w: 0.9914449}
-  m_LocalPosition: {x: -4, y: 5, z: -9}
+  m_LocalPosition: {x: -4.5, y: 5, z: -10.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -146,12 +146,7 @@ MonoBehaviour:
   handCount: 0
   nextStoneId: 0
   shootTokenAvailable: 0
-  costTextUi: {fileID: 0}
-  handCountTextUi: {fileID: 0}
-  shootTokenImage: {fileID: 0}
   StonePrefab: {fileID: 6663944191401573520, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
-  cancelPanel: {fileID: 0}
-  informPanel: {fileID: 0}
   deck:
   - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
   - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
@@ -166,6 +161,7 @@ MonoBehaviour:
   cardSpawnPoint: {fileID: 1217822889}
   handPileLeft: {fileID: 2031866645}
   handPileRight: {fileID: 689437317}
+  deckCount: 0
   selectedStone: {fileID: 0}
   selectedCard: {fileID: 0}
   isInformOpened: 0

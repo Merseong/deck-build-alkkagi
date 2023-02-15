@@ -26,6 +26,23 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     public bool IsLocalRotated => isLocalRotated;
     private int maxHandSize = 7;
 
+    [SerializeField] private int deckCount;
+    protected int DeckCount
+    {
+        get => deckCount;
+        set
+        {
+            if (value < 0)
+                Debug.LogError("Deck Count can't be negative!");
+
+            if (IngameUIManager.Inst.DeckCountText != null)
+            {
+                IngameUIManager.Inst.DeckCountText.text = value.ToString();
+            }
+            deckCount = value;
+        }
+    }
+
     // 이거는 상황 봐서 액션 자체에 대한 클래스를 만들어서 HistoryAction 클래스랑 합칠 수도 있음
     private delegate void ActionDelegate();
     [SerializeField] private ActionDelegate actionQueue;
@@ -206,7 +223,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         {
             Card drawCard = deck[0];
             deck.RemoveAt(0);
-            var cardObject = Instantiate(cardPrefab, cardSpawnPoint.position, cardRot);
+            var cardObject = Instantiate(cardPrefab, cardSpawnPoint.position, cardRot, IngameUIManager.Inst.HandCardTransform);
             var card = cardObject.GetComponent<Card>();
             card.Setup(drawCard);
             hand.Add(card);
@@ -215,6 +232,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         }
         ArrangeHand(true);
         HandCount = hand.Count;
+        DeckCount = deck.Count;
     }
 
     protected override void RemoveCards(int idx)
@@ -426,8 +444,9 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private IEnumerator EShootTokenAlert()
     {
         float time;
-        RectTransform alertRect = IngameUIManager.Inst.ShootTokenImage.transform.GetChild(0).GetComponent<RectTransform>();
-        alertRect.gameObject.SetActive(true);
+        // RectTransform alertRect = IngameUIManager.Inst.ShootTokenImage.transform.GetChild(0).GetComponent<RectTransform>();
+        RectTransform alertRect = IngameUIManager.Inst.ShootTokenImage.transform.GetComponent<RectTransform>();
+        // alertRect.gameObject.SetActive(true);
 
         while (isDragging)
         {
@@ -440,7 +459,80 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             }
         }
 
-        alertRect.gameObject.SetActive(false);
+        // alertRect.gameObject.SetActive(false);
+    }
+
+    private bool isMoving = false;
+    private bool isMoveDownward = false;
+    private void ShootDragRoutine(bool isBeginning)
+    {
+        isMoveDownward = isBeginning;
+
+        if(isMoving)
+        {    
+            return;
+        }
+
+        if(isBeginning)
+        {
+            StartCoroutine(EShootDragBeginUIRoutine());
+        }
+        else
+        {
+            StartCoroutine(EShootDragEndUIRoutine());
+        }
+    }
+
+    float beginTotTime = .5f;
+    float endTotTime = .5f;
+    private IEnumerator EShootDragBeginUIRoutine()
+    {
+        isMoving = true;
+        float curTime = IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition.y / -400;
+        while(curTime < beginTotTime)
+        {
+            if(!isMoveDownward)
+            {
+                StartCoroutine(EShootDragEndUIRoutine());
+                yield break;
+            }
+
+            if(GameManager.Inst.isLocalGoFirst)
+                IngameUIManager.Inst.HandCardTransform.position = new Vector3(0f, 0f, Mathf.Lerp(0, -4, curTime / beginTotTime));
+            else
+                IngameUIManager.Inst.HandCardTransform.position = new Vector3(0f, 0f, Mathf.Lerp(0, 4, curTime / beginTotTime));
+
+            IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition = new Vector2(0f, Mathf.Lerp(0, -400, curTime / beginTotTime));
+            curTime += Time.deltaTime;
+            yield return null;
+        }
+        
+        cancelPanel.gameObject.SetActive(true);
+        isMoving = false;
+    }
+
+    private IEnumerator EShootDragEndUIRoutine()
+    {
+        isMoving = true;
+        float curTime = (IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition.y + 400) / 400;
+        while(curTime < endTotTime)
+        {
+            if(isMoveDownward)
+            {
+                StartCoroutine(EShootDragBeginUIRoutine());
+                yield break;
+            }
+
+            if(GameManager.Inst.isLocalGoFirst)
+                IngameUIManager.Inst.HandCardTransform.position = new Vector3(0f, 0f, Mathf.Lerp(-4, 0, curTime / endTotTime));
+            else
+                IngameUIManager.Inst.HandCardTransform.position = new Vector3(0f, 0f, Mathf.Lerp(4, 0, curTime / endTotTime));
+
+            IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition = new Vector2(0f, Mathf.Lerp(-400, 0, curTime / endTotTime));
+            curTime += Time.deltaTime;
+            yield return null;
+        }
+        isMoving = false;
     }
 
     #region TouchInputActions
@@ -857,7 +949,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             {
                 //Simply select current stone and move to shooting phase
                 GameManager.Inst.isCancelOpened = true;
-                cancelPanel.gameObject.SetActive(true);
+                ShootDragRoutine(true);
                 // Debug.Log("Selected");
                 return;
             }
@@ -879,6 +971,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         Vector3 moveVec = dragStartPoint - dragEndPoint;
 
         GameManager.Inst.isCancelOpened = false;
+
+        ShootDragRoutine(false);
         cancelPanel.gameObject.SetActive(false);
 
         dragEffectObj?.gameObject.SetActive(false);
