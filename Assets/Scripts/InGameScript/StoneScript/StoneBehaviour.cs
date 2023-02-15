@@ -58,6 +58,8 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     [SerializeField] float indirectExitTime;
     [SerializeField] float indirectExitSpeed;
 
+    private List<StoneProperty> properties;
+
     // temp:
     [SerializeField] private GameObject enemySign;
 
@@ -148,6 +150,27 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
             enemySign.SetActive(true);
         }
     }
+
+    #region Stone Properties
+
+    public virtual void InitProperty()
+    {
+        properties = new List<StoneProperty>();
+    }
+
+    public void AddProperty(StoneProperty property)
+    {
+        properties.Add(property);
+        property.OnSet();
+    }
+
+    public void RemoveProperty(StoneProperty property)
+    {
+        property.OnUnset();
+        properties.Remove(property);
+    }
+
+    #endregion
 
     public virtual Sprite GetSpriteState(string state)
     {
@@ -250,4 +273,14 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         }
     }
 
+    #region Ability
+
+    public virtual void OnEnter() { }
+    public virtual void OnExit() { }
+    public virtual void OnShoot() { }
+    public virtual void OnHit() { }
+    public virtual void OnTurnStart() { }
+    public virtual void OnTurnEnd() { }
+
+    #endregion
 }

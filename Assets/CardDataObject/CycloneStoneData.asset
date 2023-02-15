@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ab37ca60595e43469bbcaf7f2d4c0a7, type: 3}
-  m_Name: TestStoneData
+  m_Name: CycloneStoneData
   m_EditorClassIdentifier: 
-  cardID: 101
-  cardName: Fighter
+  cardID: 32
+  cardName: "\uD3ED\uD48D"
   stoneSize: 1
-  stoneWeight: 2
+  stoneWeight: 1
   cardCost: 2
-  inDeckNumber: 0
-  description: This is Fighter stone
+  inDeckNumber: 2
+  description: "\uB4F1\uC7A5: \uB2E4\uB978 \uBAA8\uB4E0 \uC544\uAD70\uC5D0\uAC8C
+    \"\uC9C8\uC8FC\"\uB97C \uBD80\uC5EC\uD569\uB2C8\uB2E4."
