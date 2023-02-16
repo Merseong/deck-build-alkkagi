@@ -184,6 +184,11 @@ public class GameManager : SingletonBehavior<GameManager>
         IngameUIManager.Inst.TurnEndButtonText.text = localFirst ? "Batch End" : "Oppo Batch";
     }
 
+    public void SurrenderButtonAction()
+    {
+        GameOverAction(PlayerEnum.LOCAL);
+    }
+
     public void GameOverAction(PlayerEnum loser)
     {
         if (LocalTurnState == TurnState.END || OppoTurnState == TurnState.END) return;
