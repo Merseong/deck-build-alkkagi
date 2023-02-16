@@ -324,7 +324,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if (isLocalRotated)
             spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
         spawnedStone.transform.GetChild(4).GetComponent<SpriteRenderer>().material.color = Color.blue;
-        spawnedStone.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(cardData.stoneSize), .15f, Util.GetRadiusFromStoneSize(cardData.stoneSize));
+        spawnedStone.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(cardData.stoneSize)*2, .15f, Util.GetRadiusFromStoneSize(cardData.stoneSize)*2);
         spawnedStone.GetComponent<AkgRigidbody>().Init(Util.GetMassFromStoneWeight(cardData.stoneSize, cardData.stoneWeight));
 
         return newStoneId;
@@ -781,7 +781,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = Util.GetSpriteState(selectedCard.CardData,"Idle");
         if (isLocalRotated)
             stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
-        stoneGhost.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize), .15f, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
+        stoneGhost.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize) *2, .15f, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize)*2);
 
         IngameUIManager.Inst.CostPanel.CostEmphasize(selectedCard.CardData.cardCost);
     }
@@ -1012,6 +1012,15 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             if(!SpendCost(needCost))
             {
                 //Not enough cost for shooting
+                selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.GetSpriteState("Idle");
+                if (isLocalRotated)
+                {
+                    selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
+                }
+                else
+                {
+                    selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 0, 0);
+                }
                 isDragging = false;
                 selectedStone = null;
                 Debug.LogError("You have not enough cost for shooting stone!");
