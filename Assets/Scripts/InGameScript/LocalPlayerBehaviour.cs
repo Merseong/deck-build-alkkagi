@@ -307,7 +307,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     public override int SpawnStone(CardData cardData, Vector3 spawnPosition, int stoneId = -1)
     {
-        if (!GameBoard.IsPossibleToPut(spawnPosition, Util.GetRadiusFromStoneSize(cardData.stoneSize)))
+        if (!gameBoard.IsPossibleToPut(spawnPosition, Util.GetRadiusFromStoneSize(cardData.stoneSize)))
         {
             return -1;
         }
@@ -983,6 +983,15 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             IngameUIManager.Inst.UserAlertPanel.Alert("You need to drag stone for shot!");
             isDragging = false;
             selectedStone = null;
+            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.GetSpriteState("Idle");
+            if (isLocalRotated)
+            {
+                selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
+            }
+            else
+            {
+                selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 0, 0);
+            }
             return;
         }
 
@@ -1033,6 +1042,15 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         }
 
         // 여기넣는게 맞는지 모름
+        selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.GetSpriteState("Idle");
+        if (isLocalRotated)
+        {
+            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
+        }
+        else
+        {
+            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 0, 0);
+        }
         isDragging = false;
 
         selectedStone = null;

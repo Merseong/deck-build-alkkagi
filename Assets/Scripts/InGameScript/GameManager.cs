@@ -189,6 +189,15 @@ public class GameManager : SingletonBehavior<GameManager>
         GameOverAction(PlayerEnum.LOCAL);
     }
 
+    public void OptionButtonAction()
+    {
+        IngameUIManager.Inst.SettingPanel.gameObject.SetActive(true);
+    }
+    public void EnemyInfoButtonAction()
+    {
+        IngameUIManager.Inst.EnemyInfoPanel.gameObject.SetActive(true);
+    }
+
     public void GameOverAction(PlayerEnum loser)
     {
         if (LocalTurnState == TurnState.END || OppoTurnState == TurnState.END) return;

@@ -148,12 +148,20 @@ public class GameBoard : MonoBehaviour
     }
 
     // 지정된 위치에 가능한지 판별
-    public static bool IsPossibleToPut(Vector3 pos, float stoneRadius)
+    public bool IsPossibleToPut(Vector3 pos, float stoneRadius)
     {
         var stoneOnBoard = GameManager.Inst.AllStones.Values;
         foreach (StoneBehaviour stone in stoneOnBoard)
         {
             if (Vector3.Distance(pos, stone.gameObject.transform.position) <= stoneRadius)
+            {
+                return false;
+            }
+        }
+        var guards = playerGuards.Values;
+        foreach (GameObject guard in guards)
+        {
+            if (Vector3.Distance(pos, guard.transform.position) <= stoneRadius)
             {
                 return false;
             }

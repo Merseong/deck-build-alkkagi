@@ -42,5 +42,8 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
     public RectTransform ShootReadyEmphasizeUI => shootReadyEmphasizeUI;
     [SerializeField] private NotificationPanel notificationPanel;
     public NotificationPanel NotificationPanel => notificationPanel;
-
+    [SerializeField] private RectTransform settingPanel;
+    public RectTransform SettingPanel => settingPanel;
+    [SerializeField] private RectTransform enemyInfoPanel;
+    public RectTransform EnemyInfoPanel => enemyInfoPanel;
 }
