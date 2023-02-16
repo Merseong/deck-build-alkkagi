@@ -60,13 +60,14 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private float curStoneSelectionActionTime;
     private bool isDragging = false;
+    private int needCost;
     private bool reachedAvg = false;
     private bool leftHighEnd = false;
     private bool leftLowEnd = false;
     private bool startOnCancel;
     private Vector3 dragStartPoint;
     private Vector3 dragEndPoint;
-    private float curDragMagnitude;
+    [SerializeField] private float curDragMagnitude;
     private ArrowGenerator stoneArrowObj;
 
     //FIXME :Temporarily get board script by inspector
@@ -806,10 +807,21 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         Color dragColor;
         Vector3 deltaVec = new Vector3(TouchManager.Inst.GetTouchDelta().x, 0, TouchManager.Inst.GetTouchDelta().y);
 
-        if (moveVec.magnitude >= maxDragLimit)
+        if(Cost < 2)
+        {
+            curDragMagnitude = moveVec.magnitude;
+            needCost = 1;
+            if(moveVec.magnitude >= maxDragLimit/2)
+            {
+                curDragMagnitude = maxDragLimit/2;
+            }
+            dragColor = Cost1Color;
+        }
+        else if (moveVec.magnitude >= maxDragLimit)
         {
             curDragMagnitude = maxDragLimit;
             dragColor = Cost2Color;
+            needCost = 2;
         }
         else
         {
@@ -841,6 +853,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             //Decreasing Power
             if (cur < avg && cur > avg * (1f - maxClippingPercentage) && reachedAvg && (!leftLowEnd || Vector3.Dot(deltaVec, moveVec) > 0))
             {
+                needCost = 1;
                 curDragMagnitude = maxDragLimit / 2;
                 dragColor = Cost1Color;
                 IngameUIManager.Inst.CostPanel.CostEmphasize(1);
@@ -848,17 +861,20 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             //Increasing Power
             else if (cur > avg && cur < avg * (1f + maxClippingPercentage) && reachedAvg && (!leftHighEnd || Vector3.Dot(deltaVec, moveVec) < 0))
             {
+                needCost = 1;
                 curDragMagnitude = maxDragLimit / 2;
                 dragColor = Cost1Color;
                 IngameUIManager.Inst.CostPanel.CostEmphasize(1);
             }
             else if (moveVec.magnitude > maxDragLimit / 2)
             {
+                needCost = 2;
                 dragColor = Cost2Color;
                 IngameUIManager.Inst.CostPanel.CostEmphasize(2);
             } 
             else
             {
+                needCost = 1;
                 dragColor = Cost1Color;
                 IngameUIManager.Inst.CostPanel.CostEmphasize(1);
             }
@@ -945,7 +961,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if (selectedStone != null)
         {
             selectedStone.isClicked = true;
-            if (canShoot && !isOpenStoneInform && selectedStone.ownerPlayer == GameManager.PlayerEnum.LOCAL)
+            if (canShoot && !isOpenStoneInform && selectedStone.ownerPlayer == GameManager.PlayerEnum.LOCAL && Cost > 0 && ShootTokenAvailable)
             {
                 //Simply select current stone and move to shooting phase
                 GameManager.Inst.isCancelOpened = true;
@@ -997,7 +1013,6 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         if (isDragging && !startOnCancel)
         {
-            int needCost = curDragMagnitude <= maxDragLimit / 2 ? 1 : 2;
 
             // shoot token이 없는 경우, 쏘지 못하게 리셋
             if (!ShootTokenAvailable)
@@ -1067,6 +1082,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             Debug.LogError("Unavailiable place to spawn stone!");
             IngameUIManager.Inst.UserAlertPanel.Alert("Unavailiable place to spawn stone"); // 돌을 놓을 수 있는 위치가 아닙니다
             GameManager.Inst.GameBoard.UnhightlightPossiblePos();
+            selectedCard.EnlargeCard(false);
             return;
         }
         else if(!SpendCost(selectedCard.CardData.cardCost))
@@ -1074,6 +1090,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             Debug.LogError("Not enough cost to play card!");
             IngameUIManager.Inst.UserAlertPanel.Alert("Not enough cost to play card"); // 코스트가 부족합니다
             GameManager.Inst.GameBoard.UnhightlightPossiblePos();
+            selectedCard.EnlargeCard(false);
             return;
         }
 

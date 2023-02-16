@@ -24,12 +24,12 @@ public class Card : MonoBehaviour
     void OnMouseOver()
     {
         if(GameManager.Inst.isCancelOpened) return;
-        EnlargeCard(true);
+        // EnlargeCard(true);
     }
 
     private void OnMouseExit()
     {
-        EnlargeCard(false);
+        // EnlargeCard(false);
     }
 
     public void SetOriginOrder(int originOrder)
@@ -64,7 +64,7 @@ public class Card : MonoBehaviour
         }
     }
 
-    void EnlargeCard(bool isEnlarge)
+    public void EnlargeCard(bool isEnlarge)
     {
         if(GameManager.Inst.isInformOpened)
         {
