@@ -325,7 +325,7 @@ public class AkgRigidbody : MonoBehaviour
 
         velocity = normalVelocity + tangentialVelocity;
         RecordVelocity();
-        RecordCollideEvent(MyNetworkData.EventEnum.COLLIDE);
+        RecordCollideEvent(EventEnum.COLLIDE);
         CollideForecast();
     }
 
@@ -333,7 +333,7 @@ public class AkgRigidbody : MonoBehaviour
     {
         if (!TryGetComponent<StoneBehaviour>(out var stone)) return;
 
-        AkgPhysicsManager.Inst.rigidbodyRecorder.AppendVelocity(new MyNetworkData.VelocityRecord
+        AkgPhysicsManager.Inst.rigidbodyRecorder.AppendVelocity(new VelocityRecord
         {
             stoneId = stone.StoneId,
             time = Time.time,
@@ -342,11 +342,11 @@ public class AkgRigidbody : MonoBehaviour
         });
     }
 
-    private void RecordCollideEvent(MyNetworkData.EventEnum eventEnum)
+    private void RecordCollideEvent(EventEnum eventEnum)
     {
         if (!TryGetComponent<StoneBehaviour>(out var stone)) return;
 
-        AkgPhysicsManager.Inst.rigidbodyRecorder.AppendEventRecord(new MyNetworkData.EventRecord
+        AkgPhysicsManager.Inst.rigidbodyRecorder.AppendEventRecord(new EventRecord
         {
             stoneId = stone.StoneId,
             time = Time.time,

@@ -56,11 +56,11 @@ public class OppoPlayerBehaviour : PlayerBehaviour
         return newStoneId;
     }
 
-    private void PlayCardReceiveNetworkAction(MyNetworkData.Packet packet)
+    private void PlayCardReceiveNetworkAction(Packet packet)
     {
-        if (packet.Type != (short)MyNetworkData.PacketType.ROOM_OPPONENT) return;
+        if (packet.Type != (short)PacketType.ROOM_OPPONENT) return;
 
-        var msg = MyNetworkData.MessagePacket.Deserialize(packet.Data);
+        var msg = MessagePacket.Deserialize(packet.Data);
 
         if (!msg.message.StartsWith("PLAYCARD/")) return;
 

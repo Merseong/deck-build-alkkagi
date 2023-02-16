@@ -211,18 +211,18 @@ public class GameManager : SingletonBehavior<GameManager>
         // 2초 후 전송
         yield return new WaitForSeconds(2f);
 
-        NetworkManager.Inst.SendData(new MyNetworkData.MessagePacket
+        NetworkManager.Inst.SendData(new MessagePacket
         {
             senderID = NetworkManager.Inst.NetworkId,
             message = $"BREAK",
-        }, MyNetworkData.PacketType.ROOM_CONTROL);
+        }, PacketType.ROOM_CONTROL);
     }
 
-    private void RoomExitReceiveNetworkAction(MyNetworkData.Packet packet)
+    private void RoomExitReceiveNetworkAction(Packet packet)
     {
-        if (packet.Type != (short)MyNetworkData.PacketType.ROOM_CONTROL) return;
+        if (packet.Type != (short)PacketType.ROOM_CONTROL) return;
 
-        var msg = MyNetworkData.MessagePacket.Deserialize(packet.Data);
+        var msg = MessagePacket.Deserialize(packet.Data);
 
         if (msg.senderID != 0) return;
         if (!msg.message.StartsWith("EXIT/")) return;
@@ -267,11 +267,11 @@ public class GameManager : SingletonBehavior<GameManager>
     /// <param name="packet">
     /// { ROOM_BROADCAST | 0 | TURNEND/ nextTotalTurn stonePosition LocalNextTurnState }
     /// </param>
-    private void TurnInfoReceiveNetworkAction(MyNetworkData.Packet packet)
+    private void TurnInfoReceiveNetworkAction(Packet packet)
     {
-        if (packet.Type != (short)MyNetworkData.PacketType.ROOM_BROADCAST) return;
+        if (packet.Type != (short)PacketType.ROOM_BROADCAST) return;
 
-        var msg = MyNetworkData.MessagePacket.Deserialize(packet.Data);
+        var msg = MessagePacket.Deserialize(packet.Data);
 
         if (msg.senderID != 0) return;
         if (!msg.message.StartsWith("TURNEND/")) return;
@@ -302,11 +302,11 @@ public class GameManager : SingletonBehavior<GameManager>
     /// </remarks>
     private void TurnInfoSendNetworkAction()
     {
-        NetworkManager.Inst.SendData(new MyNetworkData.MessagePacket
+        NetworkManager.Inst.SendData(new MessagePacket
         {
             senderID = NetworkManager.Inst.NetworkId,
             message = $"TURNEND/ {nextTotalTurn} {"hello"} {(short)LocalNextTurnState} {(short)OppoNextTurnState}",
-        }, MyNetworkData.PacketType.ROOM_BROADCAST);
+        }, PacketType.ROOM_BROADCAST);
 
         isTurnEndSent = true;
     }
@@ -510,11 +510,11 @@ public class GameManager : SingletonBehavior<GameManager>
         // 후에는 hs 끝나면 없애는거까지
     }
 
-    private void HSReceiveNetworkAction(MyNetworkData.Packet packet)
+    private void HSReceiveNetworkAction(Packet packet)
     {
-        if (packet.Type != (short)MyNetworkData.PacketType.ROOM_OPPONENT) return;
+        if (packet.Type != (short)PacketType.ROOM_OPPONENT) return;
 
-        var msg = MyNetworkData.MessagePacket.Deserialize(packet.Data);
+        var msg = MessagePacket.Deserialize(packet.Data);
 
         if (!msg.message.StartsWith("HS/")) return;
 
@@ -566,11 +566,11 @@ public class GameManager : SingletonBehavior<GameManager>
 
     private void HSSendNetworkAction(string message)
     {
-        NetworkManager.Inst.SendData(new MyNetworkData.MessagePacket
+        NetworkManager.Inst.SendData(new MessagePacket
         {
             senderID = NetworkManager.Inst.NetworkId,
             message = $"HS/ {message}",
-        }, MyNetworkData.PacketType.ROOM_OPPONENT);
+        }, PacketType.ROOM_OPPONENT);
     }
 
     private IEnumerator EHSSecondAsking(string question, string messageTrue, string messageFalse)

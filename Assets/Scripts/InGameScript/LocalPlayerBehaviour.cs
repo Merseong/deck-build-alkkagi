@@ -337,11 +337,11 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         Debug.Log($"[{NetworkManager.Inst.NetworkId}] {toSend}");
 
-        NetworkManager.Inst.SendData(new MyNetworkData.MessagePacket
+        NetworkManager.Inst.SendData(new MessagePacket
         {
             senderID = NetworkManager.Inst.NetworkId,
             message = toSend,
-        }, MyNetworkData.PacketType.ROOM_OPPONENT);
+        }, PacketType.ROOM_OPPONENT);
     }
 
     private void ShootStone(Vector3 vec) // vec이 velocity인지 force인지 명확하게 해야함

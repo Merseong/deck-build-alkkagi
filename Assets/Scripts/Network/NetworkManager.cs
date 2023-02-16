@@ -5,11 +5,13 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using UnityEngine;
-using MyNetworkData;
 using UnityEngine.SceneManagement;
+using Unity.Networking.Transport;
+using Unity.Collections;
 
 public class NetworkManager : SingletonBehavior<NetworkManager>
 {
+    [Header("old networking")]
     SocketClient m_client;
     private SocketClient Client => m_client;
 
@@ -105,12 +107,57 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
         if (!m_isNetworkMode) return;
 
+        m_client = new SocketClient();
         m_networkTestCanvas.SetActive(m_isNetworkMode);
         ConnectionStatus = ConnectionStatusEnum.DISCONNECTED;
 
         // syncVarDataDict = new Dictionary<uint, byte[]>();
         // syncVarActionDict = new Dictionary<uint, Action>();
         syncVarDict = new Dictionary<uint, (byte[], Action)>();
+    }
+
+    private void Update()
+    {
+        if (!m_isNetworkMode) return;
+
+        Client.Driver.ScheduleUpdate().Complete();
+
+        if (!Client.Driver.IsCreated)
+        {
+            return;
+        }
+
+        DataStreamReader stream;
+        NetworkEvent.Type cmd;
+        while ((cmd = Client.Connection.PopEvent(Client.Driver, out stream)) != NetworkEvent.Type.Empty)
+        {
+            if (cmd == NetworkEvent.Type.Connect)
+            {
+                Debug.Log("hello network!");
+
+                // Send test data
+                var packet = new Packet().Pack(PacketType.PACKET_TEST, new TestPacket
+                {
+                    message = "hello world!",
+                });
+                var byteArr = new NativeArray<byte>(packet.GetSendBytes(), Allocator.Temp);
+
+                Client.Driver.BeginSend(Client.Connection, out var writer);
+                writer.WriteBytes(byteArr);
+                Client.Driver.EndSend(writer);
+            }
+            else if (cmd == NetworkEvent.Type.Data)
+            {
+                var value = new NativeArray<byte>(stream.Length, Allocator.Temp);
+                stream.ReadBytes(value);
+                Client.OnReceived(value);
+            }
+            else if (cmd == NetworkEvent.Type.Disconnect)
+            {
+                Debug.LogWarning("Client got disconnected from server.");
+                Client.Connection = default;
+            }
+        }
     }
 
     private void LateUpdate()
@@ -123,9 +170,13 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
     private void OnDestroy()
     {
+        if (!m_isNetworkMode) return;
+
         DisconnectServer();
+        if (Client != null)
+            Client.Driver.Dispose();
     }
-    #endregion
+#endregion
 
     public void RefreshUI(bool hideCanvas = false)
     {
@@ -140,21 +191,19 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
             return;
         }
 
-        m_client = new SocketClient();
         m_client.Connect(host, port);
         ConnectionStatus = ConnectionStatusEnum.CONNECTING;
     }
 
     public void DisconnectServer()
     {
-        if (!m_isNetworkMode || m_client == null)
+        if (!m_isNetworkMode || !Client.Driver.IsCreated)
         {
             return;
         }
         m_client.Disconnect();
 
         ConnectionStatus = ConnectionStatusEnum.DISCONNECTED;
-        m_client = null;
     }
 
 
@@ -176,7 +225,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         {
             Debug.LogError("[NETWORK] not connected");
         }
-        
+
         var sendPacket = new Packet().Pack(type, data);
         Client.Send(sendPacket);
     }
@@ -190,7 +239,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         syncVarDict[netID] = (data, callback);
     }
 
-    #region Delegate Control functions
+#region Delegate Control functions
     public void AddReceiveDelegate(ParsePacketDelegate func)
     {
         ParsePacket += func;
@@ -210,9 +259,9 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         ParsePacket += BasicProcessPacket;
         ParsePacket += ParsePacketAction;
     }
-    #endregion
+#endregion
 
-    #region Send Actions
+#region Send Actions
 
     public void EnterGameRoom()
     {
@@ -262,9 +311,9 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
             Client.Send(p);
         }
     }
-    #endregion
+#endregion
 
-    #region Receive Actions
+#region Receive Actions
     /// <summary>
     /// 
     /// </summary>
@@ -359,5 +408,5 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         SyncVarDict[sp.NetID] = (_data, _callback);
         _callback();
     }
-    #endregion
+#endregion
 }

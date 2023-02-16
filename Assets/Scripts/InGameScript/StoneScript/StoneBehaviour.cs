@@ -120,10 +120,10 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     {
         isExiting = true;
         if (!AkgPhysicsManager.Inst.rigidbodyRecorder.IsPlaying)
-            AkgPhysicsManager.Inst.rigidbodyRecorder.AppendEventRecord(new MyNetworkData.EventRecord
+            AkgPhysicsManager.Inst.rigidbodyRecorder.AppendEventRecord(new EventRecord
             {
                 stoneId = stoneId,
-                eventEnum = MyNetworkData.EventEnum.DROPOUT,
+                eventEnum = EventEnum.DROPOUT,
                 time = Time.time,
                 xPosition = transform.position.x,
                 zPosition = transform.position.z,
