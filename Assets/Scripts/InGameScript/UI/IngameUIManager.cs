@@ -58,20 +58,22 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
     [SerializeField] private Button enemyInfoButton;
     [SerializeField] private Button enemyInfoPanelButton;
 
+    [SerializeField] private RectTransform resultPanel;
+    public RectTransform ResultPanel => resultPanel;
+
     private void Start()
     {
         enemyInfoButton.onClick.AddListener(() => {
             ActivateUI(enemyInfoPanel);
-
-        });
-
-        optionButton.onClick.AddListener(() => {
-            ActivateUI(settingPanel);
-            ActivateUI(BlurImage);
+            SetEnemyInfoPanel();
         });
 
         enemyInfoPanelButton.onClick.AddListener(() => {
             DeactivateUI(enemyInfoPanel);
+        });
+
+        optionButton.onClick.AddListener(() => {
+            ActivateUI(settingPanel);
             ActivateUI(BlurImage);
         });
 
@@ -105,5 +107,20 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
     public bool isThereActivatedUI()
     {
         return currentActivatedUI.Count > 0 ? true : false;
+    }
+
+    public bool isThereActivatedUI(RectTransform rect)
+    {
+        return currentActivatedUI.Contains(rect);
+    }
+
+    public void SetResultPanel()
+    {
+        //TODO : Set result from gamemanager's data
+    }
+
+    private void SetEnemyInfoPanel()
+    {
+        //TODO : Set enemy info from gagmemanager's data
     }
 }

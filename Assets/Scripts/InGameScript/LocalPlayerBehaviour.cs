@@ -56,7 +56,6 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private bool isSelecting;
     private bool isOpenStoneInform = false;
-    [SerializeField] private bool isInformOpened = false;
 
     private float curStoneSelectionActionTime;
     private bool isDragging = false;
@@ -67,7 +66,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private bool startOnCancel;
     private Vector3 dragStartPoint;
     private Vector3 dragEndPoint;
-    [SerializeField] private float curDragMagnitude;
+    private float curDragMagnitude;
     private ArrowGenerator stoneArrowObj;
 
     //FIXME :Temporarily get board script by inspector
@@ -566,7 +565,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     public void NormalInTouch(Vector3 curScreenTouchPosition)
     {
-        if (IngameUIManager.Inst.isThereActivatedUI()) return;
+        if (IngameUIManager.Inst.isThereActivatedUI(informPanel.GetComponent<RectTransform>())) return;
 
         Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
         Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
@@ -592,7 +591,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         IngameUIManager.Inst.CostPanel.CostEmphasize(0);
 
         //UI handle
-        if (IngameUIManager.Inst.isThereActivatedUI())
+        if (IngameUIManager.Inst.isThereActivatedUI(informPanel.GetComponent<RectTransform>()))
         {
             UICloseAction();
             return;
@@ -637,7 +636,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     public void PrepareInTouch(Vector3 curScreenTouchPosition)
     {
-        if (IngameUIManager.Inst.isThereActivatedUI()) return;
+        if (IngameUIManager.Inst.isThereActivatedUI(informPanel.GetComponent<RectTransform>())) return;
 
         Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
         Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
@@ -657,7 +656,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         IngameUIManager.Inst.CostPanel.CostEmphasize(0);
 
         //UI handle
-        if (IngameUIManager.Inst.isThereActivatedUI())
+        if (IngameUIManager.Inst.isThereActivatedUI(informPanel.GetComponent<RectTransform>()))
         {
             UICloseAction();
             return;
@@ -696,7 +695,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     public void WaitInTouch(Vector3 curScreenTouchPosition)
     {
-        if (IngameUIManager.Inst.isThereActivatedUI()) return;
+        if (IngameUIManager.Inst.isThereActivatedUI(informPanel.GetComponent<RectTransform>())) return;
 
         Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
         Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
@@ -709,7 +708,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
 
         //UI handle
-        if (IngameUIManager.Inst.isThereActivatedUI())
+        if (IngameUIManager.Inst.isThereActivatedUI(informPanel.GetComponent<RectTransform>()))
         {
             UICloseAction();
             return;
@@ -760,7 +759,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         dragStartPoint = curTouchPositionNormalized;
         startOnCancel = isTouchOnCancel;
 
-        if (isDragging && !IngameUIManager.Inst.isThereActivatedUI())
+        if (isDragging && !IngameUIManager.Inst.isThereActivatedUI(informPanel.GetComponent<RectTransform>()))
         {
             //temp
             selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.GetSpriteState("Ready");
@@ -794,7 +793,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private void StoneDragAction(Vector3 curScreenTouchPosition, Vector3 curTouchPositionNormalized)
     {
         if(selectedStone.ownerPlayer == GameManager.PlayerEnum.OPPO) return;
-
+        
         bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, curScreenTouchPosition, null);
         isDragging = !isTouchOnCancel;
 
@@ -962,7 +961,6 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             if (canShoot && !isOpenStoneInform && selectedStone.ownerPlayer == GameManager.PlayerEnum.LOCAL && Cost > 0 && ShootTokenAvailable)
             {
                 //Simply select current stone and move to shooting phase
-                GameManager.Inst.isCancelOpened = true;
                 ShootDragRoutine(true);
                 // Debug.Log("Selected");
                 return;
@@ -984,10 +982,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         dragEndPoint = curTouchPositionNormalized;
         Vector3 moveVec = dragStartPoint - dragEndPoint;
 
-        GameManager.Inst.isCancelOpened = false;
-
         ShootDragRoutine(false);
-        IngameUIManager.Inst.DeactivateUI(informPanel.GetComponent<RectTransform>());
+        IngameUIManager.Inst.DeactivateUI(cancelPanel.GetComponent<RectTransform>());
 
         dragEffectObj?.gameObject.SetActive(false);
         stoneArrowObj?.gameObject.SetActive(false);

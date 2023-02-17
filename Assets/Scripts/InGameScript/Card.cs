@@ -23,7 +23,6 @@ public class Card : MonoBehaviour
 
     void OnMouseOver()
     {
-        if(GameManager.Inst.isCancelOpened) return;
         // EnlargeCard(true);
     }
 
@@ -66,7 +65,7 @@ public class Card : MonoBehaviour
 
     public void EnlargeCard(bool isEnlarge)
     {
-        if(GameManager.Inst.isInformOpened)
+        if(IngameUIManager.Inst.isThereActivatedUI())
         {
             MoveTransform(originRPS, false);
             return;   

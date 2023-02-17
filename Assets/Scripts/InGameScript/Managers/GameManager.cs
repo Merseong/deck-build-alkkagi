@@ -36,9 +36,6 @@ public class GameManager : SingletonBehavior<GameManager>
     public bool isPlayerHonorSkip;
     //후공의 경우에 상대가 HS했을 경우 동의 여부에 대한 bool
     public bool isPlayerConsentHonorSkip;
-    //카드 정보 일람 여부에 대햔 flag
-    public bool isInformOpened;
-    public bool isCancelOpened;
 
     // 각자 턴의 제어
     // WAIT가 아닌 턴의 종료가 일어나는 PLAYER쪽에서 턴 변경 처리
@@ -189,15 +186,6 @@ public class GameManager : SingletonBehavior<GameManager>
         GameOverAction(PlayerEnum.LOCAL);
     }
 
-    public void OptionButtonAction()
-    {
-        IngameUIManager.Inst.SettingPanel.gameObject.SetActive(true);
-    }
-    public void EnemyInfoButtonAction()
-    {
-        IngameUIManager.Inst.EnemyInfoPanel.gameObject.SetActive(true);
-    }
-
     public void GameOverAction(PlayerEnum loser)
     {
         if (LocalTurnState == TurnState.END || OppoTurnState == TurnState.END) return;
@@ -205,6 +193,9 @@ public class GameManager : SingletonBehavior<GameManager>
         if (loser == PlayerEnum.LOCAL)
         {
             Debug.LogError("Game over!");
+            IngameUIManager.Inst.DeactivateUI();
+            IngameUIManager.Inst.SetResultPanel();
+            IngameUIManager.Inst.ActivateUI(IngameUIManager.Inst.ResultPanel);
             IngameUIManager.Inst.TempCurrentTurnText.text = "LOSE";
             LocalTurnState = TurnState.END;
             OppoTurnState = TurnState.END;
