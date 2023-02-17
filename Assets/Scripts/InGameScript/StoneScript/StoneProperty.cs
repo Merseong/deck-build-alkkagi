@@ -5,12 +5,12 @@ using UnityEngine;
 public abstract class StoneProperty
 {
     protected StoneBehaviour baseStone;
-    protected int leftCount;
+    protected int remainingTurn;  // -1: infinite, 0: end
 
-    public StoneProperty(StoneBehaviour stone, int count = -1)
+    public StoneProperty(StoneBehaviour stone, int turn = -1)
     {
         baseStone = stone;
-        leftCount = count;
+        remainingTurn = turn;
     }
 
     // for sprint
@@ -29,6 +29,27 @@ public abstract class StoneProperty
     public virtual float GetDragForce(float value) { return value; }
 
     // 애니메이션 같은거 여기다 넣으면 될듯
-    public abstract void OnSet();
-    public abstract void OnUnset();
+    public virtual void OnAdded()
+    {
+        GameManager.Inst.GetPlayer(baseStone.BelongingPlayer).OnTurnStart += DecreaseRemainingTurn;
+    }
+
+    public virtual void OnRemoved()
+    {
+        GameManager.Inst.GetPlayer(baseStone.BelongingPlayer).OnTurnStart -= DecreaseRemainingTurn;
+    }
+
+    private void DecreaseRemainingTurn()
+    {
+        if (remainingTurn > 0)
+            remainingTurn--;
+
+        if (remainingTurn == 0)
+            RemoveProperty();
+    }
+
+    private void RemoveProperty()
+    {
+        baseStone.RemoveProperty(this);
+    }
 }

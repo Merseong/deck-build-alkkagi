@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,13 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     // 소환 이벤트
     // 파괴 이벤트
     // 타격 이벤트
+
+    public virtual void OnEnter() { }
+    public virtual void OnExit() { }
+
+    public event Action OnShootEnter;
+    public event Action OnShootExit;
+    public event Action OnHit;
 
     [SerializeField] private int stoneId;
     public int StoneId => stoneId;
@@ -57,7 +65,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     [SerializeField] float indirectExitTime;
     [SerializeField] float indirectExitSpeed;
 
-    private List<StoneProperty> properties;
+    public List<StoneProperty> Properties { get; private set; }
 
     // temp:
     [SerializeField] private GameObject enemySign;
@@ -154,19 +162,19 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     public virtual void InitProperty()
     {
-        properties = new List<StoneProperty>();
+        Properties = new List<StoneProperty>();
     }
 
     public void AddProperty(StoneProperty property)
     {
-        properties.Add(property);
-        property.OnSet();
+        Properties.Add(property);
+        property.OnAdded();
     }
 
     public void RemoveProperty(StoneProperty property)
     {
-        property.OnUnset();
-        properties.Remove(property);
+        property.OnRemoved();
+        Properties.Remove(property);
     }
 
     #endregion
@@ -271,15 +279,4 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
             // if collided, change sprite to collided
         }
     }
-
-    #region Ability
-
-    public virtual void OnEnter() { }
-    public virtual void OnExit() { }
-    public virtual void OnShoot() { }
-    public virtual void OnHit() { }
-    public virtual void OnTurnStart() { }
-    public virtual void OnTurnEnd() { }
-
-    #endregion
 }

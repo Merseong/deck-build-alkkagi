@@ -61,6 +61,9 @@ public abstract class PlayerBehaviour : MonoBehaviour
         }
     }
 
+    public event Action OnTurnStart;
+    public event Action OnTurnEnd;
+
     public virtual void InitPlayer(GameManager.PlayerEnum pEnum)
     {
         player = pEnum;

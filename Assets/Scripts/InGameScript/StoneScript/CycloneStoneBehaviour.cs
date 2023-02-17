@@ -9,7 +9,8 @@ public class CycloneStoneBehaviour : StoneBehaviour
         PlayerBehaviour player = GameManager.Inst.players[(int)BelongingPlayer];
         foreach (StoneBehaviour stone in player.Stones.Values)
         {
-            stone.AddProperty(new SprintProperty(stone));
+            if (SprintProperty.IsAvailable(stone))
+                stone.AddProperty(new SprintProperty(stone));
         }
     }
 }
