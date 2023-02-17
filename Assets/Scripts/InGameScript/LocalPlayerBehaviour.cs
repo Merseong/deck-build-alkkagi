@@ -395,7 +395,6 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private void SetInformPanel(CardData data)
     {
-        GameManager.Inst.isInformOpened = isInformOpened = true;
         informPanel.SetInformation(data);
     }
 
@@ -508,7 +507,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             yield return null;
         }
         
-        cancelPanel.gameObject.SetActive(true);
+        IngameUIManager.Inst.ActivateUI(cancelPanel.GetComponent<RectTransform>());
         isMoving = false;
     }
 
@@ -567,7 +566,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     public void NormalInTouch(Vector3 curScreenTouchPosition)
     {
-        if (isInformOpened) return;
+        if (IngameUIManager.Inst.isThereActivatedUI()) return;
 
         Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
         Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
@@ -593,7 +592,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         IngameUIManager.Inst.CostPanel.CostEmphasize(0);
 
         //UI handle
-        if (isInformOpened)
+        if (IngameUIManager.Inst.isThereActivatedUI())
         {
             UICloseAction();
             return;
@@ -638,7 +637,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     public void PrepareInTouch(Vector3 curScreenTouchPosition)
     {
-        if (isInformOpened) return;
+        if (IngameUIManager.Inst.isThereActivatedUI()) return;
 
         Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
         Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
@@ -658,7 +657,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         IngameUIManager.Inst.CostPanel.CostEmphasize(0);
 
         //UI handle
-        if (isInformOpened)
+        if (IngameUIManager.Inst.isThereActivatedUI())
         {
             UICloseAction();
             return;
@@ -697,7 +696,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     public void WaitInTouch(Vector3 curScreenTouchPosition)
     {
-        if (isInformOpened) return;
+        if (IngameUIManager.Inst.isThereActivatedUI()) return;
 
         Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(curScreenTouchPosition);
         Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
@@ -710,7 +709,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         Vector3 curTouchPositionNormalized = new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
 
         //UI handle
-        if (isInformOpened)
+        if (IngameUIManager.Inst.isThereActivatedUI())
         {
             UICloseAction();
             return;
@@ -761,7 +760,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         dragStartPoint = curTouchPositionNormalized;
         startOnCancel = isTouchOnCancel;
 
-        if (isDragging && !isInformOpened)
+        if (isDragging && !IngameUIManager.Inst.isThereActivatedUI())
         {
             //temp
             selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.GetSpriteState("Ready");
@@ -946,8 +945,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private void UICloseAction()
     {
-        informPanel.gameObject.SetActive(false);
-        GameManager.Inst.isInformOpened = isInformOpened = false;
+        IngameUIManager.Inst.DeactivateUI();
         selectedCard = null;
         selectedStone = null;
         GameManager.Inst.GameBoard.UnhightlightPossiblePos();
@@ -973,7 +971,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             {
                 //Open Information about selected stone
                 SetInformPanel(selectedStone.CardData);
-                informPanel.gameObject.SetActive(true);
+                IngameUIManager.Inst.ActivateUI(informPanel.GetComponent<RectTransform>());
                 // Debug.Log("Information");
                 return;
             }
@@ -989,7 +987,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         GameManager.Inst.isCancelOpened = false;
 
         ShootDragRoutine(false);
-        cancelPanel.gameObject.SetActive(false);
+        IngameUIManager.Inst.DeactivateUI(informPanel.GetComponent<RectTransform>());
 
         dragEffectObj?.gameObject.SetActive(false);
         stoneArrowObj?.gameObject.SetActive(false);
@@ -1107,7 +1105,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         stoneGhost.SetActive(false);
 
         SetInformPanel(selectedCard.CardData);
-        informPanel.gameObject.SetActive(true);
+        IngameUIManager.Inst.ActivateUI(informPanel.GetComponent<RectTransform>());
         GameManager.Inst.GameBoard.UnhightlightPossiblePos();
     }
 

@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class IngameUIManager : SingletonBehavior<IngameUIManager>
 {
+    private List<RectTransform> currentActivatedUI = new();
+
     [SerializeField] private AskingPanel askingPanel;
     public AskingPanel AskingPanel => askingPanel;
 
@@ -40,10 +42,68 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
 
     [SerializeField] private RectTransform shootReadyEmphasizeUI;
     public RectTransform ShootReadyEmphasizeUI => shootReadyEmphasizeUI;
+
     [SerializeField] private NotificationPanel notificationPanel;
     public NotificationPanel NotificationPanel => notificationPanel;
+
+    [SerializeField] private RectTransform BlurImage;
+    [SerializeField] private Button BlurImageButton;
+
     [SerializeField] private RectTransform settingPanel;
     public RectTransform SettingPanel => settingPanel;
+    [SerializeField] private Button optionButton;
+
     [SerializeField] private RectTransform enemyInfoPanel;
     public RectTransform EnemyInfoPanel => enemyInfoPanel;
+    [SerializeField] private Button enemyInfoButton;
+    [SerializeField] private Button enemyInfoPanelButton;
+
+    private void Start()
+    {
+        enemyInfoButton.onClick.AddListener(() => {
+            ActivateUI(enemyInfoPanel);
+
+        });
+
+        optionButton.onClick.AddListener(() => {
+            ActivateUI(settingPanel);
+            ActivateUI(BlurImage);
+        });
+
+        enemyInfoPanelButton.onClick.AddListener(() => {
+            DeactivateUI(enemyInfoPanel);
+            ActivateUI(BlurImage);
+        });
+
+        BlurImageButton.onClick.AddListener(() => {
+            DeactivateUI();
+
+        });
+    }
+
+    public void ActivateUI(RectTransform rect)
+    {
+        currentActivatedUI.Add(rect);
+        rect.gameObject.SetActive(true);
+    }
+
+    public void DeactivateUI()
+    {
+        foreach(var ui in currentActivatedUI)
+        {
+            ui.gameObject.SetActive(false);
+        }
+        currentActivatedUI.Clear();
+    }
+
+    public void DeactivateUI(RectTransform rect)
+    {
+        rect.gameObject.SetActive(false);
+        currentActivatedUI.Remove(rect);
+    }
+
+    public bool isThereActivatedUI()
+    {
+        return currentActivatedUI.Count > 0 ? true : false;
+    }
 }
