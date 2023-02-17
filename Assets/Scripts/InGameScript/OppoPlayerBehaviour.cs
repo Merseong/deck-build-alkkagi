@@ -47,7 +47,6 @@ public class OppoPlayerBehaviour : PlayerBehaviour
         stoneBehaviour.SetCardData(cardData, newStoneId, Player);
 
         //temp code
-        spawnedStone.transform.GetComponent<StoneBehaviour>().ownerPlayer = GameManager.PlayerEnum.OPPO;
         spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = stoneBehaviour.GetSpriteState("Idle");
         spawnedStone.transform.GetChild(4).GetComponent<SpriteRenderer>().material.color = Color.red;
         spawnedStone.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(cardData.stoneSize), .15f, Util.GetRadiusFromStoneSize(cardData.stoneSize));

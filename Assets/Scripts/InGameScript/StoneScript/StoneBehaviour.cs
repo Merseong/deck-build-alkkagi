@@ -26,7 +26,6 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     [SerializeField] private GameObject collideParticle;
     [SerializeField] private GameObject directExitParticle;
     public CardData CardData => cardData;
-    public GameManager.PlayerEnum ownerPlayer;
 
     private AkgRigidbody akgRigidbody;
     public bool isMoving

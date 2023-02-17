@@ -319,7 +319,6 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         stoneBehaviour.SetCardData(cardData, newStoneId, Player);
 
         //temp code
-        spawnedStone.GetComponent<StoneBehaviour>().ownerPlayer = GameManager.PlayerEnum.LOCAL;
         spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = stoneBehaviour.GetSpriteState("Idle");
         if (isLocalRotated)
             spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
@@ -751,7 +750,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private void StoneDragAction_Begin(Vector3 curScreenTouchPosition, Vector3 curTouchPositionNormalized)
     {
-        if(selectedStone.ownerPlayer == GameManager.PlayerEnum.OPPO) return;
+        if(selectedStone.BelongingPlayer == GameManager.PlayerEnum.OPPO) return;
 
         bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, curScreenTouchPosition, null);
         isDragging = !isTouchOnCancel;
@@ -792,7 +791,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private void StoneDragAction(Vector3 curScreenTouchPosition, Vector3 curTouchPositionNormalized)
     {
-        if(selectedStone.ownerPlayer == GameManager.PlayerEnum.OPPO) return;
+        if(selectedStone.BelongingPlayer == GameManager.PlayerEnum.OPPO) return;
         
         bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, curScreenTouchPosition, null);
         isDragging = !isTouchOnCancel;
@@ -958,7 +957,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if (selectedStone != null)
         {
             selectedStone.isClicked = true;
-            if (canShoot && !isOpenStoneInform && selectedStone.ownerPlayer == GameManager.PlayerEnum.LOCAL && Cost > 0 && ShootTokenAvailable)
+            if (canShoot && !isOpenStoneInform && selectedStone.BelongingPlayer == GameManager.PlayerEnum.LOCAL && Cost > 0 && ShootTokenAvailable)
             {
                 //Simply select current stone and move to shooting phase
                 ShootDragRoutine(true);
