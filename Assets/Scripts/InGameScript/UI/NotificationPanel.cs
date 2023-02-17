@@ -17,6 +17,13 @@ public class NotificationPanel : MonoBehaviour
             .AppendInterval(0.9f)
             .Append(transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad));
     }
+    public void Show()
+    {
+        Sequence sequence = DOTween.Sequence()
+            .Append(transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.InOutQuad))
+            .AppendInterval(0.9f)
+            .Append(transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad));
+    }
 
     private void Start() => ScaleZero();
 

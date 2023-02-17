@@ -45,6 +45,8 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
 
     [SerializeField] private NotificationPanel notificationPanel;
     public NotificationPanel NotificationPanel => notificationPanel;
+    [SerializeField] private NotificationPanel honorSkipPanel;
+    public NotificationPanel HonorSkipPanel => honorSkipPanel;
 
     [SerializeField] private RectTransform BlurImage;
     [SerializeField] private Button BlurImageButton;
@@ -122,5 +124,8 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
     private void SetEnemyInfoPanel()
     {
         //TODO : Set enemy info from gagmemanager's data
+        EnemyInfoPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Deck : " + " / Hand : " + GameManager.Inst.OppoPlayer.HandCount;
+        //닉네임
+        //승패전적
     }
 }

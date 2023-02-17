@@ -278,7 +278,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4b02e65e8e145fe40a9d3093d27bb20a, type: 2}
   stoneAtlas: {fileID: 4343727234628468602, guid: 15417bec6ed96894fa69a9c23e6fd69d, type: 2}
   gameBoard: {fileID: 1500342745}
-  isLocalGoFirst: 0
+  isLocalGoFirst: 1
   isPlayerHonorSkip: 0
   isPlayerConsentHonorSkip: 0
   totalTurn: 0
@@ -780,10 +780,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 302932775, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 984495492558740912, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_Name
       value: Canvas
@@ -873,6 +869,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2541405846502629878, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: honorSkipPanel
+      value: 
+      objectReference: {fileID: 984495492866551159}
+    - target: {fileID: 2541405846502629878, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: handCardTransform
       value: 
       objectReference: {fileID: 1651452038}
@@ -880,10 +880,6 @@ PrefabInstance:
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1170189266}
-    - target: {fileID: 4505103425272151528, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6211080835878945003, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -901,3 +897,14 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+--- !u!114 &984495492866551159 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 347388233904962350, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+  m_PrefabInstance: {fileID: 984495492866551158}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74a48cbfacff42c469e727ff81e84804, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

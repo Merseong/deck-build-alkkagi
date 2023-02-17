@@ -28,7 +28,7 @@ public abstract class PlayerBehaviour : MonoBehaviour
     }
 
     [SerializeField] private int handCount;
-    protected int HandCount
+    public int HandCount
     {
         get => handCount;
         set
