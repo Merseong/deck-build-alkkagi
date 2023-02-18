@@ -18,7 +18,6 @@ public class CostPanel : MonoBehaviour
     private int curEmphasized;
     private bool isEmphasized = false;
     
-
     public void CostEmphasize(int tot)
     {
         if(tot > curCostCnt)

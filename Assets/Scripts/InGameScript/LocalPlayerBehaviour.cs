@@ -134,6 +134,16 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     {
         base.RefreshUI();
 
+        switch (GameManager.Inst.LocalTurnState)
+        {
+            case GameManager.TurnState.PREPARE:
+                IngameUIManager.Inst.CostPanel.ResetCost(GameManager.Inst.initialTurnCost);
+                break;
+            case GameManager.TurnState.NORMAL:
+            default:
+                IngameUIManager.Inst.CostPanel.ResetCost(GameManager.Inst.normalTurnCost);
+                break;
+        }
         IngameUIManager.Inst.CostPanel.SetCost(Cost);
         // TODO: 현재 표시부분 없어서 주석처리
         //IngameUIManager.Inst.HandCountText.text = HandCount.ToString();
@@ -203,7 +213,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if (deck.Count < number)
         {
             Debug.LogError("Card 부족");
-            IngameUIManager.Inst.UserAlertPanel.Alert("No cards in deck"); //"덱에 카드가 부족합니다"
+            // TODO: 일단 alert할거까진 아닌듯
+            //IngameUIManager.Inst.UserAlertPanel.Alert("No cards in deck"); //"덱에 카드가 부족합니다"
             return;
         }
         if (number == 0)
@@ -989,7 +1000,6 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         {
             IngameUIManager.Inst.UserAlertPanel.Alert("You need to drag stone for shot!");
             isDragging = false;
-            selectedStone = null;
             selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.GetSpriteState("Idle");
             if (isLocalRotated)
             {
@@ -999,6 +1009,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             {
                 selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 0, 0);
             }
+            selectedStone = null;
             return;
         }
 

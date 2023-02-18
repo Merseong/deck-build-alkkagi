@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 using System;
-using System.Linq;
 
 public abstract class PlayerBehaviour : MonoBehaviour
 {
@@ -22,8 +20,8 @@ public abstract class PlayerBehaviour : MonoBehaviour
             if (value < 0)
                 Debug.LogError("Cost is less than 0! Fix this!");
 
-            RefreshUI();
             cost = value;
+            RefreshUI();
         }
     }
 
@@ -33,8 +31,8 @@ public abstract class PlayerBehaviour : MonoBehaviour
         get => deckCount;
         protected set
         {
-            RefreshUI();
             deckCount = value;
+            RefreshUI();
         }
     }
 
@@ -47,8 +45,8 @@ public abstract class PlayerBehaviour : MonoBehaviour
             if (value < 0)
                 Debug.LogError("Hand Count is less than 0! Fix this!");
 
-            RefreshUI();
             handCount = value;
+            RefreshUI();
         }
     }
 
@@ -62,13 +60,16 @@ public abstract class PlayerBehaviour : MonoBehaviour
         get => shootTokenAvailable;
         set
         {
-            RefreshUI();
             shootTokenAvailable = value;
+            RefreshUI();
         }
     }
 
-    public event Action OnTurnStart;
-    public event Action OnTurnEnd;
+    public event Action OnTurnStart = () => { };
+    public event Action OnTurnEnd = () => { };
+
+    public void InvokeTurnStart() => OnTurnStart();
+    public void InvokeTurnEnd() => OnTurnEnd();
 
     public virtual void InitPlayer(GameManager.PlayerEnum pEnum)
     {
@@ -114,17 +115,14 @@ public abstract class PlayerBehaviour : MonoBehaviour
     {
         if (resetTo > 0)
         {
-            IngameUIManager.Inst.CostPanel.ResetCost(resetTo);
             Cost = (ushort)resetTo;
         }
         else if (GameManager.Inst.TurnCount == 0)
         {
-            IngameUIManager.Inst.CostPanel.ResetCost(GameManager.Inst.initialTurnCost);
             Cost = GameManager.Inst.initialTurnCost;
         }
         else
         {
-            IngameUIManager.Inst.CostPanel.ResetCost(GameManager.Inst.normalTurnCost);
             Cost = GameManager.Inst.normalTurnCost;
         }
             

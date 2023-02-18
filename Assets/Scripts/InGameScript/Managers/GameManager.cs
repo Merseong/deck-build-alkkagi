@@ -42,8 +42,8 @@ public class GameManager : SingletonBehavior<GameManager>
     // 각자 턴의 제어
     // WAIT가 아닌 턴의 종료가 일어나는 PLAYER쪽에서 턴 변경 처리
     // 턴 시작 시 처리되어야하는 일 ex) UI, 코스트 증감, 드로우 등등
-    public event Action<TurnState> OnTurnStart = new Action<TurnState>((_) => { });
-    public event Action<TurnState> OnTurnEnd = new Action<TurnState>((_) => { });
+    public event Action OnTurnStart = () => { };
+    public event Action OnTurnEnd = () => { };
     public enum TurnState
     {
         PREPARE,
@@ -98,7 +98,6 @@ public class GameManager : SingletonBehavior<GameManager>
 
     public void Start()
     {
-        OnTurnStart += StartTurnBasis;
         NetworkManager.Inst.AddReceiveDelegate(TurnInfoReceiveNetworkAction);
         NetworkManager.Inst.AddReceiveDelegate(RoomExitReceiveNetworkAction);
 
@@ -162,6 +161,9 @@ public class GameManager : SingletonBehavior<GameManager>
     #region Turn Control
     public void InitializeGame(bool localFirst)
     {
+        OnTurnStart += StartTurnBasis;
+        OnTurnStart += OppoStartTurnBasis;
+
         isLocalGoFirst = localFirst;
 
         turnStates[(int)FirstPlayer] = TurnState.PREPARE;
@@ -178,9 +180,11 @@ public class GameManager : SingletonBehavior<GameManager>
 
         // Start game
         LocalPlayer.DrawCards(5);
-        LocalPlayer.ResetCost(30); // temp
+        LocalPlayer.ResetCost(); // temp
         LocalPlayer.ShootTokenAvailable = true;
         IngameUIManager.Inst.TurnEndButtonText.text = localFirst ? "Batch End" : "Oppo Batch";
+        if (localFirst)
+            IngameUIManager.Inst.NotificationPanel.Show("My Turn!");
     }
 
     public void SurrenderButtonAction()
@@ -256,16 +260,35 @@ public class GameManager : SingletonBehavior<GameManager>
         SceneManager.LoadScene(2); // load result scene
     }
 
-    private void StartTurnBasis(TurnState turnState)
+    private void StartTurnBasis()
     {
-        if (turnState != TurnState.NORMAL) return;
+        switch (LocalTurnState)
+        {
+            case TurnState.NORMAL:
+                LocalPlayer.DrawCards(1);
+                LocalPlayer.ResetCost();
+                LocalPlayer.ShootTokenAvailable = true;
+                LocalPlayer.InvokeTurnStart();
+                IngameUIManager.Inst.NotificationPanel.Show("My Turn!");
+                break;
+            default:
+                break;
+        }
+    }
 
-        LocalPlayer.DrawCards(1);
-        LocalPlayer.ResetCost();
-        LocalPlayer.ShootTokenAvailable = true;
-
-        IngameUIManager.Inst.NotificationPanel.Show("My Turn!");
-
+    private void OppoStartTurnBasis()
+    {
+        switch (OppoTurnState)
+        {
+            case TurnState.NORMAL:
+                OppoPlayer.DrawCards(1);
+                OppoPlayer.ResetCost();
+                OppoPlayer.ShootTokenAvailable = true;
+                OppoPlayer.InvokeTurnStart();
+                break;
+            default:
+                break;
+        }
     }
 
     /// <remarks>
@@ -347,7 +370,7 @@ public class GameManager : SingletonBehavior<GameManager>
     {
         isTurnEndSent = false;
 
-        if (turnEndAction) OnTurnEnd(LocalTurnState);
+        if (turnEndAction) OnTurnEnd();
         // 상대 GameManager의 turn info 변경
         // 예시
         // SomeNetworkPacket result = await SendTurnInfo();
@@ -372,7 +395,7 @@ public class GameManager : SingletonBehavior<GameManager>
         (players[0] as LocalPlayerBehaviour).stateMachine.SetState(LocalTurnState);
 
         // TurnState.NORMAL인경우만 내 턴을 시작
-        OnTurnStart(LocalTurnState);
+        OnTurnStart();
     }
 
     private void SetNextTurnState()

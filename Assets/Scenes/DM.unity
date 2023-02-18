@@ -169,6 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: 0
   cost: 0
+  deckCount: 0
   handCount: 0
   nextStoneId: 0
   shootTokenAvailable: 0
@@ -867,6 +868,10 @@ PrefabInstance:
     - target: {fileID: 984495492558740924, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 984495492558740926, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_ScreenMatchMode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2541405846502629878, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: enemyCost
