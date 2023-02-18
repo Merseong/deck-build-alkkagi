@@ -23,8 +23,10 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
     [SerializeField] private TextMeshProUGUI handCountText;
     public TextMeshProUGUI HandCountText => handCountText;
 
-    [SerializeField] private TextMeshProUGUI deckCountText;
-    public TextMeshProUGUI DeckCountText => deckCountText;
+    [SerializeField] private TextMeshProUGUI deckCountText1;
+    public TextMeshProUGUI DeckCountText1 => deckCountText1;
+    [SerializeField] private TextMeshProUGUI deckCountText2;
+    public TextMeshProUGUI DeckCountText2 => deckCountText2;
     [SerializeField] private TextMeshProUGUI turnEndButtonText;
     public TextMeshProUGUI TurnEndButtonText => turnEndButtonText;
 

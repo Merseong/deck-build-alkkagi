@@ -147,7 +147,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         IngameUIManager.Inst.CostPanel.SetCost(Cost);
         // TODO: 현재 표시부분 없어서 주석처리
         //IngameUIManager.Inst.HandCountText.text = HandCount.ToString();
-        IngameUIManager.Inst.DeckCountText.text = DeckCount.ToString();
+        IngameUIManager.Inst.DeckCountText1.text = DeckCount.ToString();
+        IngameUIManager.Inst.DeckCountText2.text = DeckCount.ToString();
 
         ColorUtility.TryParseHtmlString(ShootTokenAvailable ? "#C0FFBD" : "#FF8D91", out Color color);
         IngameUIManager.Inst.ShootTokenImage.color = color;
@@ -498,7 +499,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private IEnumerator EShootDragBeginUIRoutine()
     {
         isMoving = true;
-        float curTime = IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition.y / -350;
+        float curTime = IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition.y / -150;
         while(curTime < beginTotTime)
         {
             if(!isMoveDownward)
@@ -512,7 +513,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             else
                 IngameUIManager.Inst.HandCardTransform.position = new Vector3(0f, 0f, Mathf.Lerp(0, 4, curTime / beginTotTime));
 
-            IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition = new Vector2(0f, Mathf.Lerp(0, -350, curTime / beginTotTime));
+            IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition = new Vector2(0f, Mathf.Lerp(0, -150, curTime / beginTotTime));
             curTime += Time.deltaTime;
             yield return null;
         }
@@ -526,7 +527,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     {
         IngameUIManager.Inst.ShootReadyEmphasizeUI.GetChild(3).gameObject.SetActive(false);
         isMoving = true;
-        float curTime = (IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition.y + 350) / 350;
+        float curTime = (IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition.y + 150) / 150;
         while(curTime < endTotTime)
         {
             if(isMoveDownward)
@@ -540,7 +541,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             else
                 IngameUIManager.Inst.HandCardTransform.position = new Vector3(0f, 0f, Mathf.Lerp(4, 0, curTime / endTotTime));
 
-            IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition = new Vector2(0f, Mathf.Lerp(-350, 0, curTime / endTotTime));
+            IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition = new Vector2(0f, Mathf.Lerp(-150, 0, curTime / endTotTime));
             curTime += Time.deltaTime;
             yield return null;
         }
