@@ -288,6 +288,9 @@ MonoBehaviour:
   nextTurnStates: 0000000000000000
   initialTurnCost: 6
   normalTurnCost: 3
+  isInHonorSkipRoutine: 0
+  isLocalDoAction: 0
+  isTurnEnded: 0
 --- !u!4 &501744209
 Transform:
   m_ObjectHideFlags: 0

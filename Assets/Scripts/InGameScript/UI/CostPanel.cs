@@ -64,8 +64,8 @@ public class CostPanel : MonoBehaviour
     {
         costText.text = cost.ToString();
 
-        if(cost == 0) costTextBackground.color = Color.gray;
-        else costTextBackground.color = Color.green;
+        if(cost == 0) costTextBackground.gameObject.SetActive(false);
+        else costTextBackground.gameObject.SetActive(true);
 
         //코스트의 최대치가 갱신되는 경우
         if(cost > curMaxCost)
