@@ -328,9 +328,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         stoneBehaviour.SetCardData(cardData, newStoneId, Player);
 
         //temp code
-        spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = stoneBehaviour.GetSpriteState("Idle");
-        if (isLocalRotated)
-            spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
+        stoneBehaviour.ChangeSpriteAndRot("Idle", IsLocalRotated);
         spawnedStone.transform.GetChild(4).GetComponent<SpriteRenderer>().material.color = Color.blue;
 
         var radius = Util.GetRadiusFromStoneSize(cardData.stoneSize);
@@ -361,7 +359,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 #endif
 
         ShootTokenAvailable = false;
-        selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.GetSpriteState("Shoot");
+        selectedStone.ChangeSpriteAndRot("Shoot", IsLocalRotated);
         StartCoroutine(EShootStone(selectedStone));
         selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);
     }
@@ -396,15 +394,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         foreach (StoneBehaviour stone in GameManager.Inst.AllStones.Values)
         {
-            stone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = stone.GetSpriteState("Idle");
-            if (isLocalRotated)
-            {
-                stone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
-            }
-            else
-            {
-                stone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 0, 0);
-            }
+            stone.ChangeSpriteAndRot("Idle", IsLocalRotated);
         }
         // send physics records, stone final poses, event list
         recorder.EndRecord(out var velocityRecords, out var eventRecords);
@@ -781,7 +771,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if (isDragging && !IngameUIManager.Inst.isThereActivatedUI(informPanel.GetComponent<RectTransform>()))
         {
             //temp
-            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.GetSpriteState("Ready");
+            selectedStone.ChangeSpriteAndRot("Ready", IsLocalRotated);
 
             dragEffectObj.gameObject.SetActive(true);
             dragEffectObj.SetPosition(0, curTouchPositionNormalized);
@@ -1012,15 +1002,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         {
             IngameUIManager.Inst.UserAlertPanel.Alert("You need to drag stone for shot!");
             isDragging = false;
-            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.GetSpriteState("Idle");
-            if (isLocalRotated)
-            {
-                selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
-            }
-            else
-            {
-                selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 0, 0);
-            }
+            selectedStone.ChangeSpriteAndRot("Idle", isLocalRotated);
             selectedStone = null;
             return;
         }
@@ -1033,15 +1015,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             {
                 Debug.LogWarning("공격토큰이 존재하지 않습니다.");
                 IngameUIManager.Inst.UserAlertPanel.Alert("No attack token"); // "공격 토큰이 존재하지 않습니다"
-                selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.GetSpriteState("Idle");
-                if (isLocalRotated)
-                {
-                    selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
-                }
-                else
-                {
-                    selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 0, 0);
-                }
+                selectedStone.ChangeSpriteAndRot("Idle", isLocalRotated);
                 isDragging = false;
                 selectedStone = null;
                 return;
@@ -1050,15 +1024,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             if(!SpendCost(needCost))
             {
                 //Not enough cost for shooting
-                selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.GetSpriteState("Idle");
-                if (isLocalRotated)
-                {
-                    selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
-                }
-                else
-                {
-                    selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 0, 0);
-                }
+                selectedStone.ChangeSpriteAndRot("Idle", isLocalRotated);
                 isDragging = false;
                 selectedStone = null;
                 Debug.LogError("You have not enough cost for shooting stone!");
@@ -1071,15 +1037,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         }
 
         // 여기넣는게 맞는지 모름
-        selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.GetSpriteState("Idle");
-        if (isLocalRotated)
-        {
-            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
-        }
-        else
-        {
-            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 0, 0);
-        }
+        selectedStone.ChangeSpriteAndRot("Idle", isLocalRotated);
         isDragging = false;
 
         selectedStone = null;

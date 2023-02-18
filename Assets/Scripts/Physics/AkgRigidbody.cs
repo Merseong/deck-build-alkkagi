@@ -301,7 +301,7 @@ public class AkgRigidbody : MonoBehaviour
             if (velocity == Vector3.zero)
             {
                 StoneBehaviour stone = gameObject.GetComponent<StoneBehaviour>();
-                gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = stone.GetSpriteState("Idle");
+                gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = stone.GetSpriteState("Hit");
 
                 float randnum = UnityEngine.Random.Range(-30.0f, 30.0f);
                 if (GameManager.Inst.isLocalGoFirst)

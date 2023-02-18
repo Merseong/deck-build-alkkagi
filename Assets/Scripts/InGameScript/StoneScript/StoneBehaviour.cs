@@ -207,6 +207,15 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         return sprite;
     }
 
+    public virtual void ChangeSpriteAndRot(string state, bool isRotated)
+    {
+        transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = GetSpriteState(state);
+        if (isRotated)
+            transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
+        else
+            transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 0, 0);
+    }
+
     private bool CheckStoneDropByTransform()
     {
         if (isExiting) return true;
