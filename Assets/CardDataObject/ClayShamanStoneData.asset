@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ab37ca60595e43469bbcaf7f2d4c0a7, type: 3}
+  m_Name: ClayShamanStoneData
+  m_EditorClassIdentifier: 
+  cardID: 15
+  cardName: "\uC810\uD1A0 \uC8FC\uC220\uC0AC"
+  stoneSize: 2
+  stoneWeight: 0
+  cardCost: 3
+  inDeckNumber: 1
+  description: "\uD1F4\uC7A5: \uC810\uD1A0 \uC778\uD615 3\uAC1C\uB97C \uC190\uC5D0
+    \uB123\uC2B5\uB2C8\uB2E4."

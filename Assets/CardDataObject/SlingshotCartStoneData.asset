@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ab37ca60595e43469bbcaf7f2d4c0a7, type: 3}
+  m_Name: SlingshotCartStoneData
+  m_EditorClassIdentifier: 
+  cardID: 20
+  cardName: "\uC0C8\uCD1D\uCE74\uB4DC"
+  stoneSize: 2
+  stoneWeight: 1
+  cardCost: 3
+  inDeckNumber: 1
+  description: "\uD134\uC774 \uB05D\uB0A0 \uB54C, \uC190\uC5D0 \uC788\uB294 1 \uCF54\uC2A4\uD2B8
+    \uCE74\uB4DC \uD558\uB098\uB97C \uC804\uBC29\uC73C\uB85C \uBC1C\uC0AC\uD569\uB2C8\uB2E4."

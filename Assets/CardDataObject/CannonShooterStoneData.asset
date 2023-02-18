@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ab37ca60595e43469bbcaf7f2d4c0a7, type: 3}
+  m_Name: CannonShooterStoneData
+  m_EditorClassIdentifier: 
+  cardID: 4
+  cardName: "\uCE90\uB17C\uC288\uD130"
+  stoneSize: 1
+  stoneWeight: 1
+  cardCost: 2
+  inDeckNumber: 2
+  description: "\"\uCD94\uC9C4\uBCF4\uD638\uB9C9\", \uBC1C\uC0AC: \uBC1C\uC0AC \uBC18\uB300
+    \uBC29\uD5A5\uC73C\uB85C \uBB34\uAC8C 2\uBC30\uC758 \uD0C4\uD658\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4."

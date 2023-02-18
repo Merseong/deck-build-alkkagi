@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ab37ca60595e43469bbcaf7f2d4c0a7, type: 3}
+  m_Name: GraveKeeperStoneData
+  m_EditorClassIdentifier: 
+  cardID: 36
+  cardName: "\uBB34\uB364\uC9C0\uAE30"
+  stoneSize: 0
+  stoneWeight: 1
+  cardCost: 2
+  inDeckNumber: 2
+  description: "\uB4F1\uC7A5: \uD1F4\uC7A5\uD55C \uC544\uAD70 \uC2A4\uD1A4 \uD558\uB098\uB97C
+    \uBB34\uC791\uC704 \uC704\uCE58\uC5D0 \uB4F1\uC7A5\uC2DC\uD0B5\uB2C8\uB2E4."

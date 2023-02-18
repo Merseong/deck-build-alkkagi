@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ab37ca60595e43469bbcaf7f2d4c0a7, type: 3}
+  m_Name: PriestStoneData
+  m_EditorClassIdentifier: 
+  cardID: 11
+  cardName: "\uC0AC\uC81C"
+  stoneSize: 1
+  stoneWeight: 0
+  cardCost: 2
+  inDeckNumber: 3
+  description: "\uB4F1\uC7A5: \uAC00\uC7A5 \uAC00\uAE4C\uC6B4 \uC544\uAD70\uC5D0\uAC8C
+    \"\uBCF4\uD638\uB9C9\"\uC744 \uBD80\uC5EC\uD569\uB2C8\uB2E4."

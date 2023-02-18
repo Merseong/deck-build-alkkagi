@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ab37ca60595e43469bbcaf7f2d4c0a7, type: 3}
+  m_Name: AlchemistStoneData
+  m_EditorClassIdentifier: 
+  cardID: 8
+  cardName: "\uC5F0\uAE08\uC220\uC0AC"
+  stoneSize: 1
+  stoneWeight: 1
+  cardCost: 2
+  inDeckNumber: 2
+  description: "\uD134 \uC2DC\uC791 \uC2DC \uC0C1\uB300 \uC9C4\uC601\uC5D0 \uC788\uB2E4\uBA74,
+    \uCF54\uC2A4\uD2B8\uB97C 2 \uBC1B\uC2B5\uB2C8\uB2E4."
