@@ -42,8 +42,8 @@ public class GameManager : SingletonBehavior<GameManager>
     // 각자 턴의 제어
     // WAIT가 아닌 턴의 종료가 일어나는 PLAYER쪽에서 턴 변경 처리
     // 턴 시작 시 처리되어야하는 일 ex) UI, 코스트 증감, 드로우 등등
-    public event Action OnTurnStart = () => { };
-    public event Action OnTurnEnd = () => { };
+    public event Action OnTurnStart;
+    public event Action OnTurnEnd;
     public enum TurnState
     {
         PREPARE,
@@ -288,10 +288,7 @@ public class GameManager : SingletonBehavior<GameManager>
         {
             case TurnState.NORMAL:
             case TurnState.WAITFORHS:
-                LocalPlayer.DrawCards(1);
-                LocalPlayer.ResetCost();
-                LocalPlayer.ShootTokenAvailable = true;
-                LocalPlayer.InvokeTurnStart();
+                LocalPlayer.StartTurn();
                 break;
             default:
                 break;
@@ -304,10 +301,7 @@ public class GameManager : SingletonBehavior<GameManager>
         {
             case TurnState.NORMAL:
             case TurnState.WAITFORHS:
-                OppoPlayer.DrawCards(1);
-                OppoPlayer.ResetCost();
-                OppoPlayer.ShootTokenAvailable = true;
-                OppoPlayer.InvokeTurnStart();
+                OppoPlayer.StartTurn();
                 break;
             default:
                 break;
@@ -399,7 +393,7 @@ public class GameManager : SingletonBehavior<GameManager>
     {
         isTurnEndSent = false;
 
-        if (newTurnAction) OnTurnEnd();
+        if (newTurnAction) OnTurnEnd?.Invoke();
         // 상대 GameManager의 turn info 변경
         // 예시
         // SomeNetworkPacket result = await SendTurnInfo();
@@ -425,7 +419,7 @@ public class GameManager : SingletonBehavior<GameManager>
         UpdateTurnEndButtonText();
 
         // TurnState.NORMAL인경우만 내 턴을 시작
-        if (newTurnAction) OnTurnStart();
+        if (newTurnAction) OnTurnStart?.Invoke();
 
         lastTurn = Math.Max(lastTurn, totalTurn);
     }

@@ -65,11 +65,21 @@ public abstract class PlayerBehaviour : MonoBehaviour
         }
     }
 
-    public event Action OnTurnStart = () => { };
-    public event Action OnTurnEnd = () => { };
+    public event Action OnTurnStart;
+    public event Action OnTurnEnd;
 
-    public void InvokeTurnStart() => OnTurnStart();
-    public void InvokeTurnEnd() => OnTurnEnd();
+    public void StartTurn()
+    {
+        DrawCards(1);
+        ResetCost();
+        ResetShootToken();
+        OnTurnStart?.Invoke();
+    }
+
+    public void EndTurn()
+    {
+        OnTurnEnd?.Invoke();
+    }
 
     public virtual void InitPlayer(GameManager.PlayerEnum pEnum)
     {
@@ -91,6 +101,11 @@ public abstract class PlayerBehaviour : MonoBehaviour
         {
             GameManager.Inst.players[(int)Player] = this;
         });
+    }
+
+    public void ResetShootToken()
+    {
+        shootTokenAvailable = true;
     }
 
     #region UI actions
