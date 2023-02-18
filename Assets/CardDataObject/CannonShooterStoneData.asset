@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: 4
   cardName: "\uCE90\uB17C\uC288\uD130"
+  cardEngName: CannonShooter
   stoneSize: 1
   stoneWeight: 1
   cardCost: 2

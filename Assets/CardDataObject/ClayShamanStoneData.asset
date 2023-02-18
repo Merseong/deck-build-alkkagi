@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: 15
   cardName: "\uC810\uD1A0 \uC8FC\uC220\uC0AC"
+  cardEngName: ClayShaman
   stoneSize: 2
   stoneWeight: 0
   cardCost: 3

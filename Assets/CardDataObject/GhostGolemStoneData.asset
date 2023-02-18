@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: 2
   cardName: "\uC720\uB839\uACE8\uB818"
+  cardEngName: GhostGolem
   stoneSize: 2
   stoneWeight: 1
   cardCost: 3

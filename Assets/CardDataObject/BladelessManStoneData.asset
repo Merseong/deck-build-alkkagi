@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: 31
   cardName: "\uB0A0\uC5C6\uB294\uC120\uD48D\uAE30\uB9E8"
+  cardEngName: BladelessMan
   stoneSize: 0
   stoneWeight: 1
   cardCost: 1

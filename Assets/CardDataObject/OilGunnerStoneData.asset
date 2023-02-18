@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: 30
   cardName: "\uC8FC\uC720\uAC70\uB108"
+  cardEngName: OilGunner
   stoneSize: 1
   stoneWeight: 1
   cardCost: 2

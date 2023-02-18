@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: 19
   cardName: Knight
+  cardEngName: RailDriver
   stoneSize: 3
   stoneWeight: 1
   cardCost: 3

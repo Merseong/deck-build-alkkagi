@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: 29
   cardName: "\uCCB4\uB9AC \uC544\uC774\uC2A4\uD06C\uB9BC"
+  cardEngName: CherryIceCream
   stoneSize: 0
   stoneWeight: 0
   cardCost: 1

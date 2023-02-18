@@ -30,10 +30,17 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
  
     [Header("UI Component")]
     [SerializeField] RectTransform deckList;
+    [SerializeField] RectTransform deckUnlockPanel;
+    [SerializeField] Button deckUnlockCancelButton;
+    [SerializeField] TextMeshProUGUI deckUnlockInformText;
+    [SerializeField] TextMeshProUGUI unlockRequirementGoldText;
 
     private void Start()
     {
         Initiallize();
+        deckUnlockCancelButton.onClick.AddListener(()=>{
+            deckUnlockPanel.gameObject.SetActive(false);
+        });
     }
 
     private void Initiallize()
@@ -55,8 +62,9 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         //Selected deck is not available
         if(!isDeckAvailable[idx])
         {
+            deckUnlockInformText.text = "Will you unlock " + deckNames[idx] +"?";
             
-
+            deckUnlockPanel.gameObject.SetActive(true);
             return;
         }
 

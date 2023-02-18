@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: 11
   cardName: "\uC0AC\uC81C"
+  cardEngName: Priest
   stoneSize: 1
   stoneWeight: 0
   cardCost: 2

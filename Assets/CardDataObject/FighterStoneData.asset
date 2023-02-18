@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: 12
   cardName: "\uD30C\uC774\uD130"
+  cardEngName: Fighter
   stoneSize: 1
   stoneWeight: 1
   cardCost: 2

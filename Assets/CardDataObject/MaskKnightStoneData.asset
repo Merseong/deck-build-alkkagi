@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: 14
   cardName: "\uBCF5\uBA74\uAE30\uC0AC"
+  cardEngName: MaskKnight
   stoneSize: 1
   stoneWeight: 1
   cardCost: 2

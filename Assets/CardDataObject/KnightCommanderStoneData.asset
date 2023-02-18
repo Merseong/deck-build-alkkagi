@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: 25
   cardName: "\uAE30\uC0AC\uB2E8\uC7A5"
+  cardEngName: KnightCommander
   stoneSize: 3
   stoneWeight: 1
   cardCost: 7

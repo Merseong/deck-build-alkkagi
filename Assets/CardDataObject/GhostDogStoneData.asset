@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: 16
   cardName: "\uC720\uB839\uAC1C"
+  cardEngName: GhostDog
   stoneSize: 0
   stoneWeight: 1
   cardCost: 1

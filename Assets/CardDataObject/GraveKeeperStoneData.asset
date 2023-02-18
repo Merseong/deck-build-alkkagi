@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: 36
   cardName: "\uBB34\uB364\uC9C0\uAE30"
+  cardEngName: GraveKeeper
   stoneSize: 0
   stoneWeight: 1
   cardCost: 2

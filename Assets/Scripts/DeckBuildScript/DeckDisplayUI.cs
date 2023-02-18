@@ -32,11 +32,10 @@ public class DeckDisplayUI : MonoBehaviour
 
     public void SetActivation(bool value)
     {
-        Debug.Log(value);
         if(value)
         {
             selectButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Selected";
-            GetComponent<Image>().color = new Color(212/255, 255/255, 177/255, 1f);
+            GetComponent<Image>().color = new Color(212/255f, 255/255f, 177/255f, 1f);
         }
         else
         {

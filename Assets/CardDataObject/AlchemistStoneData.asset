@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: 8
   cardName: "\uC5F0\uAE08\uC220\uC0AC"
+  cardEngName: Alchemist
   stoneSize: 1
   stoneWeight: 1
   cardCost: 2

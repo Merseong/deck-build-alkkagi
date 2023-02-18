@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: 26
   cardName: "\uCF54\uBFD4\uB07C\uB9AC"
+  cardEngName: RhinoElephant
   stoneSize: 2
   stoneWeight: 1
   cardCost: 3
