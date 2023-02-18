@@ -113,7 +113,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         turnActionDic.Add(GameManager.TurnState.PREPARE, new Action<Vector3>[] { PrepareTouchBegin, PrepareInTouch, PrepareTouchEnd });
         turnActionDic.Add(GameManager.TurnState.WAIT, new Action<Vector3>[] { WaitTouchBegin, WaitInTouch, WaitTouchEnd });
-        turnActionDic.Add(GameManager.TurnState.WAITFORHS, new Action<Vector3>[] { WaitTouchBegin, WaitInTouch, WaitTouchEnd });
+        turnActionDic.Add(GameManager.TurnState.WAITFORHS, new Action<Vector3>[] { NormalTouchBegin, NormalInTouch, NormalTouchEnd });
         turnActionDic.Add(GameManager.TurnState.WAITFORHSCONSENT, new Action<Vector3>[] { WaitTouchBegin, WaitInTouch, WaitTouchEnd });
         turnActionDic.Add(GameManager.TurnState.NORMAL, new Action<Vector3>[] { NormalTouchBegin, NormalInTouch, NormalTouchEnd });
         turnActionDic.Add(GameManager.TurnState.HONORSKIP, new Action<Vector3>[] { HonorskipTouchBegin, HonorskipInTouch, HonorskipTouchEnd });
@@ -302,6 +302,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private void PlayCard(Card card, Vector3 nearbyPos)
     {
         // 끌어놓은 위치에 Stone 생성
+        GameManager.Inst.SetLocalDoAction();
         var stoneId = SpawnStone(card.CardData, nearbyPos);
         selectedCard = null;
         
@@ -357,7 +358,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 #if UNITY_EDITOR
         if (pauseEditorOnShoot) UnityEditor.EditorApplication.isPaused = true;
 #endif
-
+        GameManager.Inst.SetLocalDoAction();
         ShootTokenAvailable = false;
         selectedStone.ChangeSpriteAndRot("Shoot", IsLocalRotated);
         StartCoroutine(EShootStone(selectedStone));
