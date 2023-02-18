@@ -37,16 +37,12 @@ public class AkgRigidbody : MonoBehaviour
     private int collidableForecastLimit = 3;
     private List<int> collidedList;
 
-    public void Init(float initMass = -1)
+    public void Init() => Init(0, 1f);
+
+    public void Init(float initRadius, float initMass)
     {
-        if (initMass > 0)
-        {
-            mass = initMass;
-        }
-        if (mass < 0)
-        {
-            mass = 0;
-        }
+        mass = initMass;
+        circleRadius = initRadius;
         drag = AkgPhysics.movingDragAccleration;
 
         collidableList = new AkgRigidbody[collidableForecastLimit];

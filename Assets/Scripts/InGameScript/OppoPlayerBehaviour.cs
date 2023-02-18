@@ -39,8 +39,10 @@ public class OppoPlayerBehaviour : PlayerBehaviour
         //temp code
         spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = stoneBehaviour.GetSpriteState("Idle");
         spawnedStone.transform.GetChild(4).GetComponent<SpriteRenderer>().material.color = Color.red;
-        spawnedStone.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(cardData.stoneSize)*2, .15f, Util.GetRadiusFromStoneSize(cardData.stoneSize)*2);
-        spawnedStone.GetComponent<AkgRigidbody>().Init(Util.GetMassFromStoneWeight(cardData.stoneSize, cardData.stoneWeight));
+
+        var radius = Util.GetRadiusFromStoneSize(cardData.stoneSize);
+        spawnedStone.transform.localScale = new Vector3(radius * 2, .15f, radius * 2);
+        spawnedStone.GetComponent<AkgRigidbody>().Init(radius, Util.GetMassFromStoneWeight(cardData.stoneSize, cardData.stoneWeight));
 
         return newStoneId;
     }
@@ -83,7 +85,8 @@ public class OppoPlayerBehaviour : PlayerBehaviour
 
     public void SetCostHandValue(short cost, short hand)
     {
-        Cost = (ushort)cost;
-        HandCount = (ushort)hand;
+        this.cost = (ushort)cost;
+        this.handCount = (ushort)hand;
+        RefreshUI();
     }
 }

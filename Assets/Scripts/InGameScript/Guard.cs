@@ -21,7 +21,7 @@ public class Guard : MonoBehaviour, AkgRigidbodyInterface
         guardId = id;
         isBelongLocal = isLocal;
         akgRigidbody = GetComponent<AkgRigidbody>();
-        akgRigidbody.Init(1f);
+        akgRigidbody.Init();
         SetSide(isLocal);
     }
 

@@ -332,8 +332,10 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if (isLocalRotated)
             spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
         spawnedStone.transform.GetChild(4).GetComponent<SpriteRenderer>().material.color = Color.blue;
-        spawnedStone.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(cardData.stoneSize)*2, .15f, Util.GetRadiusFromStoneSize(cardData.stoneSize)*2);
-        spawnedStone.GetComponent<AkgRigidbody>().Init(Util.GetMassFromStoneWeight(cardData.stoneSize, cardData.stoneWeight));
+
+        var radius = Util.GetRadiusFromStoneSize(cardData.stoneSize);
+        spawnedStone.transform.localScale = new Vector3(radius * 2, .15f, radius * 2);
+        spawnedStone.GetComponent<AkgRigidbody>().Init(radius, Util.GetMassFromStoneWeight(cardData.stoneSize, cardData.stoneWeight));
 
         return newStoneId;
     }
