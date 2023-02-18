@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 
 [System.Serializable]
 public class RPS
@@ -111,9 +112,9 @@ public static class Util
         }
     }
     
-    public static Sprite GetSpriteState(CardData cardData, string state)
+    public static Sprite GetSpriteState(CardData cardData, string state, SpriteAtlas stoneAtlas)
     {
-        Sprite sprite = GameManager.Inst.stoneAtlas.GetSprite(cardData.cardName + "_" + state);
+        Sprite sprite = stoneAtlas.GetSprite(cardData.cardName + "_" + state);
         while (sprite == null)
         {
             switch (state)
@@ -127,10 +128,9 @@ public static class Util
                     state = "Shoot";
                     break;
                 default:
-                    state = "Idle";
-                    break;
+                    return null;
             }
-            sprite = GameManager.Inst.stoneAtlas.GetSprite(cardData.cardName + "_" + state);
+            sprite = stoneAtlas.GetSprite(cardData.cardName + "_" + state);
         }
         return sprite;
     }

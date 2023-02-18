@@ -15,7 +15,7 @@ public class InformationPanel : MonoBehaviour
 
     public void SetInformation(CardData data)
     {
-        Sprite.sprite = Util.GetSpriteState(data, "Idle");
+        Sprite.sprite = Util.GetSpriteState(data, "Idle", GameManager.Inst.stoneAtlas);
         cardSize.text = data.stoneSize.ToString();
         cardWeight.text = data.stoneWeight.ToString();
         cardDescription.text = data.description.ToString();

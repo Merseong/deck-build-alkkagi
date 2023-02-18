@@ -787,7 +787,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private void CardDragAction_Begin()
     {
-        stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = Util.GetSpriteState(selectedCard.CardData,"Idle");
+        stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = Util.GetSpriteState(selectedCard.CardData,"Idle", GameManager.Inst.stoneAtlas);
         if (isLocalRotated)
             stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
         stoneGhost.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize) *2, .15f, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize)*2);
