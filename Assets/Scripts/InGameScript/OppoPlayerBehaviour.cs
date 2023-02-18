@@ -39,6 +39,8 @@ public class OppoPlayerBehaviour : PlayerBehaviour
         //temp code
         spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = stoneBehaviour.GetSpriteState("Idle");
         spawnedStone.transform.GetChild(4).GetComponent<SpriteRenderer>().material.color = Color.red;
+        if(GameManager.Inst.isLocalGoFirst)
+            spawnedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
 
         var radius = Util.GetRadiusFromStoneSize(cardData.stoneSize);
         spawnedStone.transform.localScale = new Vector3(radius * 2, .15f, radius * 2);

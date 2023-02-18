@@ -800,6 +800,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if (isLocalRotated)
             stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
         stoneGhost.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize) *2, .15f, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize)*2);
+        stoneGhost.transform.GetChild(4).GetComponent<SpriteRenderer>().material.color = Color.blue;
 
         IngameUIManager.Inst.CostPanel.CostEmphasize(selectedCard.CardData.cardCost);
     }
@@ -942,7 +943,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             Transform putMarkTransform = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
             if(putMarkTransform != null)
             {                
-                putMarkTransform.GetComponent<SpriteRenderer>().material.color = Color.red;
+                putMarkTransform.GetComponent<SpriteRenderer>().material.color = Color.blue;
                 stoneGhost.transform.position = putMarkTransform.position;
             }
         }
