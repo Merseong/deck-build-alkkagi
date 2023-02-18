@@ -55,10 +55,14 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
     public RectTransform SettingPanel => settingPanel;
     [SerializeField] private Button optionButton;
 
+    [SerializeField] private TextMeshProUGUI enemyCostText;
+    [SerializeField] private Image enemyTokenImage;
+
     [SerializeField] private RectTransform enemyInfoPanel;
     public RectTransform EnemyInfoPanel => enemyInfoPanel;
     [SerializeField] private Button enemyInfoButton;
     [SerializeField] private Button enemyInfoPanelButton;
+    [SerializeField] private TextMeshProUGUI enemyInfoDeckHandText;
 
     [SerializeField] private RectTransform resultPanel;
     public RectTransform ResultPanel => resultPanel;
@@ -66,8 +70,8 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
     private void Start()
     {
         enemyInfoButton.onClick.AddListener(() => {
-            ActivateUI(enemyInfoPanel);
-            SetEnemyInfoPanel();
+            ActivateUI(enemyInfoPanel, true);
+            SetEnemyData(GameManager.Inst.OppoPlayer as OppoPlayerBehaviour);
         });
 
         enemyInfoPanelButton.onClick.AddListener(() => {
@@ -81,14 +85,27 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
 
         BlurImageButton.onClick.AddListener(() => {
             DeactivateUI();
-
         });
     }
 
-    public void ActivateUI(RectTransform rect)
+    public void ActivateUI(RectTransform rect, bool useToggle = false)
     {
-        currentActivatedUI.Add(rect);
-        rect.gameObject.SetActive(true);
+        if (useToggle)
+        {
+            if (rect.gameObject.activeSelf)
+            {
+                DeactivateUI(rect);
+            }
+            else
+            {
+                ActivateUI(rect);
+            }
+        }
+        else
+        {
+            currentActivatedUI.Add(rect);
+            rect.gameObject.SetActive(true);
+        }
     }
 
     public void DeactivateUI()
@@ -121,11 +138,26 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
         //TODO : Set result from gamemanager's data
     }
 
-    private void SetEnemyInfoPanel()
+    /// <summary>
+    /// 한번만 설정하면 되는 정보들
+    /// </summary>
+    /// <param name="enemyPlayer"></param>
+    public void SetEnemyInfo(OppoPlayerBehaviour enemyPlayer)
     {
-        //TODO : Set enemy info from gagmemanager's data
-        EnemyInfoPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Deck : " + " / Hand : " + GameManager.Inst.OppoPlayer.HandCount;
         //닉네임
         //승패전적
+    }
+
+    /// <summary>
+    /// 지속적인 갱신이 필요한 데이터들 (핸드, 덱, 코스트 등)
+    /// </summary>
+    /// <param name="enemyPlayer"></param>
+    public void SetEnemyData(OppoPlayerBehaviour enemyPlayer)
+    {
+        //TODO : Set enemy info from gagmemanager's data
+        enemyInfoDeckHandText.text = $"Deck: {enemyPlayer.DeckCount} / Hand: {enemyPlayer.HandCount}";
+        enemyCostText.text = enemyPlayer.Cost.ToString();
+        ColorUtility.TryParseHtmlString(enemyPlayer.ShootTokenAvailable ? "#C0FFBD" : "#FF8D91", out Color color);
+        enemyTokenImage.color = color;
     }
 }

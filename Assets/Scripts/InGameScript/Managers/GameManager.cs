@@ -93,8 +93,8 @@ public class GameManager : SingletonBehavior<GameManager>
         set => nextTurnStates[1] = value;
     }
 
-    public int initialTurnCost = 6;
-    public int normalTurnCost = 3;
+    public ushort initialTurnCost = 6;
+    public ushort normalTurnCost = 3;
 
     public void Start()
     {

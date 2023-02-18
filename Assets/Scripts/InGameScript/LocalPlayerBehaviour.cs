@@ -26,23 +26,6 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     public bool IsLocalRotated => isLocalRotated;
     private int maxHandSize = 7;
 
-    [SerializeField] private int deckCount;
-    protected int DeckCount
-    {
-        get => deckCount;
-        set
-        {
-            if (value < 0)
-                Debug.LogError("Deck Count can't be negative!");
-
-            if (IngameUIManager.Inst.DeckCountText != null)
-            {
-                IngameUIManager.Inst.DeckCountText.text = value.ToString();
-            }
-            deckCount = value;
-        }
-    }
-
     // 이거는 상황 봐서 액션 자체에 대한 클래스를 만들어서 HistoryAction 클래스랑 합칠 수도 있음
     private delegate void ActionDelegate();
     [SerializeField] private ActionDelegate actionQueue;
@@ -147,6 +130,19 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         stoneGhost.SetActive(false);
     }
 
+    public override void RefreshUI()
+    {
+        base.RefreshUI();
+
+        IngameUIManager.Inst.CostPanel.SetCost(Cost);
+        // TODO: 현재 표시부분 없어서 주석처리
+        //IngameUIManager.Inst.HandCountText.text = HandCount.ToString();
+        IngameUIManager.Inst.DeckCountText.text = DeckCount.ToString();
+
+        ColorUtility.TryParseHtmlString(ShootTokenAvailable ? "#C0FFBD" : "#FF8D91", out Color color);
+        IngameUIManager.Inst.ShootTokenImage.color = color;
+    }
+
     private bool IsTouchOnBoard(Vector3 point)
     {
         Ray ray = Camera.main.ScreenPointToRay(point);
@@ -231,14 +227,14 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             SetOriginOrder();
         }
         ArrangeHand(true);
-        HandCount = hand.Count;
-        DeckCount = deck.Count;
+        HandCount = (ushort)hand.Count;
+        DeckCount = (ushort)deck.Count;
     }
 
     protected override void RemoveCards(int idx)
     {
         base.RemoveCards(idx);
-        // 나중에 Playcard에 있는 카드 컨트롤 부분 옮기던가
+        // TODO: 나중에 Playcard에 있는 카드 컨트롤 부분 옮기던가
     }
 
     private void SetOriginOrder()
@@ -311,6 +307,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         {
             return -1;
         }
+        
+        // TODO: 코스트 소모를 여기서 하는게 아님??
 
         //FIXME : 카드에 맞는 스톤을 런타임에 생성해줘야 함
         GameObject spawnedStone = Instantiate(StonePrefab, spawnPosition, Quaternion.identity);

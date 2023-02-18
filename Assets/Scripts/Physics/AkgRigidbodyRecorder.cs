@@ -49,7 +49,7 @@ public class AkgRigidbodyRecorder
         eventRecords.Add(eventRecord);
     }
 
-    public IEnumerator EPlayRecord(ShootStonePacket records)
+    public IEnumerator EPlayRecord(StoneActionPacket records)
     {
         isPlaying = true;
         var vRecords = records.velocityRecords;
@@ -75,16 +75,29 @@ public class AkgRigidbodyRecorder
             }
             while (erIdx < eRecords.Length && eRecords[erIdx].time <= Time.time - startTime)
             {
-                switch (eRecords[erIdx].eventEnum)
+                var eventRec = eRecords[erIdx];
+                switch (eventRec.eventEnum)
                 {
+                    case EventEnum.SPENDTOKEN:
+                        if (!GameManager.Inst.OppoPlayer.ShootTokenAvailable)
+                        {
+                            Debug.LogError("[OPPO] Shoot token already spent!");
+                        }
+                        GameManager.Inst.OppoPlayer.ShootTokenAvailable = false;
+                        break;
                     case EventEnum.GUARDCOLLIDE:
                         // stoneId => 충돌한 guard의 번호
-                        GameManager.Inst.GameBoard.RemoveGuard(eRecords[erIdx].stoneId);
+                        GameManager.Inst.GameBoard.RemoveGuard(eventRec.stoneId);
                         break;
                     case EventEnum.DROPOUT:
-                        var stone = GameManager.Inst.FindStone(eRecords[erIdx].stoneId);
-                        stone.transform.position = new Vector3(eRecords[erIdx].xPosition, 0, eRecords[erIdx].zPosition);
+                        var stone = GameManager.Inst.FindStone(eventRec.stoneId);
+                        stone.transform.position = new Vector3(eventRec.xPosition, 0, eventRec.zPosition);
                         stone.isExitingByPlaying = true;
+                        break;
+                    case EventEnum.POWER:
+                        // 돌의 각자 특성상의 action
+                        break;
+                    default:
                         break;
                 }
                 erIdx++;
@@ -135,7 +148,7 @@ public class AkgRigidbodyRecorder
         _velocityRecords.Sort((n1, n2) => n1.time.CompareTo(n2.time));
         _eventRecords.Sort((n1, n2) => n1.time.CompareTo(n2.time));
 
-        var data = new ShootStonePacket
+        var data = new StoneActionPacket
         {
             senderID = NetworkManager.Inst.NetworkId,
             velocityRecords = _velocityRecords.ToArray(),
@@ -155,7 +168,7 @@ public class AkgRigidbodyRecorder
     {
         if (packet.Type != (short)PacketType.ROOM_OPPO_SHOOTSTONE) return;
 
-        var msg = ShootStonePacket.Deserialize(packet.Data);
+        var msg = StoneActionPacket.Deserialize(packet.Data);
 
         msg.velocityRecords = msg.velocityRecords[..msg.velocityCount];
         msg.positionRecords = msg.positionRecords[..msg.positionCount];

@@ -12,34 +12,42 @@ public abstract class PlayerBehaviour : MonoBehaviour
     [SerializeField] private GameManager.PlayerEnum player;
     public GameManager.PlayerEnum Player => player;
 
-    [SerializeField] protected int cost;
-    public int Cost
+    [SerializeField] protected ushort cost;
+    public ushort Cost
     {
         get => cost;
 
-        private set
+        protected set
         {
             if (value < 0)
                 Debug.LogError("Cost is less than 0! Fix this!");
 
-            IngameUIManager.Inst.CostPanel.SetCost(value);
+            RefreshUI();
             cost = value;
         }
     }
 
-    [SerializeField] private int handCount;
-    public int HandCount
+    [SerializeField] private ushort deckCount;
+    public ushort DeckCount
+    {
+        get => deckCount;
+        protected set
+        {
+            RefreshUI();
+            deckCount = value;
+        }
+    }
+
+    [SerializeField] private ushort handCount;
+    public ushort HandCount
     {
         get => handCount;
-        set
+        protected set
         {
             if (value < 0)
                 Debug.LogError("Hand Count is less than 0! Fix this!");
 
-            if (IngameUIManager.Inst.HandCountText != null)
-            {
-                IngameUIManager.Inst.HandCountText.text = value.ToString();
-            }
+            RefreshUI();
             handCount = value;
         }
     }
@@ -54,10 +62,8 @@ public abstract class PlayerBehaviour : MonoBehaviour
         get => shootTokenAvailable;
         set
         {
+            RefreshUI();
             shootTokenAvailable = value;
-
-            ColorUtility.TryParseHtmlString(value ? "#C0FFBD" : "#FF8D91", out Color color);
-            IngameUIManager.Inst.ShootTokenImage.color = color;
         }
     }
 
@@ -86,13 +92,18 @@ public abstract class PlayerBehaviour : MonoBehaviour
         });
     }
 
+    #region UI actions
+    public virtual void RefreshUI() { }
+    #endregion
+
     #region Cost functions
 
     ///<summary>
     ///return true when succesfully spend costs<br></br>return false when current cost is less then parameter
     ///</summary>
     ///<param name = "used">Cost to spend</param>
-    protected bool SpendCost(int used)
+    protected bool SpendCost(int used) => SpendCost((ushort)used);
+    protected bool SpendCost(ushort used)
     {
         if(Cost < used) return false;
         Cost -= used;
@@ -104,7 +115,7 @@ public abstract class PlayerBehaviour : MonoBehaviour
         if (resetTo > 0)
         {
             IngameUIManager.Inst.CostPanel.ResetCost(resetTo);
-            Cost = resetTo;
+            Cost = (ushort)resetTo;
         }
         else if (GameManager.Inst.TurnCount == 0)
         {
@@ -123,7 +134,8 @@ public abstract class PlayerBehaviour : MonoBehaviour
     #region Card functions
     public virtual void DrawCards(int number)
     {
-        HandCount += number;
+        HandCount += (ushort)number;
+        DeckCount -= (ushort)number;
     }
 
     protected virtual void RemoveCards(int idx)
