@@ -56,6 +56,9 @@ public class AkgRigidbodyRecorder
         var pRecords = records.positionRecords;
         var eRecords = records.eventRecords;
 
+        (GameManager.Inst.OppoPlayer as OppoPlayerBehaviour).SetCostHandValue(records.finalCost, records.finalHand);
+
+
         yield return null;
         // play vRecords, eRecords
         var startTime = Time.time;
@@ -79,6 +82,7 @@ public class AkgRigidbodyRecorder
                 switch (eventRec.eventEnum)
                 {
                     case EventEnum.SPENDTOKEN:
+                        // stoneId => 토큰을 사용한 stone의 번호
                         if (!GameManager.Inst.OppoPlayer.ShootTokenAvailable)
                         {
                             Debug.LogError("[OPPO] Shoot token already spent!");
@@ -151,12 +155,17 @@ public class AkgRigidbodyRecorder
         var data = new StoneActionPacket
         {
             senderID = NetworkManager.Inst.NetworkId,
+
             velocityRecords = _velocityRecords.ToArray(),
             positionRecords = _positionRecords.ToArray(),
             eventRecords = _eventRecords.ToArray(),
+
             velocityCount = (short)_velocityRecords.Count,
             positionCount = (short)_positionRecords.Count,
             eventCount = (short)_eventRecords.Count,
+
+            finalCost = (short)GameManager.Inst.LocalPlayer.Cost,
+            finalHand = (short)GameManager.Inst.LocalPlayer.HandCount,            
         };
 
         NetworkManager.Inst.SendData(data, PacketType.ROOM_OPPO_SHOOTSTONE);

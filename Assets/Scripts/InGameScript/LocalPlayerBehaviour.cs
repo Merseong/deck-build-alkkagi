@@ -358,17 +358,26 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if (pauseEditorOnShoot) UnityEditor.EditorApplication.isPaused = true;
 #endif
 
-        StartCoroutine(EShootStone());
-
-        selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.GetSpriteState("Shoot");
-        selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);
         ShootTokenAvailable = false;
+        selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = selectedStone.GetSpriteState("Shoot");
+        StartCoroutine(EShootStone(selectedStone));
+        selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);
     }
 
-    private IEnumerator EShootStone()
+    private IEnumerator EShootStone(StoneBehaviour firedStone)
     {
         var recorder = AkgPhysicsManager.Inst.rigidbodyRecorder;
         recorder.StartRecord(Time.time);
+        
+        if (!ShootTokenAvailable)
+        {
+            recorder.AppendEventRecord(new EventRecord
+            {
+                time = Time.time,
+                stoneId = firedStone.StoneId,
+                eventEnum = EventEnum.SPENDTOKEN,
+            });
+        }
 
         yield return null;
         bool isAllStoneStop = false;

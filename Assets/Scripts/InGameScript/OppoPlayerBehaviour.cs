@@ -80,4 +80,10 @@ public class OppoPlayerBehaviour : PlayerBehaviour
         base.RefreshUI();
         IngameUIManager.Inst.SetEnemyData(this);
     }
+
+    public void SetCostHandValue(short cost, short hand)
+    {
+        Cost = (ushort)cost;
+        HandCount = (ushort)hand;
+    }
 }
