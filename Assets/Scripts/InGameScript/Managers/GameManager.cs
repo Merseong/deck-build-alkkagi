@@ -499,7 +499,11 @@ public class GameManager : SingletonBehavior<GameManager>
             nextTurnStates[(int)SecondPlayer] = TurnState.WAITFORHS;
             TurnInfoSendNetworkAction();
             yield return new WaitUntil(() => turnStates[(int)FirstPlayer] == TurnState.NORMAL);
-            // 4 | NORMAL | *
+            // 4 | NORMAL | WAIT or HS
+            if (turnStates[(int)SecondPlayer] == TurnState.HONORSKIP)
+            {
+                SetHSPlayer(OppoPlayer);
+            }
         }
         else // 선공이 아무 행동 안하고 턴종시 HS
         {
@@ -518,31 +522,6 @@ public class GameManager : SingletonBehavior<GameManager>
             {
                 SetHSPlayer(LocalPlayer);
             } 
-        }
-
-        yield return new WaitUntil(() => totalTurn == nextTotalTurn); 
-        // 세가지 상황이 존재
-        // 4 | NORMAL | WAIT : 선공의 HS or 선공 후공 다 HS안함
-        // 4 | NORMAL | HS : 선공 HS안함 -> 후공 HS
-        // 2 | NORMAL | WAIT : 했다가 거부당함
-
-        if (totalTurn == 2)
-        {
-            // 내 2턴을 진행
-            isTurnEnded = false;
-            yield return new WaitUntil(() => isTurnEnded);
-            nextTotalTurn = 3;
-            nextTurnStates[(int)FirstPlayer] = TurnState.WAIT;
-            nextTurnStates[(int)SecondPlayer] = TurnState.WAITFORHS;
-            TurnInfoSendNetworkAction();
-        }
-
-        yield return new WaitUntil(() => totalTurn == 4);
-
-        // 후공(==상대방)의 HS
-        if (turnStates[(int)SecondPlayer] == TurnState.HONORSKIP)
-        {
-            SetHSPlayer(OppoPlayer);
         }
 
         isInHonorSkipRoutine = false;
@@ -586,11 +565,9 @@ public class GameManager : SingletonBehavior<GameManager>
                 // 후공이 동작 없이 턴종함 == 선공의 HS를 거부 -> 선공은 다시 2턴 진행
             }
         }
-        yield return new WaitUntil(() => totalTurn >= 3);
-
-        // 후공의 HS가 가능한 상황 ( 3 | WAIT | WAITFORHS )
-        if (turnStates[(int)SecondPlayer] == TurnState.WAITFORHS)
+        else if (turnStates[(int)SecondPlayer] == TurnState.WAITFORHS)
         {
+            // 후공의 HS가 가능한 상황 ( 3 | WAIT | WAITFORHS )
             isTurnEnded = false;
             yield return new WaitUntil(() => isTurnEnded);
 
