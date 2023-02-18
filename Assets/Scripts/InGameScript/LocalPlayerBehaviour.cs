@@ -622,7 +622,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         if (selectedCard != null)
         {
-            if ((dragStartPoint - curTouchPositionNormalized).magnitude < cardDragThreshold)
+            if ((dragStartPoint - curTouchPositionNormalized).magnitude <= cardDragThreshold)
             {
                 CardSelectionAction();
             }
@@ -682,7 +682,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         if (selectedCard != null)
         {
-            if ((dragStartPoint - curTouchPositionNormalized).magnitude < cardDragThreshold)
+            if ((dragStartPoint - curTouchPositionNormalized).magnitude <= cardDragThreshold)
             {
                 CardSelectionAction();
                 return;
@@ -735,7 +735,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         if (selectedCard != null)
         {
-            if ((dragStartPoint - curTouchPositionNormalized).magnitude < cardDragThreshold)
+            if ((dragStartPoint - curTouchPositionNormalized).magnitude <= cardDragThreshold)
             {
                 CardSelectionAction();
                 return;
@@ -1085,6 +1085,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         SetInformPanel(selectedCard.CardData);
         IngameUIManager.Inst.ActivateUI(informPanel.GetComponent<RectTransform>());
         GameManager.Inst.GameBoard.UnhightlightPossiblePos();
+        ArrangeHand(false);
     }
 
     #endregion InputActionSet

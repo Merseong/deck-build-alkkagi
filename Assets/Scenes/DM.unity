@@ -734,6 +734,10 @@ PrefabInstance:
       propertyPath: gameBoard
       value: 
       objectReference: {fileID: 1500342745}
+    - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: cardDragThreshold
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
