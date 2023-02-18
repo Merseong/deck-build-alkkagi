@@ -67,9 +67,6 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     public List<StoneProperty> Properties { get; private set; }
 
-    // temp:
-    [SerializeField] private GameObject enemySign;
-
     private void Awake()
     {
         boardTransform = GameObject.Find("Board").transform;
@@ -150,13 +147,11 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         {
             akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.LOCALSTONE;
             OnEnter();
-            enemySign.SetActive(false);
         }
         else
         {
             akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.OPPOSTONE;
             // oppo stone의 경우, 이후 추가 action을 수신하면 그때 OnEnter를 호출한다.
-            enemySign.SetActive(true);
         }
     }
 
