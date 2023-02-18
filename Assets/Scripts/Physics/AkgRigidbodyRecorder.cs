@@ -49,6 +49,14 @@ public class AkgRigidbodyRecorder
         eventRecords.Add(eventRecord);
     }
 
+    public void SendEventOnly(EventRecord eventRecord)
+    {
+        StartRecord(Time.time);
+        AppendEventRecord(eventRecord);
+        EndRecord(out _, out var eventRecs);
+        SendRecord(new List<VelocityRecord>(), eventRecs);
+    }
+
     public IEnumerator EPlayRecord(StoneActionPacket records)
     {
         isPlaying = true;
@@ -57,7 +65,6 @@ public class AkgRigidbodyRecorder
         var eRecords = records.eventRecords;
 
         (GameManager.Inst.OppoPlayer as OppoPlayerBehaviour).SetCostHandValue(records.finalCost, records.finalHand);
-
 
         yield return null;
         // play vRecords, eRecords
@@ -78,6 +85,7 @@ public class AkgRigidbodyRecorder
             }
             while (erIdx < eRecords.Length && eRecords[erIdx].time <= Time.time - startTime)
             {
+                StoneBehaviour stone;
                 var eventRec = eRecords[erIdx];
                 switch (eventRec.eventEnum)
                 {
@@ -94,12 +102,14 @@ public class AkgRigidbodyRecorder
                         GameManager.Inst.GameBoard.RemoveGuard(eventRec.stoneId);
                         break;
                     case EventEnum.DROPOUT:
-                        var stone = GameManager.Inst.FindStone(eventRec.stoneId);
+                        stone = GameManager.Inst.FindStone(eventRec.stoneId);
                         stone.transform.position = new Vector3(eventRec.xPosition, 0, eventRec.zPosition);
                         stone.isExitingByPlaying = true;
                         break;
                     case EventEnum.POWER:
                         // 돌의 각자 특성상의 action
+                        stone = GameManager.Inst.FindStone(eventRec.stoneId);
+                        stone.ParseActionString(eventRec.eventMessage);
                         break;
                     default:
                         break;
@@ -109,18 +119,11 @@ public class AkgRigidbodyRecorder
         }
 
         // check pRecords and current stones
-        bool isAllStoneStop = false;
-
-        while (!isAllStoneStop)
+        yield return new WaitUntil(() =>
         {
-            yield return new WaitUntil(() =>
-            {
-                return GameManager.Inst.AllStones.Count == 0 ||
-                    GameManager.Inst.AllStones.Values.All(x => !x.isMoving);
-            });
-
-            isAllStoneStop = true;
-        }
+            return GameManager.Inst.AllStones.Count == 0 ||
+                GameManager.Inst.AllStones.Values.All(x => !x.isMoving);
+        });
 
         for (var prIdx = 0; prIdx < pRecords.Length; ++prIdx)
         {

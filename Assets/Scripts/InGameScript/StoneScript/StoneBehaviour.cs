@@ -135,7 +135,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
                 xPosition = transform.position.x,
                 zPosition = transform.position.z,
             });
-
+        OnExit();
         GameManager.Inst.players[(int)BelongingPlayer].RemoveStone(stoneId);
         akgRigidbody.SetDrag(0);
         akgRigidbody.BeforeDestroy();
@@ -149,14 +149,18 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         if (BelongingPlayer == GameManager.PlayerEnum.LOCAL)
         {
             akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.LOCALSTONE;
+            OnEnter();
             enemySign.SetActive(false);
         }
         else
         {
             akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.OPPOSTONE;
+            // oppo stone의 경우, 이후 추가 action을 수신하면 그때 OnEnter를 호출한다.
             enemySign.SetActive(true);
         }
     }
+
+    public virtual void ParseActionString(string actionStr) { }
 
     #region Stone Properties
 

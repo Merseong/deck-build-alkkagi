@@ -36,7 +36,7 @@ public abstract class PlayerBehaviour : MonoBehaviour
         }
     }
 
-    [SerializeField] private ushort handCount;
+    [SerializeField] protected ushort handCount;
     public ushort HandCount
     {
         get => handCount;
