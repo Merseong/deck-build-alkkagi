@@ -37,7 +37,7 @@ public class OppoPlayerBehaviour : PlayerBehaviour
         stoneBehaviour.SetCardData(cardData, newStoneId, Player);
 
         //temp code
-        stoneBehaviour.ChangeSpriteAndRot("Idle", GameManager.Inst.isLocalGoFirst);
+        stoneBehaviour.ChangeSpriteAndRot("Idle", !GameManager.Inst.isLocalGoFirst);
         spawnedStone.transform.GetChild(3).GetComponent<SpriteRenderer>().material.color = Color.red;
 
         var radius = Util.GetRadiusFromStoneSize(cardData.stoneSize);

@@ -270,6 +270,26 @@ public class GameManager : SingletonBehavior<GameManager>
         //SceneManager.LoadScene(2); // load result scene
     }
 
+
+    private void UpdateTurnEndButtonText(TurnState turnState,bool isLocal)
+    {
+        switch (turnState)
+        {
+            case TurnState.NORMAL:
+                IngameUIManager.Inst.TurnEndButtonText.text = isLocal ? "Turn End" : "Oppo Turn";
+                break;
+            case TurnState.PREPARE:
+                IngameUIManager.Inst.TurnEndButtonText.text = isLocal ? "Batch End" : "Oppo Batch";  
+                break;
+            case TurnState.WAITFORHS:
+            case TurnState.WAITFORHSCONSENT:
+                IngameUIManager.Inst.TurnEndButtonText.text = isLocal ? "HonorWait" : "HonorWait";
+                break;
+            defalut:
+                break;
+        }
+    }
+
     private void StartTurnBasis()
     {
         switch (LocalTurnState)
@@ -284,6 +304,7 @@ public class GameManager : SingletonBehavior<GameManager>
             default:
                 break;
         }
+        UpdateTurnEndButtonText(LocalTurnState, true);
     }
 
     private void OppoStartTurnBasis()
@@ -299,6 +320,7 @@ public class GameManager : SingletonBehavior<GameManager>
             default:
                 break;
         }
+        UpdateTurnEndButtonText(OppoTurnState, false);
     }
 
     /// <remarks>
@@ -416,28 +438,25 @@ public class GameManager : SingletonBehavior<GameManager>
             case 0:
                 nextTurnStates[(int)FirstPlayer] = TurnState.WAIT;
                 nextTurnStates[(int)SecondPlayer] = TurnState.PREPARE;
-                IngameUIManager.Inst.TurnEndButtonText.text = !isLocalGoFirst ? "Batch End" : "Oppo Batch";
                 nextTotalTurn++;
                 break;
             // 준비턴 후공 종료시
             case 1:
                 nextTurnStates[(int)FirstPlayer] = TurnState.WAITFORHS;
                 nextTurnStates[(int)SecondPlayer] = TurnState.WAITFORHS;
-                IngameUIManager.Inst.TurnEndButtonText.text = isLocalGoFirst ? "Honor Skip" : "Wait";
+ 
                 nextTotalTurn++;
                 break;
             // 2: 1턴 선공 (HS or FNORMAL)
             case 2:
                 nextTurnStates[(int)FirstPlayer] = TurnState.WAIT;
                 nextTurnStates[(int)SecondPlayer] = TurnState.WAITFORHS;
-                IngameUIManager.Inst.TurnEndButtonText.text = !isLocalGoFirst ? "Honor Skip" : "Wait";
                 nextTotalTurn++;
                 break;
             // 3: 1턴 후공 (HS or normal)
             case 3:
                 LocalNextTurnState = TurnState.WAIT;
                 OppoNextTurnState = TurnState.NORMAL;
-                IngameUIManager.Inst.TurnEndButtonText.text = "Oppo Turn";
                 nextTotalTurn++;
                 break;
             // 4~: 2턴 이후
@@ -446,13 +465,11 @@ public class GameManager : SingletonBehavior<GameManager>
                 {
                     LocalNextTurnState = TurnState.WAIT;
                     OppoNextTurnState = TurnState.NORMAL;
-                    IngameUIManager.Inst.TurnEndButtonText.text = "Oppo Turn";
                 }
                 else
                 {
                     LocalNextTurnState = TurnState.NORMAL;
                     OppoNextTurnState = TurnState.WAIT;
-                    IngameUIManager.Inst.TurnEndButtonText.text = "Turn End";
                 }
                 nextTotalTurn++;
                 break;
