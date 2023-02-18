@@ -7,6 +7,7 @@ public class CycloneStoneBehaviour : StoneBehaviour
     public override void OnEnter()
     {
         ApplySprint();
+
         AkgPhysicsManager.Inst.rigidbodyRecorder.SendEventOnly(new EventRecord
         {
             eventEnum = EventEnum.POWER,
@@ -30,7 +31,7 @@ public class CycloneStoneBehaviour : StoneBehaviour
         PlayerBehaviour player = GameManager.Inst.players[(int)BelongingPlayer];
         foreach (StoneBehaviour stone in player.Stones.Values)
         {
-            if (SprintProperty.IsAvailable(stone))
+            if (stone != this)
                 stone.AddProperty(new SprintProperty(stone));
         }
     }

@@ -4,36 +4,25 @@ using UnityEngine;
 
 public class SprintProperty : StoneProperty
 {
-    public static bool IsAvailable(StoneBehaviour stone)
-    {
-        foreach (StoneProperty property in stone.Properties)
-        {
-            if (property as SprintProperty != null)
-                return false;
-        }
-
-        return true;
-    }
-
     private bool canSprint = true;
 
-    public SprintProperty(StoneBehaviour stone, int count = -1) : base(stone, count) { }
+    public SprintProperty(StoneBehaviour stone, int turn = -1) : base(stone, turn) { }
 
-    public override void OnAdded()
+    public override void OnAdded(bool isReplaced = false)
     {
-        base.OnAdded();
+        base.OnAdded(isReplaced);
 
         GameManager.Inst.GetPlayer(baseStone.BelongingPlayer).OnTurnStart += ResetCanSprint;
     }
 
-    public override void OnRemoved()
+    public override void OnRemoved(bool isReplaced = false)
     {
-        base.OnRemoved();
+        base.OnRemoved(isReplaced);
 
         GameManager.Inst.GetPlayer(baseStone.BelongingPlayer).OnTurnStart -= ResetCanSprint;
     }
 
-    public override bool CanSprint(bool value) { return canSprint || value; }
+    public override bool CanSprint(bool value) { return value || canSprint; }
 
     private void ResetCanSprint()
     {

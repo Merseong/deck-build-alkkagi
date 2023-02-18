@@ -164,10 +164,20 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         Properties = new List<StoneProperty>();
     }
 
-    public void AddProperty(StoneProperty property)
+    public void AddProperty<T>(T property) where T : StoneProperty
     {
-        Properties.Add(property);
-        property.OnAdded();
+        (bool result, T oldProperty) = StoneProperty.IsAvailable<T>(this, property);
+        if (result)
+        {
+            if (oldProperty != null)
+            {
+                oldProperty.OnRemoved(true);
+                Properties.Remove(oldProperty);
+            }
+
+            Properties.Add(property);
+            property.OnAdded(oldProperty != null);
+        }
     }
 
     public void RemoveProperty(StoneProperty property)
@@ -180,9 +190,10 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     public virtual Sprite GetSpriteState(string state)
     {
-        Sprite sprite = GameManager.Inst.stoneAtlas.GetSprite(cardData.cardEngName + "_" + state);
+        Sprite sprite = GameManager.Inst.stoneAtlas.GetSprite($"{cardData.cardEngName}_{state}");
         while (sprite == null)
         {
+            Debug.LogError($"There is no sprite named \"{cardData.cardEngName}_{state}\"");
             switch (state)
             {
                 case "Shoot":
@@ -193,11 +204,13 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
                 case "Break":
                     state = "Shoot";
                     break;
+                case "Idle":
+                    return null;
                 default:
                     state = "Idle";
                     break;
             }
-            sprite = GameManager.Inst.stoneAtlas.GetSprite(cardData.cardName + "_" + state);
+            sprite = GameManager.Inst.stoneAtlas.GetSprite($"{cardData.cardEngName}_{state}");
         }
         return sprite;
     }
