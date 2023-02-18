@@ -498,7 +498,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private IEnumerator EShootDragBeginUIRoutine()
     {
         isMoving = true;
-        float curTime = IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition.y / -300;
+        float curTime = IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition.y / -350;
         while(curTime < beginTotTime)
         {
             if(!isMoveDownward)
@@ -512,7 +512,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             else
                 IngameUIManager.Inst.HandCardTransform.position = new Vector3(0f, 0f, Mathf.Lerp(0, 4, curTime / beginTotTime));
 
-            IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition = new Vector2(0f, Mathf.Lerp(0, -300, curTime / beginTotTime));
+            IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition = new Vector2(0f, Mathf.Lerp(0, -350, curTime / beginTotTime));
             curTime += Time.deltaTime;
             yield return null;
         }
@@ -526,7 +526,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     {
         IngameUIManager.Inst.ShootReadyEmphasizeUI.GetChild(3).gameObject.SetActive(false);
         isMoving = true;
-        float curTime = (IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition.y + 300) / 300;
+        float curTime = (IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition.y + 350) / 350;
         while(curTime < endTotTime)
         {
             if(isMoveDownward)
@@ -540,7 +540,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             else
                 IngameUIManager.Inst.HandCardTransform.position = new Vector3(0f, 0f, Mathf.Lerp(4, 0, curTime / endTotTime));
 
-            IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition = new Vector2(0f, Mathf.Lerp(-300, 0, curTime / endTotTime));
+            IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition = new Vector2(0f, Mathf.Lerp(-350, 0, curTime / endTotTime));
             curTime += Time.deltaTime;
             yield return null;
         }

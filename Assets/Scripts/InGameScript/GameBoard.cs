@@ -60,6 +60,8 @@ public class GameBoard : MonoBehaviour
             player2PutMarks[cnt-1].SetActive(false);
         }
 
+        guardHorizontalCnt = (int)(BoardData.width / 0.2);
+        guardVerticalCnt = (int)(BoardData.height / 0.2);
         SetGuard();
     }
 
