@@ -199,10 +199,6 @@ public class GameManager : SingletonBehavior<GameManager>
         if (loser == PlayerEnum.LOCAL)
         {
             Debug.LogError("Game over!");
-            IngameUIManager.Inst.DeactivateUI();
-            IngameUIManager.Inst.SetResultPanel();
-            IngameUIManager.Inst.ActivateUI(IngameUIManager.Inst.ResultPanel);
-            IngameUIManager.Inst.TempCurrentTurnText.text = "LOSE";
             LocalTurnState = TurnState.END;
             OppoTurnState = TurnState.END;
             StartCoroutine(ERoomExitSendNetworkAction());
@@ -210,7 +206,6 @@ public class GameManager : SingletonBehavior<GameManager>
         else
         {
             Debug.Log("You win!");
-            IngameUIManager.Inst.TempCurrentTurnText.text = "WIN";
             LocalTurnState = TurnState.END;
             OppoTurnState = TurnState.END;
         }
@@ -227,6 +222,15 @@ public class GameManager : SingletonBehavior<GameManager>
             senderID = NetworkManager.Inst.NetworkId,
             message = $"BREAK",
         }, PacketType.ROOM_CONTROL);
+
+        if (!NetworkManager.Inst.IsNetworkMode)
+        {
+            RoomExitReceiveNetworkAction(new Packet().Pack(PacketType.ROOM_CONTROL, new MessagePacket
+            {
+                senderID = 0,
+                message = "EXIT/ 0 L",
+            }));
+        }
     }
 
     private void RoomExitReceiveNetworkAction(Packet packet)
@@ -248,16 +252,22 @@ public class GameManager : SingletonBehavior<GameManager>
         {
             case "W":
                 container.isLocalWin = true;
+                IngameUIManager.Inst.TempCurrentTurnText.text = "WIN!";
                 break;
             case "L":
                 container.isLocalWin = false;
+                IngameUIManager.Inst.TempCurrentTurnText.text = "LOSE";
                 break;
             default:
                 break;
         }
 
+        IngameUIManager.Inst.DeactivateUI();
+        IngameUIManager.Inst.SetResultPanel();
+        IngameUIManager.Inst.ActivateUI(IngameUIManager.Inst.ResultPanel);
+
         NetworkManager.Inst.RemoveReceiveDelegate(RoomExitReceiveNetworkAction);
-        SceneManager.LoadScene(2); // load result scene
+        //SceneManager.LoadScene(2); // load result scene
     }
 
     private void StartTurnBasis()

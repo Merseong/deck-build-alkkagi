@@ -55,7 +55,6 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
                     testStatusText.text = "Connecting...";
                     break;
                 case ConnectionStatusEnum.IDLE:
-                    m_networkTestCanvas.SetActive(true);
                     testStatusText.text = $"Connected, ID: {NetworkId}";
                     break;
                 case ConnectionStatusEnum.MATCHMAKING:
@@ -180,8 +179,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
     public void RefreshUI(bool hideCanvas = false)
     {
-        m_networkTestCanvas.SetActive(m_isNetworkMode);
-        if (hideCanvas) m_networkTestCanvas.SetActive(false);
+        m_networkTestCanvas.SetActive(m_isNetworkMode && !hideCanvas);
     }
 
     public void ConnectServer()

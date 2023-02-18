@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8541796470024885361}
   - component: {fileID: 8442542963656404355}
   - component: {fileID: 8064756203856176089}
-  - component: {fileID: 6947402406787830421}
   m_Layer: 0
   m_Name: CenterLine
   m_TagString: Untagged
@@ -84,20 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6947402406787830421
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4946164002024694986}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &7143488552480288805
 GameObject:
   m_ObjectHideFlags: 0
@@ -111,6 +96,7 @@ GameObject:
   - component: {fileID: 7143488552480288808}
   - component: {fileID: 7143488552480288811}
   - component: {fileID: 7143488552480288810}
+  - component: {fileID: 1500342750}
   m_Layer: 0
   m_Name: Board
   m_TagString: Board
@@ -132,7 +118,7 @@ Transform:
   m_Children:
   - {fileID: 8541796470024885361}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7143488552480288809
 MeshFilter:
@@ -192,9 +178,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7143488552480288805}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
@@ -217,3 +211,16 @@ MonoBehaviour:
   isNullPos: {x: 0, y: 100, z: 0}
   guardHorizontalCnt: 3
   guardVerticalCnt: 4
+--- !u!114 &1500342750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7143488552480288805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b22f965b5c420f740a0c54447ea737d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rigidbodyCounter: 0

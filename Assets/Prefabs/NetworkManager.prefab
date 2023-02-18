@@ -1003,6 +1003,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1077,7 +1078,7 @@ Transform:
   m_Children:
   - {fileID: 2049415887}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &775994638631315117
 MonoBehaviour:
@@ -1091,8 +1092,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b3e3704ec8812439ce23a2c67a7948, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkId: -1
   m_isNetworkMode: 1
+  host: 116.125.55.46
+  port: 3333
+  networkId: -1
+  roomNumber: -1
+  _connectionStatus: 0
+  connectionStatusString: 
   m_messageToSend: TestMessageToYou
   m_networkTestCanvas: {fileID: 2049415883}
   testStatusText: {fileID: 523208749}
