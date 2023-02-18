@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RailDriverStoneData
   m_EditorClassIdentifier: 
   cardID: 19
-  cardName: Knight
+  cardName: "\uB808\uC77C\uB4DC\uB77C\uC774\uBC84"
   cardEngName: RailDriver
   stoneSize: 3
   stoneWeight: 1

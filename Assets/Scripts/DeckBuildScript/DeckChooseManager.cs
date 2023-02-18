@@ -34,13 +34,17 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
     [SerializeField] Button deckUnlockCancelButton;
     [SerializeField] TextMeshProUGUI deckUnlockInformText;
     [SerializeField] TextMeshProUGUI unlockRequirementGoldText;
+    [SerializeField] RectTransform profilePanel;
+    [SerializeField] Button profileCloseButton;
+    [SerializeField] Button profileOpenButton;
+    [SerializeField] RectTransform menuPanel;
+    [SerializeField] RectTransform menuBackgroundPanel;
+    [SerializeField] Button menuOpenButton;
+    [SerializeField] Button menuCloseButton;
 
     private void Start()
     {
         Initiallize();
-        deckUnlockCancelButton.onClick.AddListener(()=>{
-            deckUnlockPanel.gameObject.SetActive(false);
-        });
     }
 
     private void Initiallize()
@@ -55,6 +59,31 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         {
             DisplayDeckFromDeckcode(item);
         }
+
+        deckUnlockCancelButton.onClick.AddListener(()=>{
+            deckUnlockPanel.gameObject.SetActive(false);
+        });
+
+        profileOpenButton.onClick.AddListener(()=>{
+            profilePanel.gameObject.SetActive(true);
+        });
+
+        profileCloseButton.onClick.AddListener(()=>{
+            profilePanel.gameObject.SetActive(false);
+        });
+
+        menuOpenButton.onClick.AddListener(()=>{
+            menuPanel.gameObject.SetActive(true);
+            menuBackgroundPanel.gameObject.SetActive(true);
+        });
+        
+        menuCloseButton.onClick.AddListener(()=>{
+            menuPanel.gameObject.SetActive(false);
+            menuBackgroundPanel.gameObject.SetActive(false);
+        });
+
+
+        SetPlayerProfile();
     }
 
     public void DeckSelection(int idx)
@@ -63,7 +92,7 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         if(!isDeckAvailable[idx])
         {
             deckUnlockInformText.text = "Will you unlock " + deckNames[idx] +"?";
-            
+
             deckUnlockPanel.gameObject.SetActive(true);
             return;
         }
@@ -78,6 +107,11 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         CurrentSelectedDeckIdx = idx;
     }
     
+    public void SetPlayerProfile()
+    {
+
+    }
+
     public string GenerateDeckCode(List<CardData> data)
     {
         StringBuilder sb = new StringBuilder();
@@ -188,6 +222,7 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
                 result += (cur - 'A' + 10) * (int)Mathf.Pow(16, hex.Length - i - 1);
             }
         }
+    
         return result;
     }
 
