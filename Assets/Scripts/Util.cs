@@ -114,7 +114,7 @@ public static class Util
     
     public static Sprite GetSpriteState(CardData cardData, string state, SpriteAtlas stoneAtlas)
     {
-        Sprite sprite = stoneAtlas.GetSprite(cardData.cardName + "_" + state);
+        Sprite sprite = stoneAtlas.GetSprite(cardData.cardEngName + "_" + state);
         while (sprite == null)
         {
             switch (state)

@@ -8,6 +8,7 @@ public class CardData : ScriptableObject
     private int cardID;
     public int CardID => cardID;
     public string cardName;
+    public string cardEngName;
     // 크기
     public enum StoneSize
     {

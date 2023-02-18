@@ -180,7 +180,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     public virtual Sprite GetSpriteState(string state)
     {
-        Sprite sprite = GameManager.Inst.stoneAtlas.GetSprite(cardData.cardName + "_" + state);
+        Sprite sprite = GameManager.Inst.stoneAtlas.GetSprite(cardData.cardEngName + "_" + state);
         while (sprite == null)
         {
             switch (state)
