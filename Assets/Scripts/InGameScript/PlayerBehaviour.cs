@@ -105,7 +105,7 @@ public abstract class PlayerBehaviour : MonoBehaviour
 
     public void ResetShootToken()
     {
-        shootTokenAvailable = true;
+        ShootTokenAvailable = true;
     }
 
     #region UI actions
