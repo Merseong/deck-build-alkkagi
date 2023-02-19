@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: TestStoneData
   m_EditorClassIdentifier: 
   cardID: 101
-  cardName: Fighter
+  cardName: "\uD30C\uC774\uD130"
+  cardEngName: Fighter
   stoneSize: 1
   stoneWeight: 2
   cardCost: 2

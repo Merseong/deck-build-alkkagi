@@ -73,6 +73,8 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         akgRigidbody = GetComponent<AkgRigidbody>();
         ParticleManager.Inst.RegisterParticle(collideParticle);
         ParticleManager.Inst.RegisterParticle(directExitParticle);
+
+        InitProperty();
     }
 
     private void Update()
@@ -162,6 +164,8 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     public virtual void InitProperty()
     {
         Properties = new List<StoneProperty>();
+
+        PrintProperty();
     }
 
     public void AddProperty<T>(T property) where T : StoneProperty
@@ -184,6 +188,15 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     {
         property.OnRemoved();
         Properties.Remove(property);
+    }
+
+    public void PrintProperty()
+    {
+        Debug.Log($"{cardData.cardEngName} has {Properties.Count} properties");
+        foreach (StoneProperty property in Properties)
+        {
+            Debug.Log($"{property.GetType().Name}");
+        }
     }
 
     public bool CanSprint(bool init = false)

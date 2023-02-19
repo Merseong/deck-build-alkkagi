@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: TestStoneData_2
   m_EditorClassIdentifier: 
   cardID: 102
-  cardName: Knight
+  cardName: "\uAE30\uC0AC"
+  cardEngName: Knight
   stoneSize: 2
   stoneWeight: 1
   cardCost: 3
