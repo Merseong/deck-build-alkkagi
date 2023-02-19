@@ -148,7 +148,7 @@ public enum PacketType
     /// <summary>
     /// ShootStonePacket<br/> 돌의 움직임에 관한 패킷
     /// </summary>
-    ROOM_OPPO_SHOOTSTONE,
+    ROOM_OPPO_STONEACTION,
     /// <summary>
     /// 룸 컨트롤(참여, 퇴장 등)시 사용
     /// </summary>

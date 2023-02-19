@@ -171,14 +171,14 @@ public class AkgRigidbodyRecorder
             finalHand = (short)GameManager.Inst.LocalPlayer.HandCount,            
         };
 
-        NetworkManager.Inst.SendData(data, PacketType.ROOM_OPPO_SHOOTSTONE);
+        NetworkManager.Inst.SendData(data, PacketType.ROOM_OPPO_STONEACTION);
 
         Debug.Log(JsonUtility.ToJson(data));
     }
 
     private void ShootRecordReceiveNetworkAction(Packet packet)
     {
-        if (packet.Type != (short)PacketType.ROOM_OPPO_SHOOTSTONE) return;
+        if (packet.Type != (short)PacketType.ROOM_OPPO_STONEACTION) return;
 
         var msg = StoneActionPacket.Deserialize(packet.Data);
 
