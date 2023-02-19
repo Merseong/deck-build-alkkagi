@@ -24,8 +24,8 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
 
     [Header("Connection info")]
-    [SerializeField] private int networkId = -1;
-    public int NetworkId => networkId;
+    [SerializeField] private uint networkId = 0;
+    public uint NetworkId => networkId;
     [SerializeField] private int roomNumber = -1;
     
     enum ConnectionStatusEnum
@@ -167,6 +167,8 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         }
     }
 
+    private void OnApplicationQuit() => OnDestroy();
+
     private void OnDestroy()
     {
         if (!m_isNetworkMode) return;
@@ -205,14 +207,14 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     }
 
 
-    public void SetNetworkId(int id, bool reset = false)
+    public void SetNetworkId(uint id, bool reset = false)
     {
         if (reset)
         {
-            networkId = -1;
+            networkId = 0;
             return;
         }
-        if (networkId > 0) return;
+        if (networkId != 0) return;
         networkId = id;
     }
 
@@ -319,14 +321,11 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     {
         switch((PacketType)packet.Type)
         {
-            case PacketType.PACKET_USER_CLOSED:
-                DisconnectServer();
-                break;
             case PacketType.PACKET_TEST:
                 var message = TestPacket.Deserialize(packet.Data);
                 Debug.Log($"[TESTPACKET] {message.message}");
                 break;
-            case PacketType.PACKET_INFO:
+            case PacketType.USER_INFO:
                 var mp = MessagePacket.Deserialize(packet.Data);
                 SetNetworkId(mp.senderID);
                 ConnectionStatus = ConnectionStatusEnum.IDLE;

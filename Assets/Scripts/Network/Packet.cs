@@ -125,16 +125,21 @@ public class PacketRes : Data<PacketRes>
 public enum PacketType
 {
     UNDEFINED,
-    PACKET_USER_CLOSED,
+    /// <summary>
+    /// 에코 테스트용 패킷
+    /// </summary>
+    /// <remarks>TestPacket</remarks>
     PACKET_TEST,
     /// <summary>
-    /// 접속한 유저에게 기본 정보를 알려주기 위해 사용
+    /// 로그인을 위해 사용
     /// </summary>
-    /// <remarks>
-    /// MessagePacket(임시)<br/>
-    /// senderId 송신 -> 해당 플레이어의 networkID
-    /// </remarks>
-    PACKET_INFO,
+    /// <remarks> MessagePacket, UserDataPacket </remarks>
+    USER_LOGIN,
+    /// <summary>
+    /// 유저에 대한 정보를 알리기 위해 사용
+    /// </summary>
+    /// <remarks> UserDataPacket </remarks>
+    USER_INFO,
     ROOM_BROADCAST,
     /// <summary>
     /// 룸의 상대편에게 메세지를 보낼 때 사용
@@ -175,7 +180,7 @@ public class TestPacket : Data<TestPacket>
 [Serializable]
 public class MessagePacket : Data<MessagePacket>
 {
-    public int senderID;
+    public uint senderID;
     public string message;
 
     public MessagePacket() { }
@@ -196,7 +201,7 @@ public class SyncVarPacket : Data<SyncVarPacket>
 [Serializable]
 public class StoneActionPacket : Data<StoneActionPacket>
 {
-    public int senderID;
+    public uint senderID;
 
     public VelocityRecord[] velocityRecords;
     public PositionRecord[] positionRecords;
@@ -249,4 +254,20 @@ public enum EventEnum
     DROPOUT,
     POWER,
     COUNT,
+}
+
+[Serializable]
+public class UserDataPacket : Data<UserDataPacket>
+{
+    public bool isSuccess;
+    public uint uid;
+    public string nickname;
+    public uint honorWin;
+    public uint honorLose;
+    public uint win;
+    public uint lose;
+    public uint rating;
+    public uint deckUnlock;
+    public uint moneyPoint;
+    public uint honorPoint;
 }
