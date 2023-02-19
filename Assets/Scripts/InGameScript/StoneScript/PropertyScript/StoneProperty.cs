@@ -34,11 +34,11 @@ public abstract class StoneProperty
     public virtual int ShieldCount(int value) { return value; }
     // for accel shield
     public virtual bool HasAccelShield(bool value) { return value; }
-    // for curse
+    // for cursed
     public virtual float GetMass(float value) { return value; }
     // for pinned
     public virtual bool IsStatic(bool value) { return value; }
-    // for grease
+    // for greased
     public virtual float GetDragAccel(float value) { return value; }
 
     // 애니메이션 같은거 여기다 넣으면 될듯
@@ -73,7 +73,7 @@ public abstract class StoneProperty
             RemoveProperty();
     }
 
-    private void RemoveProperty()
+    protected void RemoveProperty()
     {
         baseStone.RemoveProperty(this);
     }

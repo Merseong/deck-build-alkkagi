@@ -25,7 +25,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     public event Action OnShootEnter;
     public event Action OnShootExit;
-    public event Action OnHit;
+    public event Action<AkgRigidbody> OnHit;
 
     [SerializeField] private int stoneId;
     public int StoneId => stoneId;
