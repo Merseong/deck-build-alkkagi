@@ -1412,7 +1412,7 @@ RectTransform:
   - {fileID: 1054908535547438178}
   - {fileID: 5929486963521324484}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1520,7 +1520,7 @@ MonoBehaviour:
   enemyInfoPanelButton: {fileID: 984495492866551161}
   enemyInfoDeckHandText: {fileID: 3857777162580067115}
   resultPanel: {fileID: 5929486963521324484}
-  honorMarkImage: {fileID: 0}
+  honorMarkImage: {fileID: 1108374798533287752}
 --- !u!1 &984495492826000312
 GameObject:
   m_ObjectHideFlags: 0
