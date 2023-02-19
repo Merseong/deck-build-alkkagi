@@ -887,7 +887,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &416043639
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4624,7 +4624,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stoneAtlas: {fileID: 4343727234628468602, guid: 15417bec6ed96894fa69a9c23e6fd69d, type: 2}
-  UIAtlas: {fileID: 0}
+  UIAtlas: {fileID: 4343727234628468602, guid: 40be7c9c230f36343a4cffcd02f542e9, type: 2}
   cardDataSource:
   - {fileID: 11400000, guid: a564fef86eef2c445850603f81599cf9, type: 2}
   - {fileID: 11400000, guid: 496ef489890ede146b69ae6fe4d3e1af, type: 2}

@@ -762,6 +762,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 22188224, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 349950194911747238, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 984495492558740912, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_Name
       value: Canvas
@@ -850,6 +858,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1767317769059022319, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377619554416365026, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2541405846502629878, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: handCardTransform
       value: 
@@ -858,10 +874,34 @@ PrefabInstance:
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1170189266}
+    - target: {fileID: 5008387881249118914, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5445182910899885815, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461928564971391953, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5488492513226470614, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6211080835878945003, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 501744208}
+    - target: {fileID: 7354582962282333413, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7746965460091717728, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8785121465290946009, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

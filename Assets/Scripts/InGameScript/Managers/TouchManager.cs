@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.EventSystems;
 
 public class TouchManager : SingletonBehavior<TouchManager>
 {
@@ -30,6 +31,7 @@ public class TouchManager : SingletonBehavior<TouchManager>
     ///</summary>
     public Vector3 GetTouchPosition()
     {
+        if(Util.IsPointerOverUIObject()) return new Vector2(-9999, -9999);
         return touchPositionAction.ReadValue<Vector2>();
     }
 
