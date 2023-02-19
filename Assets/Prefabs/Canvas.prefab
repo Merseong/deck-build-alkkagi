@@ -1520,6 +1520,7 @@ MonoBehaviour:
   enemyInfoPanelButton: {fileID: 984495492866551161}
   enemyInfoDeckHandText: {fileID: 3857777162580067115}
   resultPanel: {fileID: 5929486963521324484}
+  honorMarkImage: {fileID: 0}
 --- !u!1 &984495492826000312
 GameObject:
   m_ObjectHideFlags: 0
@@ -6985,7 +6986,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2926954457738715114
 RectTransform:
   m_ObjectHideFlags: 0

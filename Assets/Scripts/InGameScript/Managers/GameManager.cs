@@ -596,6 +596,11 @@ public class GameManager : SingletonBehavior<GameManager>
     {
         Debug.Log($"HS : {player.Player}");
         IngameUIManager.Inst.NotificationPanel.Show($"HS : {player.Player}");
+        IngameUIManager.Inst.HonorMarkImage.gameObject.SetActive(true);
+        if (player == LocalPlayer)
+            IngameUIManager.Inst.HonorMarkImage.sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Honor_1");
+        else
+            IngameUIManager.Inst.HonorMarkImage.sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Honor_0");
     }
     #endregion
 

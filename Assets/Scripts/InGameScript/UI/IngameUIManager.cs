@@ -71,6 +71,8 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
 
     [SerializeField] private RectTransform resultPanel;
     public RectTransform ResultPanel => resultPanel;
+    [SerializeField] private Image honorMarkImage;
+    public Image HonorMarkImage => honorMarkImage;
 
     private void Start()
     {
