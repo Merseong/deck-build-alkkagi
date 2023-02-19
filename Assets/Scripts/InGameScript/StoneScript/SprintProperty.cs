@@ -13,6 +13,7 @@ public class SprintProperty : StoneProperty
         base.OnAdded(isReplaced);
 
         GameManager.Inst.GetPlayer(baseStone.BelongingPlayer).OnTurnStart += ResetCanSprint;
+        baseStone.OnShootEnter += UseSprint;
     }
 
     public override void OnRemoved(bool isReplaced = false)
@@ -20,6 +21,7 @@ public class SprintProperty : StoneProperty
         base.OnRemoved(isReplaced);
 
         GameManager.Inst.GetPlayer(baseStone.BelongingPlayer).OnTurnStart -= ResetCanSprint;
+        baseStone.OnShootEnter -= UseSprint;
     }
 
     public override bool CanSprint(bool value) { return value || canSprint; }
@@ -27,5 +29,10 @@ public class SprintProperty : StoneProperty
     private void ResetCanSprint()
     {
         canSprint = true;
+    }
+
+    private void UseSprint()
+    {
+        canSprint = false;
     }
 }
