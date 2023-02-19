@@ -1,11 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using DG.Tweening;
 
 public class Card : MonoBehaviour
 {
     [SerializeField] private CardData cardData;
+    [SerializeField] private SpriteRenderer stoneSize;
+    [SerializeField] private SpriteRenderer stoneWeight;
+    [SerializeField] private SpriteRenderer character;
+    [SerializeField] private TextMeshPro costText;
+    [SerializeField] private TextMeshPro nameText;
     // public CardData CardData { set { cardData = value; } }
     public CardData CardData { get { return cardData; } set { cardData = value; } }
 
@@ -19,7 +25,18 @@ public class Card : MonoBehaviour
     public void Setup(Card card)
     {
         this.CardData = card.CardData;
+        SetSprite(cardData);
     }
+
+    public void SetSprite(CardData cardData)
+    {
+        //stoneSize.sprite = ;
+        //stoneWeight.sprite = ;
+        character.sprite = Util.GetSpriteState(cardData,"Idle",GameManager.Inst.stoneAtlas);
+        costText.text = cardData.cardCost.ToString();
+        nameText.text = cardData.cardName;
+    }
+
 
     void OnMouseOver()
     {
