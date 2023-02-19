@@ -134,4 +134,44 @@ public static class Util
         }
         return sprite;
     }
+
+    public static Sprite GetSpriteSize(CardData cardData, SpriteAtlas uiAtlas)
+    {
+        Sprite sprite;
+        switch (cardData.stoneSize)
+        {
+            case CardData.StoneSize.Small:
+                sprite = uiAtlas.GetSprite("card_1");
+                break;
+            case CardData.StoneSize.Medium:
+                sprite = uiAtlas.GetSprite("card_2");
+                break;
+            case CardData.StoneSize.Large:
+                sprite = uiAtlas.GetSprite("card_3");
+                break;
+            case CardData.StoneSize.SuperLarge:
+            default:
+                sprite = uiAtlas.GetSprite("card_4");
+                break;
+        }
+        return sprite;
+    }
+    public static Sprite GetSpriteWeight(CardData cardData, SpriteAtlas uiAtlas)
+    {
+        Sprite sprite;
+        switch (cardData.stoneWeight)
+        {
+            case CardData.StoneWeight.Light:
+                sprite = uiAtlas.GetSprite("card_6");
+                break;
+            case CardData.StoneWeight.Standard:
+                sprite = uiAtlas.GetSprite("card_7");
+                break;
+            case CardData.StoneWeight.Heavy:
+            default:
+                sprite = uiAtlas.GetSprite("card_8");
+                break;
+        }
+        return sprite;
+    }
 }

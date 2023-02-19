@@ -30,8 +30,8 @@ public class Card : MonoBehaviour
 
     public void SetSprite(CardData cardData)
     {
-        //stoneSize.sprite = ;
-        //stoneWeight.sprite = ;
+        stoneSize.sprite = Util.GetSpriteSize(cardData, IngameUIManager.Inst.UIAtlas);
+        stoneWeight.sprite = Util.GetSpriteWeight(cardData, IngameUIManager.Inst.UIAtlas);
         character.sprite = Util.GetSpriteState(cardData,"Idle",GameManager.Inst.stoneAtlas);
         costText.text = cardData.cardCost.ToString();
         nameText.text = cardData.cardName;

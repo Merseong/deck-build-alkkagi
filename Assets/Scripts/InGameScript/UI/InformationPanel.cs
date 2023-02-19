@@ -12,6 +12,8 @@ public class InformationPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI cardDescription;
     [SerializeField] private TextMeshProUGUI cardName;
     [SerializeField] private TextMeshProUGUI cardCost;
+    [SerializeField] private Image weightImage;
+    [SerializeField ]private Image sizeImage;
 
     public void SetInformation(CardData data)
     {
@@ -21,6 +23,8 @@ public class InformationPanel : MonoBehaviour
         cardDescription.text = data.description.ToString();
         cardName.text = data.cardName.ToString();
         cardCost.text = data.cardCost.ToString();
+        weightImage.sprite = Util.GetSpriteWeight(data, IngameUIManager.Inst.UIAtlas);
+        sizeImage.sprite = Util.GetSpriteSize(data, IngameUIManager.Inst.UIAtlas);
     }
 
 }

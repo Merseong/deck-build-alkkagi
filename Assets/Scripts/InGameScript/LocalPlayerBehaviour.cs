@@ -931,6 +931,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         {
             //TODO : 스톤 미리보기 추가해주어야 함
             selectedCard.GetComponent<MeshRenderer>().enabled = false;
+            selectedCard.transform.GetChild(0).gameObject.SetActive(false);
             stoneGhost.SetActive(true);
 
             gameBoard.ResetMarkState();
@@ -945,6 +946,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         else
         {
             selectedCard.GetComponent<MeshRenderer>().enabled = true;
+            selectedCard.transform.GetChild(0).gameObject.SetActive(true);
             stoneGhost.SetActive(false);
 
             GameManager.Inst.GameBoard.UnhightlightPossiblePos();
@@ -1051,6 +1053,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private void CardPlayAction(Vector3 curTouchPositionNormalized)
     {
         selectedCard.GetComponent<MeshRenderer>().enabled = true;
+        selectedCard.transform.GetChild(0).gameObject.SetActive(true);
         stoneGhost.SetActive(false);
 
         Transform nearPutTransform = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
@@ -1081,6 +1084,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private void CardSelectionAction()
     {
         selectedCard.GetComponent<MeshRenderer>().enabled = true;
+        selectedCard.transform.GetChild(0).gameObject.SetActive(true);
         stoneGhost.SetActive(false);
 
         SetInformPanel(selectedCard.CardData);

@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.U2D;
 
 public class IngameUIManager : SingletonBehavior<IngameUIManager>
 {
     private List<RectTransform> currentActivatedUI = new();
+
+    public SpriteAtlas UIAtlas;
 
     [SerializeField] private AskingPanel askingPanel;
     public AskingPanel AskingPanel => askingPanel;
