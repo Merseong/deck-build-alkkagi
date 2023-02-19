@@ -10,7 +10,8 @@ using UnityEngine.U2D;
 public class NotificationPanel : MonoBehaviour
 {
     [SerializeField] private TMP_Text notificationTextMesh;
-    [SerializeField] private Image image;
+    [SerializeField] private Image centerImage;
+    [SerializeField] private GameObject rejectPanel;
 
     public void Show(string message)
     {
@@ -20,14 +21,22 @@ public class NotificationPanel : MonoBehaviour
             .AppendInterval(0.9f)
             .Append(transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad));
     }
-    public void Show(Sprite sprite, string message)
+    public void Show(Sprite sprite)
     {
-        image.sprite = sprite;
-        notificationTextMesh.text = message;
+        ScaleOne();
+        centerImage.sprite = sprite;
         Sequence sequence = DOTween.Sequence()
-            .Append(transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.InOutQuad))
+            .Append(centerImage.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.InOutQuad))
             .AppendInterval(0.9f)
-            .Append(transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad));
+            .Append(centerImage.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad));
+    }
+    public void Show()
+    {
+        ScaleOne();
+        Sequence sequence = DOTween.Sequence()
+            .Append(rejectPanel.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.InOutQuad))
+            .AppendInterval(0.9f)
+            .Append(rejectPanel.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad));
     }
 
     private void Start() => ScaleZero();

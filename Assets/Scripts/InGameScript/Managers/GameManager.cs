@@ -32,7 +32,7 @@ public class GameManager : SingletonBehavior<GameManager>
 
     // 서버에서 선공이 누구인지 정해줘야함
     public bool isLocalGoFirst;
-    PlayerEnum FirstPlayer => isLocalGoFirst ? PlayerEnum.LOCAL: PlayerEnum.OPPO;
+    PlayerEnum FirstPlayer => isLocalGoFirst ? PlayerEnum.LOCAL : PlayerEnum.OPPO;
     PlayerEnum SecondPlayer => isLocalGoFirst ? PlayerEnum.OPPO : PlayerEnum.LOCAL;
     //선,후공과 관계없이 HS를 했는지 여부에 대한 bool
     public bool isPlayerHonorSkip;
@@ -72,7 +72,8 @@ public class GameManager : SingletonBehavior<GameManager>
     public TurnState LocalTurnState
     {
         get => turnStates[0];
-        set {
+        set
+        {
             turnStates[0] = value;
             IngameUIManager.Inst.TempCurrentTurnText.text = value.ToString();
         }
@@ -515,7 +516,11 @@ public class GameManager : SingletonBehavior<GameManager>
             if (totalTurn == 4)
             {
                 SetHSPlayer(LocalPlayer);
-            } 
+            }
+            else if (totalTurn == 2)
+            {
+                IngameUIManager.Inst.HonorSkipPanel.Show();
+            }
         }
 
         isInHonorSkipRoutine = false;
@@ -555,6 +560,7 @@ public class GameManager : SingletonBehavior<GameManager>
             {
                 totalTurn = 2;
                 nextTotalTurn = 2;
+                IngameUIManager.Inst.HonorSkipPanel.Show();
                 TurnInfoSendNetworkAction();
                 // 후공이 동작 없이 턴종함 == 선공의 HS를 거부 -> 선공은 다시 2턴 진행
             }
@@ -595,18 +601,26 @@ public class GameManager : SingletonBehavior<GameManager>
     private void SetHSPlayer(PlayerBehaviour player)
     {
         Debug.Log($"HS : {player.Player}");
-        IngameUIManager.Inst.NotificationPanel.Show($"HS : {player.Player}");
+        //IngameUIManager.Inst.NotificationPanel.Show($"HS : {player.Player}");
         IngameUIManager.Inst.HonorMarkImage.gameObject.SetActive(true);
+        Sprite sprite;
         if (player == LocalPlayer)
-            IngameUIManager.Inst.HonorMarkImage.sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Honor_1");
-        else
-            IngameUIManager.Inst.HonorMarkImage.sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Honor_0");
-    }
-    #endregion
+        {
+            sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Honor_1");
+        }
 
-    // 아너스킵
-    // 게임중 서버 통신
-    // 메세지 받아서 뿌려주기
-    // 메세지 보내기
-    // 게임보드 동기화 (상대 턴일때)
+        else
+        {
+            sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Honor_0");
+        }
+        IngameUIManager.Inst.HonorMarkImage.sprite = sprite;
+        IngameUIManager.Inst.HonorSkipPanel.Show(sprite);
+        #endregion
+
+        // 아너스킵
+        // 게임중 서버 통신
+        // 메세지 받아서 뿌려주기
+        // 메세지 보내기
+        // 게임보드 동기화 (상대 턴일때)
+    }
 }
