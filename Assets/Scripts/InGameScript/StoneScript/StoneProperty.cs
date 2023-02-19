@@ -39,7 +39,7 @@ public abstract class StoneProperty
     // for pinned
     public virtual bool IsStatic(bool value) { return value; }
     // for grease
-    public virtual float GetDragForce(float value) { return value; }
+    public virtual float GetDragAccel(float value) { return value; }
 
     // 애니메이션 같은거 여기다 넣으면 될듯
     public virtual void OnAdded(bool isReplaced = false)

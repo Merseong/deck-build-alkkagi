@@ -134,7 +134,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
             });
         OnExit();
         GameManager.Inst.players[(int)BelongingPlayer].RemoveStone(stoneId);
-        akgRigidbody.SetDrag(0);
+        akgRigidbody.SetDragAccel(0);
         akgRigidbody.BeforeDestroy();
     }
 
@@ -184,6 +184,76 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     {
         property.OnRemoved();
         Properties.Remove(property);
+    }
+
+    public bool CanSprint(bool init = false)
+    {
+        foreach (StoneProperty property in Properties)
+        {
+            init = property.CanSprint(init);
+        }
+
+        return init;
+    }
+
+    public bool IsGhost(bool init = false)
+    {
+        foreach (StoneProperty property in Properties)
+        {
+            init = property.IsGhost(init);
+        }
+
+        return init;
+    }
+
+    public int ShieldCount(int init = 0)
+    {
+        foreach (StoneProperty property in Properties)
+        {
+            init = property.ShieldCount(init);
+        }
+
+        return init;
+    }
+
+    public bool HasAccelShield(bool init = false)
+    {
+        foreach (StoneProperty property in Properties)
+        {
+            init = property.HasAccelShield(init);
+        }
+
+        return init;
+    }
+
+    public float GetMass(float init)
+    {
+        foreach (StoneProperty property in Properties)
+        {
+            init = property.GetMass(init);
+        }
+
+        return init;
+    }
+
+    public bool IsStatic(bool init)
+    {
+        foreach (StoneProperty property in Properties)
+        {
+            init = property.IsStatic(init);
+        }
+
+        return init;
+    }
+
+    public float GetDragAccel(float init)
+    {
+        foreach (StoneProperty property in Properties)
+        {
+            init = property.GetDragAccel(init);
+        }
+
+        return init;
     }
 
     #endregion

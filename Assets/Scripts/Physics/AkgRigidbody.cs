@@ -10,10 +10,46 @@ public class AkgRigidbody : MonoBehaviour
     public Vector3 velocity = Vector3.zero;
     private Vector3 oldVelocity = Vector3.zero;
 
+    private StoneBehaviour stone = null;
+
     [SerializeField] private bool isStatic = false;
     [SerializeField] private float mass = 1.0f;
-    [SerializeField] private float drag = 1f;
-    public float Mass => mass;
+    [SerializeField] private float dragAccel = 1f;
+    
+    public virtual bool IsStatic
+    {
+        get
+        {
+            if (stone == null)
+                return isStatic;
+            else
+                return stone.IsStatic(isStatic);
+        }
+        private set => isStatic = value;
+    }
+    public virtual float Mass
+    {
+        get
+        {
+            if (stone == null)
+                return mass;
+            else
+                return stone.GetMass(mass);
+        }
+        private set => mass = value;
+    }
+    public virtual float DragAccel
+    {
+        get
+        {
+            if (stone == null)
+                return dragAccel;
+            else
+                return stone.GetDragAccel(dragAccel);
+        }
+        private set => dragAccel = value;
+    }
+
     [Tooltip("반발계수")]
     [SerializeField] private float cor = 0.5f;
 
@@ -41,9 +77,11 @@ public class AkgRigidbody : MonoBehaviour
 
     public void Init(float initRadius, float initMass)
     {
-        mass = initMass;
+        Mass = initMass;
         circleRadius = initRadius;
-        drag = AkgPhysics.movingDragAccleration;
+        DragAccel = AkgPhysics.dragAccel;
+
+        stone = GetComponent<StoneBehaviour>();
 
         collidableList = new AkgRigidbody[collidableForecastLimit];
         collidedList = new();
@@ -52,7 +90,7 @@ public class AkgRigidbody : MonoBehaviour
 
     private void Update()
     {
-        if (isStatic) return;
+        if (IsStatic) return;
         if (velocity == Vector3.zero)
         {
             isForecasting = false;
@@ -62,13 +100,9 @@ public class AkgRigidbody : MonoBehaviour
         oldVelocity = velocity;
 
         float speed = velocity.magnitude;
-        if (speed > AkgPhysics.dragThreshold)
+        if (speed > 0)
         {
-            velocity = Mathf.Max(speed - Time.deltaTime * drag, 0) * velocity.normalized;
-        }
-        else if (speed > 0)
-        {
-            velocity = Mathf.Max(speed - Time.deltaTime * AkgPhysics.dragAccleration, 0) * velocity.normalized;
+            velocity = Mathf.Max(speed - Time.deltaTime * DragAccel, 0) * velocity.normalized;
         }
 
         Move(Time.deltaTime * velocity);
@@ -102,7 +136,7 @@ public class AkgRigidbody : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (isStatic) return;
+        if (IsStatic) return;
 
         collidedList.Clear();
     }
@@ -119,9 +153,9 @@ public class AkgRigidbody : MonoBehaviour
         transform.position += next;
     }
 
-    public void SetDrag(float newDrag)
+    public void SetDragAccel(float newDragAccel)
     {
-        drag = newDrag;
+        DragAccel = newDragAccel;
     }
 
     public bool CheckPointCollide(Vector3 point)
@@ -239,7 +273,7 @@ public class AkgRigidbody : MonoBehaviour
 
     private void CollideForecast()
     {
-        if (isStatic) return;
+        if (IsStatic) return;
         if (isForecasting) return;
         if (ColliderType != ColliderTypeEnum.Circle) return;
 
@@ -261,9 +295,9 @@ public class AkgRigidbody : MonoBehaviour
 
     public void AddForce(Vector3 force)
     {
-        if (isStatic) return;
+        if (IsStatic) return;
 
-        Vector3 acceleration = force / mass;
+        Vector3 acceleration = force / Mass;
         velocity += Time.fixedDeltaTime * acceleration;
 
         RecordVelocity();
@@ -272,14 +306,14 @@ public class AkgRigidbody : MonoBehaviour
 
     public void SetVelocity(Vector3 vel)
     {
-        if (isStatic) return;
+        if (IsStatic) return;
 
         velocity = vel;
     }
 
     public void OnCollision(AkgRigidbody akg, Vector3 point)
     {
-        if (isStatic) return;
+        if (IsStatic) return;
 
         if (AkgPhysicsManager.Inst.rigidbodyRecorder.IsPlaying) return;
 
@@ -292,7 +326,7 @@ public class AkgRigidbody : MonoBehaviour
         Vector3 normalVelocity = Vector3.Dot(normal, velocity) * normal;
         Vector3 tangentialVelocity = velocity - normalVelocity;
 
-        if (akg.isStatic)
+        if (akg.IsStatic)
         {
             normalVelocity = -cor * normalVelocity;
         }
@@ -315,7 +349,7 @@ public class AkgRigidbody : MonoBehaviour
             }
 
             Vector3 otherNormalVelocity = Vector3.Dot(normal, akg.oldVelocity) * normal;
-            normalVelocity = mass * normalVelocity + akg.Mass * otherNormalVelocity + akg.Mass * cor * (otherNormalVelocity - normalVelocity);
+            normalVelocity = Mass * normalVelocity + akg.Mass * otherNormalVelocity + akg.Mass * cor * (otherNormalVelocity - normalVelocity);
             normalVelocity = normalVelocity / (Mass + akg.Mass);
         }
 
@@ -353,7 +387,8 @@ public class AkgRigidbody : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        GUI.color = velocity.magnitude >= AkgPhysics.dragThreshold ? Color.red : Color.blue;
+        //GUI.color = velocity.magnitude >= AkgPhysics.dragThreshold ? Color.red : Color.blue;
+        GUI.color = Color.red;
         Handles.Label(transform.position + Vector3.up * .2f, velocity.magnitude.ToString());
         switch (ColliderType)
         {
