@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.U2D;
 
 public class InformationPanel : MonoBehaviour
 {
@@ -15,16 +16,16 @@ public class InformationPanel : MonoBehaviour
     [SerializeField] private Image weightImage;
     [SerializeField ]private Image sizeImage;
 
-    public void SetInformation(CardData data)
+    public void SetInformation(CardData data, SpriteAtlas stoneAtlas, SpriteAtlas UIAtlas)
     {
-        Sprite.sprite = Util.GetSpriteState(data, "Idle", GameManager.Inst.stoneAtlas);
+        Sprite.sprite = Util.GetSpriteState(data, "Idle", stoneAtlas);
         cardSize.text = data.stoneSize.ToString();
         cardWeight.text = data.stoneWeight.ToString();
         cardDescription.text = data.description.ToString();
         cardName.text = data.cardName.ToString();
         cardCost.text = data.cardCost.ToString();
-        weightImage.sprite = Util.GetSpriteWeight(data, IngameUIManager.Inst.UIAtlas);
-        sizeImage.sprite = Util.GetSpriteSize(data, IngameUIManager.Inst.UIAtlas);
+        weightImage.sprite = Util.GetSpriteWeight(data, UIAtlas);
+        sizeImage.sprite = Util.GetSpriteSize(data, UIAtlas);
     }
 
 }

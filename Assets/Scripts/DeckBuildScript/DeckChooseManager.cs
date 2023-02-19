@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
 {
     [SerializeField] private SpriteAtlas stoneAtlas;
+    [SerializeField] private SpriteAtlas UIAtlas;
 
     [SerializeField] private List<CardData> cardDataSource = new();
     private Dictionary<int, CardData> CardDataDic = new();
@@ -41,6 +42,7 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
     [SerializeField] RectTransform menuBackgroundPanel;
     [SerializeField] Button menuOpenButton;
     [SerializeField] Button menuCloseButton;
+    [SerializeField] InformationPanel cardInformPanel;
 
     private void Start()
     {
@@ -107,6 +109,12 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         CurrentSelectedDeckIdx = idx;
     }
     
+    public void CardSelection(int cardID)
+    {
+        cardInformPanel.gameObject.SetActive(true);
+        cardInformPanel.SetInformation(GetCardDataFromID(cardID), stoneAtlas, UIAtlas);
+    }
+
     public void SetPlayerProfile()
     {
 
@@ -160,6 +168,7 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         foreach(var item in GenerateDeckFromDeckCode(deckCode))
         {
             GameObject card = Instantiate(cardDisplayPrefab, deckUI.CardList);
+            card.GetComponent<DeckChooseCardUI>().cardID = item.CardID;
             card.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = item.cardName;
             card.transform.GetChild(0).GetComponent<Image>().sprite = Util.GetSpriteState(item, "Idle", stoneAtlas);
         }

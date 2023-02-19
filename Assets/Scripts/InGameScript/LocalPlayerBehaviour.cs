@@ -405,7 +405,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private void SetInformPanel(CardData data)
     {
-        informPanel.SetInformation(data);
+        informPanel.SetInformation(data, GameManager.Inst.stoneAtlas, IngameUIManager.Inst.UIAtlas);
     }
 
     private Vector3 ScreenPosToNormalized(Vector3 vec)
