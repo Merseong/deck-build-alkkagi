@@ -15,7 +15,11 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private RectTransform cancelPanel;
     private InformationPanel informPanel;
 
-    [SerializeField] private List<Card> deck;
+    [SerializeField] private List<CardData> deck;
+    //Temp local cardData 
+    [SerializeField] private List<CardData> cardDataSource;
+    private Dictionary<int, CardData> cardDataDic = new();
+
     [SerializeField] private List<Card> hand;
     [SerializeField] private GameObject cardPrefab;
     [SerializeField] Transform cardSpawnPoint;
@@ -103,6 +107,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             Debug.LogError("[LOCAL] player enum not matched!!");
         }
 
+        InitDeck();
+
         if (!GameManager.Inst.isLocalGoFirst)
         {
             isLocalRotated = true;
@@ -128,6 +134,29 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         temp.a = .6f;
         stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().material.color = temp;
         stoneGhost.SetActive(false);
+    }
+
+    private void InitDeck()
+    {
+        deck.Clear();
+
+        foreach(var item in cardDataSource) cardDataDic.Add(item.CardID, item);
+
+        //TODO : Should generate deck from user DB
+        var cardData = Util.GenerateDeckFromDeckCode("0109190E1221", cardDataDic);
+
+        foreach(var item in cardData)
+        {
+            for(int i=0; i<item.inDeckNumber; i++) deck.Add(item);
+        }
+
+        ShuffleDeck();
+    }
+
+    private void ShuffleDeck()
+    {
+        System.Random rng = new System.Random();
+        deck = deck.OrderBy(a => rng.Next()).ToList();
     }
 
     public override void RefreshUI()
@@ -229,7 +258,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             cardRot = Quaternion.Euler(0, 180, 0);
         for (int i = 0; i < number; i++)
         {
-            Card drawCard = deck[0];
+            CardData drawCard = deck[0];
             deck.RemoveAt(0);
             var cardObject = Instantiate(cardPrefab, cardSpawnPoint.position, cardRot, IngameUIManager.Inst.HandCardTransform);
             var card = cardObject.GetComponent<Card>();

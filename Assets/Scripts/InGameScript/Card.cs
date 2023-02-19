@@ -22,9 +22,9 @@ public class Card : MonoBehaviour
     /// <summary>
     /// carddata값을 바탕으로 기본세팅
     /// </summary>
-    public void Setup(Card card)
+    public void Setup(CardData cardData)
     {
-        this.CardData = card.CardData;
+        this.CardData = cardData;
         SetSprite(cardData);
     }
 

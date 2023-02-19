@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.EventSystems;
+using System.Text;
+using System;
 
 [System.Serializable]
 public class RPS
@@ -184,4 +186,81 @@ public static class Util
         return results.Count > 0;
     }
 
+    public static List<CardData> GenerateDeckFromDeckCode(string deckCode, Dictionary<int, CardData> CardDataDic)
+    {
+        List<CardData> result = new();
+        for(int i=0; i<deckCode.Length/2; i++)
+        {
+            CardData temp = GetCardDataFromID(HexStringToInt(deckCode.Substring(i*2,2)), CardDataDic);
+            if(temp != null) result.Add(temp);
+        }
+        return result;
+    }
+
+    public static string ConvertIdToBinary(int id)
+    {
+        StringBuilder builder = new StringBuilder();
+
+        string binary = Convert.ToString(Convert.ToInt32(id.ToString(), 10), 2);
+        if(binary.Length < 8)
+        {
+            for(int i=0; i< 8-binary.Length; i++)
+            {
+                builder.Append("0");
+            }
+        }
+        builder.Append(binary);
+
+        return builder.ToString();
+    }
+
+    public static string BinaryStringToHexString(string binary)
+    {
+        if (string.IsNullOrEmpty(binary))
+            return binary;
+
+        StringBuilder result = new StringBuilder(binary.Length / 8 + 1);
+
+        // TODO: check all 1's or 0's... throw otherwise
+
+        int mod4Len = binary.Length % 8;
+        if (mod4Len != 0)
+        {
+            // pad to length multiple of 8
+            binary = binary.PadLeft(((binary.Length / 8) + 1) * 8, '0');
+        }
+
+        for (int i = 0; i < binary.Length; i += 8)
+        {
+            string eightBits = binary.Substring(i, 8);
+            result.AppendFormat("{0:X2}", Convert.ToByte(eightBits, 2));
+        }
+
+        return result.ToString();
+    }
+
+    public static int HexStringToInt(string hex)
+    {
+        int result = 0;
+        for(int i=hex.Length-1 ; i>=0 ; i--)
+        {
+            char cur = hex[i];
+            if(cur < 'A')
+            {
+                result += (cur - '0') * (int)Mathf.Pow(16, hex.Length - i - 1);
+            }
+            else
+            {
+                result += (cur - 'A' + 10) * (int)Mathf.Pow(16, hex.Length - i - 1);
+            }
+        }
+        return result;
+    }
+
+    //TODO : Derive CardData from DB
+    public static CardData GetCardDataFromID(int id, Dictionary<int, CardData> CardDataDic)
+    {
+        if(id == 0) return null;
+        return CardDataDic[id];
+    }
 }
