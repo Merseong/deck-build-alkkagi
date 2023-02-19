@@ -38,35 +38,12 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         INGAME,
     }
     [SerializeField] private ConnectionStatusEnum _connectionStatus;
-    [SerializeField] private string connectionStatusString;
     private ConnectionStatusEnum ConnectionStatus
     {
         get => _connectionStatus;
         set
         {
             _connectionStatus = value;
-
-            switch(value)
-            {
-                case ConnectionStatusEnum.DISCONNECTED:
-                    testStatusText.text = "Disconnected";
-                    break;
-                case ConnectionStatusEnum.CONNECTING:
-                    testStatusText.text = "Connecting...";
-                    break;
-                case ConnectionStatusEnum.IDLE:
-                    testStatusText.text = $"Connected, ID: {NetworkId}";
-                    break;
-                case ConnectionStatusEnum.MATCHMAKING:
-                    testStatusText.text = $"ID: {NetworkId}, Matchmaking...";
-                    break;
-                case ConnectionStatusEnum.ROOM:
-                    testStatusText.text = $"Room {roomNumber}, {connectionStatusString}";
-                    break;
-                case ConnectionStatusEnum.INGAME:
-                    break;
-
-            }
         }
     }
 
@@ -76,12 +53,8 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
     [Header("Other data")]
     [SerializeField] private string m_messageToSend;
-
-    // temp: canvas
-    [SerializeField]
-    private GameObject m_networkTestCanvas;
-    [SerializeField]
-    private TMPro.TextMeshProUGUI testStatusText;
+    public Action OnConnected;
+    public UserDataPacket UserData = null;
 
     // [SerializeField]
     // private Dictionary<uint, byte[]> syncVarDataDict;
@@ -107,7 +80,6 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         if (!m_isNetworkMode) return;
 
         m_client = new SocketClient();
-        m_networkTestCanvas.SetActive(m_isNetworkMode);
         ConnectionStatus = ConnectionStatusEnum.DISCONNECTED;
 
         // syncVarDataDict = new Dictionary<uint, byte[]>();
@@ -133,6 +105,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
             if (cmd == NetworkEvent.Type.Connect)
             {
                 Debug.Log("hello network!");
+                OnConnected?.Invoke();
 
                 // Send test data
                 var packet = new Packet().Pack(PacketType.PACKET_TEST, new TestPacket
@@ -181,7 +154,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
     public void RefreshUI(bool hideCanvas = false)
     {
-        m_networkTestCanvas.SetActive(m_isNetworkMode && !hideCanvas);
+
     }
 
     public void ConnectServer()
@@ -203,9 +176,9 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         }
         m_client.Disconnect();
 
+        OnConnected = null;
         ConnectionStatus = ConnectionStatusEnum.DISCONNECTED;
     }
-
 
     public void SetNetworkId(uint id, bool reset = false)
     {
@@ -257,7 +230,6 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     {
         ParsePacket = new ParsePacketDelegate((_) => { });
         ParsePacket += BasicProcessPacket;
-        ParsePacket += ParsePacketAction;
     }
 #endregion
 
@@ -314,23 +286,11 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 #endregion
 
 #region Receive Actions
-    /// <summary>
-    /// 
-    /// </summary>
     public void BasicProcessPacket(Packet packet)
     {
-        switch((PacketType)packet.Type)
-        {
-            case PacketType.PACKET_TEST:
-                var message = TestPacket.Deserialize(packet.Data);
-                Debug.Log($"[TESTPACKET] {message.message}");
-                break;
-            case PacketType.USER_INFO:
-                var mp = MessagePacket.Deserialize(packet.Data);
-                SetNetworkId(mp.senderID);
-                ConnectionStatus = ConnectionStatusEnum.IDLE;
-                break;
-        }
+        if ((PacketType)packet.Type != PacketType.PACKET_TEST) return;
+        var message = TestPacket.Deserialize(packet.Data);
+        Debug.Log($"[TESTPACKET] {message.message}");
     }
 
     public void ParsePacketAction(Packet packet)
@@ -358,7 +318,6 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         if (arr[0] == "ENTERED")
         {
             roomNumber = int.Parse(arr[1]);
-            connectionStatusString = arr[0];
             Debug.Log($"[room{roomNumber}] room {roomNumber} matched!");
             ConnectionStatus = ConnectionStatusEnum.ROOM;
 
@@ -366,7 +325,6 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
             IEnumerator ELoadScene()
             {
-                m_networkTestCanvas.SetActive(false);
                 AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(1);
 
                 yield return new WaitUntil(() => asyncLoad.isDone);
@@ -381,7 +339,6 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         }
         else if (arr[0] == "START")
         {
-            connectionStatusString = mp.message;
             // arr[1]의 플레이어가 선턴을 잡고 시작함
             Debug.Log($"[room{roomNumber}] game start! with first player {arr[1]}");
             ConnectionStatus = ConnectionStatusEnum.INGAME;
