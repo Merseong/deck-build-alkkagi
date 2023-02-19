@@ -21,14 +21,33 @@ public class NotificationPanel : MonoBehaviour
             .AppendInterval(0.9f)
             .Append(transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad));
     }
-    public void Show(Sprite sprite)
+    public void Show(bool isLocalHonor)
     {
         ScaleOne();
-        centerImage.sprite = sprite;
-        Sequence sequence = DOTween.Sequence()
-            .Append(centerImage.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.InOutQuad))
-            .AppendInterval(0.9f)
-            .Append(centerImage.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad));
+        if (isLocalHonor)
+        {
+            centerImage.sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Honor_1");
+            Sequence sequence = DOTween.Sequence()
+                .Append(centerImage.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.InOutQuad))
+                .AppendInterval(0.9f)
+                .Append(centerImage.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad))
+                .AppendInterval(0.01f)
+                .Append(transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad));
+
+
+        }
+        else
+        {
+            centerImage.sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Honor_0");
+            Sequence sequence = DOTween.Sequence()
+                .Append(centerImage.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad))
+                .AppendInterval(0.9f)
+                .Append(centerImage.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.InOutQuad))
+                .AppendInterval(0.9f)
+                .Append(centerImage.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad))
+                .AppendInterval(0.01f)
+                .Append(transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad));
+        }
     }
     public void Show()
     {
@@ -36,7 +55,9 @@ public class NotificationPanel : MonoBehaviour
         Sequence sequence = DOTween.Sequence()
             .Append(rejectPanel.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.InOutQuad))
             .AppendInterval(0.9f)
-            .Append(rejectPanel.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad));
+            .Append(rejectPanel.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad))
+            .AppendInterval(0.01f)
+            .Append(transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InOutQuad));
     }
 
     private void Start() => ScaleZero();

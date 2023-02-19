@@ -497,11 +497,13 @@ public class GameManager : SingletonBehavior<GameManager>
             // 4 | NORMAL | WAIT or HS
             if (turnStates[(int)SecondPlayer] == TurnState.HONORSKIP)
             {
+                IngameUIManager.Inst.HonorSkipPanel.Show(false);
                 SetHSPlayer(OppoPlayer);
             }
         }
         else // 선공이 아무 행동 안하고 턴종시 HS
         {
+            IngameUIManager.Inst.HonorSkipPanel.Show(true);
             nextTotalTurn = 3;
             nextTurnStates[(int)FirstPlayer] = TurnState.WAITFORHSCONSENT;
             nextTurnStates[(int)SecondPlayer] = TurnState.NORMAL;
@@ -543,6 +545,7 @@ public class GameManager : SingletonBehavior<GameManager>
         // 선공의 HS -> 후공의 동의
         if (turnStates[(int)FirstPlayer] == TurnState.WAITFORHSCONSENT)
         {
+            IngameUIManager.Inst.HonorSkipPanel.Show(false);
             // 3 | WAITFORCONSENT | NORMAL
             isTurnEnded = false;
             yield return new WaitUntil(() => isTurnEnded);
@@ -582,6 +585,7 @@ public class GameManager : SingletonBehavior<GameManager>
             else
             {
                 // 후공의 HS
+                IngameUIManager.Inst.HonorSkipPanel.Show(true);
                 nextTurnStates[(int)FirstPlayer] = TurnState.NORMAL;
                 nextTurnStates[(int)SecondPlayer] = TurnState.HONORSKIP;
                 SetHSPlayer(LocalPlayer);
@@ -614,7 +618,6 @@ public class GameManager : SingletonBehavior<GameManager>
             sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Honor_0");
         }
         IngameUIManager.Inst.HonorMarkImage.sprite = sprite;
-        IngameUIManager.Inst.HonorSkipPanel.Show(sprite);
         #endregion
 
         // 아너스킵
