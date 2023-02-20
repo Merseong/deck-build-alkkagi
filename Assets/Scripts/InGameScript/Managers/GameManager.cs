@@ -98,6 +98,8 @@ public class GameManager : SingletonBehavior<GameManager>
     public ushort initialTurnCost = 6;
     public ushort normalTurnCost = 3;
 
+    public int knightEnterCount = 0;
+
     public void Start()
     {
         NetworkManager.Inst.AddReceiveDelegate(TurnInfoReceiveNetworkAction);
@@ -174,6 +176,8 @@ public class GameManager : SingletonBehavior<GameManager>
         nextTurnStates[(int)SecondPlayer] = TurnState.PREPARE;
 
         IngameUIManager.Inst.TempCurrentTurnText.text = LocalTurnState.ToString();
+
+        knightEnterCount = 0;
 
         // inspector에서 직접 설정 필요
         players[0].InitPlayer(PlayerEnum.LOCAL, NetworkManager.Inst.NetworkId);

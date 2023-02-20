@@ -3,6 +3,18 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Card Data",menuName = "Scriptable Object/Card Data")]
 public class CardData : ScriptableObject
 {
+    public void SetCost(CardData cardData, int cardCost)
+    {
+        this.cardID = cardData.cardID;
+        this.cardName = cardData.cardName;
+        this.cardEngName = cardData.cardEngName;
+        this.stoneSize = cardData.stoneSize;
+        this.stoneWeight = cardData.stoneWeight;
+        this.inDeckNumber = cardData.inDeckNumber;
+        this.description = cardData.description;
+        this.cardCost = cardCost;
+    }
+
     // 고유ID
     [SerializeField]
     private int cardID;

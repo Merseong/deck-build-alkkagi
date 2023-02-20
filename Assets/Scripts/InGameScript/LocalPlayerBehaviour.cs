@@ -430,6 +430,27 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         informPanel.SetInformation(data, GameManager.Inst.stoneAtlas, IngameUIManager.Inst.UIAtlas);
     }
 
+    public void SetKnightCommanderCost()
+    {
+        foreach(var item in hand)
+        {
+            if(item.CardData.CardID == 25)
+            {
+                item.CardData = Util.GetCostRevisedCardData(-GameManager.Inst.knightEnterCount, 25, GameManager.Inst.CardDatas);
+                item.SetSprite(item.CardData);
+            }
+        }
+
+        for(int i=0; i<deck.Count; i++)
+        {
+            if(deck[i].CardID == 25)
+            {
+                deck.Insert(i, Util.GetCostRevisedCardData(-GameManager.Inst.knightEnterCount, 25, GameManager.Inst.CardDatas));
+                deck.RemoveAt(i+1);
+            }
+        }
+    }
+
     private Vector3 ScreenPosToNormalized(Vector3 vec)
     {
         Vector3 curTouchPosition = Camera.main.ScreenToWorldPoint(vec);

@@ -280,4 +280,12 @@ public static class Util
         }
         return dict;
     }
+
+    public static CardData GetCostRevisedCardData(int amount, int cardID, List<CardData> cardDatas)
+    {
+        CardData data = GetCardDataFromID(cardID, cardDatas);
+        CardData newData = ScriptableObject.CreateInstance("CardData") as CardData;
+        newData.SetCost(data, Mathf.Max(data.cardCost + amount, 0));
+        return newData;
+    }
 }
