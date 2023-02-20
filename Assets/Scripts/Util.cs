@@ -5,6 +5,7 @@ using UnityEngine.U2D;
 using UnityEngine.EventSystems;
 using System.Text;
 using System;
+using System.Linq;
 
 [System.Serializable]
 public class RPS
@@ -186,6 +187,9 @@ public static class Util
         return results.Count > 0;
     }
 
+    public static List<CardData> GenerateDeckFromDeckCode(string deckCode, List<CardData> CardDataDic) =>
+        GenerateDeckFromDeckCode(deckCode, CardDataListToDictionary(CardDataDic));
+
     public static List<CardData> GenerateDeckFromDeckCode(string deckCode, Dictionary<int, CardData> CardDataDic)
     {
         List<CardData> result = new();
@@ -262,5 +266,15 @@ public static class Util
     {
         if(id == 0) return null;
         return CardDataDic[id];
+    }
+
+    public static Dictionary<int, CardData> CardDataListToDictionary(List<CardData> list)
+    {
+        var dict = new Dictionary<int, CardData>();
+        for (int i = 0; i < list.Count; ++i)
+        {
+            dict.Add(i, list[i]);
+        }
+        return dict;
     }
 }

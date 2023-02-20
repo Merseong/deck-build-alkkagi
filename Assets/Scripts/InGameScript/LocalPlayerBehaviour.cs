@@ -16,10 +16,6 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     private InformationPanel informPanel;
 
     [SerializeField] private List<CardData> deck;
-    //Temp local cardData 
-    [SerializeField] private List<CardData> cardDataSource;
-    private Dictionary<int, CardData> cardDataDic = new();
-
     [SerializeField] private List<Card> hand;
     [SerializeField] private GameObject cardPrefab;
     [SerializeField] Transform cardSpawnPoint;
@@ -138,10 +134,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     {
         deck.Clear();
 
-        foreach(var item in cardDataSource) cardDataDic.Add(item.CardID, item);
-
         //TODO : Should generate deck from user DB
-        var cardData = Util.GenerateDeckFromDeckCode(deckCode, cardDataDic);
+        var cardData = Util.GenerateDeckFromDeckCode(deckCode, GameManager.Inst.CardDatas);
 
         foreach(var item in cardData)
         {

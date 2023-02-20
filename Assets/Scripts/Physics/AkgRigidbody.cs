@@ -340,8 +340,6 @@ public class AkgRigidbody : MonoBehaviour
         Vector3 acceleration = force / Mass;
         velocity += Time.fixedDeltaTime * acceleration;
 
-        Time.timeScale = 0.2f;
-
         RecordVelocity();
         CollideForecast();
     }
@@ -350,7 +348,7 @@ public class AkgRigidbody : MonoBehaviour
     {
         if (IsStatic) return;
 
-        velocity = vel;
+        velocity = vel; 
     }
 
     public void OnCollision(AkgRigidbody akg, Vector3 point)
