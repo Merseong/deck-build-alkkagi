@@ -8,6 +8,6 @@ public class BladelessManStoneBehaviour : StoneBehaviour
     {
         base.InitProperty();
 
-        Properties.Add(new SprintProperty(this));
+        AddProperty(new SprintProperty(this));
     }
 }

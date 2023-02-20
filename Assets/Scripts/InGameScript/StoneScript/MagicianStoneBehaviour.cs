@@ -8,6 +8,6 @@ public class MagicianStoneBehaviour: StoneBehaviour
     {
         base.InitProperty();
 
-        Properties.Add(new ShieldProperty(this));
+        AddProperty(new ShieldProperty(this));
     }
 }
