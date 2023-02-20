@@ -104,7 +104,7 @@ public class GameManager : SingletonBehavior<GameManager>
         NetworkManager.Inst.AddReceiveDelegate(RoomExitReceiveNetworkAction);
 
 #if UNITY_EDITOR
-        if (!NetworkManager.Inst.IsNetworkMode) InitializeGame(isLocalGoFirst, "0109190E1221", 0, 100.ToString());
+        if (!NetworkManager.Inst.IsNetworkMode) InitializeGame(isLocalGoFirst, "0109190E12", 0, 100.ToString());
 #endif
     }
 
