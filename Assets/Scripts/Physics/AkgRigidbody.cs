@@ -122,6 +122,7 @@ public class AkgRigidbody : MonoBehaviour
                 var colAkgObject = collidableList[i];
                 if (collidedList.Contains(colAkgObject.GetInstanceID())) continue;
                 collidedList.Add(colAkgObject.GetInstanceID());
+                colAkgObject.collidedList.Add(GetInstanceID());
 
                 colAkgObject.OnCollision(this, point);
                 OnCollision(colAkgObject, point);
