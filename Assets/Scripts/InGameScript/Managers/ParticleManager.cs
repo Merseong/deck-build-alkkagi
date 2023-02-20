@@ -6,6 +6,10 @@ public class ParticleManager : SingletonBehavior<ParticleManager>
 {
     public readonly Dictionary<GameObject, List<GameObject>> particleDic = new();
 
+    public GameObject collideParticlePrefab;
+    public GameObject directExitParticlePrefab;
+    public ParticleSystem followingStonePrefab;
+
     public void RegisterParticle(GameObject particle)
     {
         if(particleDic.ContainsKey(particle)) return;

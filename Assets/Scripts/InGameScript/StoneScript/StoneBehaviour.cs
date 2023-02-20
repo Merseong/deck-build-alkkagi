@@ -20,6 +20,19 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     // 파괴 이벤트
     // 타격 이벤트
 
+    #region StoneTyes
+    public static Type GetStoneWithID(int id)
+    {
+        switch (id)
+        {
+            case 3: return typeof(TinyRobotStoneBehaviour);
+            case 10: return typeof(MagicianStoneBehaviour);
+            case 32: return typeof(CycloneStoneBehaviour);
+            default: return typeof(StoneBehaviour);
+        }
+    }
+    #endregion
+
     public virtual void OnEnter() { }
     public virtual void OnExit() { }
 
@@ -71,6 +84,10 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     {
         boardTransform = GameObject.Find("Board").transform;
         akgRigidbody = GetComponent<AkgRigidbody>();
+
+        collideParticle = ParticleManager.Inst.collideParticlePrefab;
+        directExitParticle = ParticleManager.Inst.directExitParticlePrefab;
+        followingStone = ParticleManager.Inst.followingStonePrefab;
         ParticleManager.Inst.RegisterParticle(collideParticle);
         ParticleManager.Inst.RegisterParticle(directExitParticle);
 

@@ -361,7 +361,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6663944191401573526}
   - component: {fileID: 6663944191401573522}
-  - component: {fileID: 6663944191401573521}
   - component: {fileID: 6019077282944342910}
   m_Layer: 6
   m_Name: Stone
@@ -404,38 +403,13 @@ MonoBehaviour:
   velocity: {x: 0, y: 0, z: 0}
   isStatic: 0
   mass: 0.1
-  drag: 1
+  dragAccel: 1
   cor: 0.5
   colliderType: 0
-  circleCenter: {x: 0, y: 0, z: 0}
+  circleCenterOffset: {x: 0, y: 0, z: 0}
   circleRadius: 0.5
   rectPoints: {x: 0, y: 0, z: 0, w: 0}
   layerMask: 0
---- !u!114 &6663944191401573521
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6663944191401573520}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1277c01d083f7f4f99af58c9a3cb759, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stoneId: 0
-  boardTransform: {fileID: 0}
-  cardData: {fileID: 11400000, guid: ad9eecbeeeab2e44eb513eee02c0e6da, type: 2}
-  collideParticle: {fileID: 8393250706075246204, guid: be7e4ae1e2e2e6f40b943eb27519abec, type: 3}
-  directExitParticle: {fileID: 143605036211117833, guid: c298094e823c15d4f9cc7d9bacaa6127, type: 3}
-  followingStone: {fileID: 3312677705765057702, guid: 3869364b4791ba44ea66661c5967a3ea, type: 3}
-  _ChasingSpeed: 0.1
-  isClicked: 0
-  belongingPlayer: 0
-  isExiting: 0
-  isExitingByPlaying: 0
-  indirectExitTime: 2
-  indirectExitSpeed: 1
 --- !u!136 &6019077282944342910
 CapsuleCollider:
   m_ObjectHideFlags: 0

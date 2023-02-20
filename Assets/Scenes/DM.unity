@@ -595,6 +595,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 482e3d3e1e82da740948f6dd43598ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collideParticlePrefab: {fileID: 8393250706075246204, guid: be7e4ae1e2e2e6f40b943eb27519abec, type: 3}
+  directExitParticlePrefab: {fileID: 143605036211117833, guid: c298094e823c15d4f9cc7d9bacaa6127, type: 3}
+  followingStonePrefab: {fileID: 3312677705765057702, guid: 3869364b4791ba44ea66661c5967a3ea, type: 3}
 --- !u!4 &1562199838
 Transform:
   m_ObjectHideFlags: 0

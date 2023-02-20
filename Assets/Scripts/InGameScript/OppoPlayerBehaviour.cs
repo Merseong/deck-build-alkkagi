@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,7 +38,9 @@ public class OppoPlayerBehaviour : PlayerBehaviour
     {
         //FIXME : 카드에 맞는 스톤을 런타임에 생성해줘야 함
         GameObject spawnedStone = Instantiate(StonePrefab, spawnPosition, Quaternion.identity);
-        var stoneBehaviour = spawnedStone.GetComponent<StoneBehaviour>();
+        //var stoneBehaviour = spawnedStone.GetComponent<StoneBehaviour>();
+        Type stoneType = StoneBehaviour.GetStoneWithID(cardData.CardID);
+        var stoneBehaviour = spawnedStone.AddComponent(stoneType) as StoneBehaviour;
         var newStoneId = AddStone(stoneBehaviour);
         stoneBehaviour.SetCardData(cardData, newStoneId, Player);
 
