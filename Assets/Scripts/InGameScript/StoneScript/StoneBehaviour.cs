@@ -394,6 +394,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     public void OnCollide(AkgRigidbody collider, Vector3 collidePoint, bool isCollided)
     {
         Debug.Log($"{cardData.name} is collided with {collider.GetComponent<StoneBehaviour>()?.cardData.name}: {isCollided}");
+        OnHit?.Invoke(collider);
         //TODO : should prevent doubly occuring particle between two stone collision
         StartCoroutine(ParticleManager.Inst.PlayParticle(collideParticle, collidePoint, curVelocity / 20f, curVelocity / 20f));
         if (isCollided)
