@@ -855,7 +855,6 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         bool isTouchOnCancel = RectTransformUtility.RectangleContainsScreenPoint(cancelPanel, curScreenTouchPosition, null);
         isDragging = !isTouchOnCancel;
 
-        isDragging = !isTouchOnCancel;
         StartCoroutine(EShootTokenAlert());
 
         dragEndPoint = curTouchPositionNormalized;

@@ -316,6 +316,7 @@ MonoBehaviour:
   nextTurnStates: 0000000000000000
   initialTurnCost: 6
   normalTurnCost: 3
+  knightEnterCount: 0
   isInHonorSkipRoutine: 0
   isLocalDoAction: 0
   isTurnEnded: 0
@@ -767,7 +768,7 @@ PrefabInstance:
       objectReference: {fileID: 1500342745}
     - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: deck.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: cardDragThreshold
@@ -776,7 +777,11 @@ PrefabInstance:
     - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: deck.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: 2620d0c0e39281641ae3dd845f4cbe27, type: 2}
+      objectReference: {fileID: 11400000, guid: c63d0f8263dbbd3478b822897e439d0f, type: 2}
+    - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: deck.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: c63d0f8263dbbd3478b822897e439d0f, type: 2}
     - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: cardDataSource.Array.size
       value: 29
