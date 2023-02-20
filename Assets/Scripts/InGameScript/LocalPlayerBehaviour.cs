@@ -350,6 +350,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         //var stoneBehaviour = spawnedStone.GetComponent<StoneBehaviour>();
         Type stoneType = StoneBehaviour.GetStoneWithID(cardData.CardID);
         var stoneBehaviour = spawnedStone.AddComponent(stoneType) as StoneBehaviour;
+        stoneBehaviour.enabled = true;
         var newStoneId = AddStone(stoneBehaviour);
         stoneBehaviour.SetCardData(cardData, newStoneId, Player);
 

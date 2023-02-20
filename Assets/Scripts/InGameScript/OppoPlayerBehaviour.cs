@@ -42,6 +42,7 @@ public class OppoPlayerBehaviour : PlayerBehaviour
         Type stoneType = StoneBehaviour.GetStoneWithID(cardData.CardID);
         Debug.Log(stoneType);
         var stoneBehaviour = spawnedStone.AddComponent(stoneType) as StoneBehaviour;
+        stoneBehaviour.enabled = true;
         var newStoneId = AddStone(stoneBehaviour);
         stoneBehaviour.SetCardData(cardData, newStoneId, Player);
 
