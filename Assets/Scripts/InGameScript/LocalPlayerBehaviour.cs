@@ -416,6 +416,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         ShootTokenAvailable = false;
         selectedStone.ChangeSpriteAndRot("Shoot", IsLocalRotated);
         selectedStone.InvokeShootEnter();
+        strikingStone = selectedStone;
         StartCoroutine(EShootStone(selectedStone));
         selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);
     }
@@ -447,6 +448,9 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
             isAllStoneStop = true;
         }
+
+        strikingStone = null;
+        firedStone.InvokeShootExit();
 
         foreach (StoneBehaviour stone in GameManager.Inst.AllStones.Values)
         {
@@ -1092,6 +1096,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
                 IngameUIManager.Inst.UserAlertPanel.Alert("Not enough cost for shooting stone!"); // "코스트가 부족합니다"
                 return;
             }
+
 
             float VelocityCalc = Mathf.Lerp(minShootVelocity, maxShootVelocity, Mathf.Min(moveVec.magnitude, maxDragLimit) / maxDragLimit) * velocityMultiplier;
             ShootStone(moveVec.normalized * selectedStone.GetComponent<AkgRigidbody>().Mass * VelocityCalc);

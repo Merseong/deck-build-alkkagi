@@ -146,6 +146,11 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         OnShootEnter?.Invoke();
     }
 
+    public void InvokeShootExit()
+    {
+        OnShootExit?.Invoke();
+    }
+
     public void RemoveStoneFromGame()
     {
         isExiting = true;
@@ -428,6 +433,9 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
             }
         }
 
+        //Fuction for make additional action when collided at individual stone behaviour
+        StoneCollisionProperty(collider, collidePoint, isCollided);
+
         //TODO : should prevent doubly occuring particle between two stone collision
         StartCoroutine(ParticleManager.Inst.PlayParticle(collideParticle, collidePoint, curVelocity / 20f, curVelocity / 20f));
         if (isCollided)
@@ -435,4 +443,6 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
             // if collided, change sprite to collided
         }
     }
+
+    protected virtual void StoneCollisionProperty(AkgRigidbody collider, Vector3 collidePoint, bool isCollided){}
 }

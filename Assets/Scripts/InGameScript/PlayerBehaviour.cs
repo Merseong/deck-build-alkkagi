@@ -71,6 +71,10 @@ public abstract class PlayerBehaviour : MonoBehaviour
     public event Action OnTurnStart;
     public event Action OnTurnEnd;
 
+    //플레이어가 발사한 스톤, 다른 스톤들에서는 이 스톤의 충돌 여부를 확인하여 타격 여부를 결정하여야 함
+    protected StoneBehaviour strikingStone;
+    public StoneBehaviour StrikingStone => strikingStone;
+
     public void StartTurn()
     {
         DrawCards(1);
