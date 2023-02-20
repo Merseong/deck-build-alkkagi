@@ -26,6 +26,11 @@ public class OppoPlayerBehaviour : PlayerBehaviour
         {
             Debug.LogError("[OPPO] player enum not matched!!");
         }
+
+        NetworkManager.Inst.UpdateUserData(uid, (oppoUser) =>
+        {
+            IngameUIManager.Inst.SetEnemyInfo(oppoUser.nickname, oppoUser.win + oppoUser.honorWin, oppoUser.lose + oppoUser.honorLose);
+        });
     }
 
     public override int SpawnStone(CardData cardData, Vector3 spawnPosition, int stoneId = -1)

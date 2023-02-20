@@ -29,6 +29,9 @@ public class ResultSceneControlManager : SingletonBehavior<ResultSceneControlMan
 
     public void MoveToMenuScene()
     {
-        SceneManager.LoadScene("DeckChooseScene");
+        NetworkManager.Inst.UpdateUserData((_) =>
+        {
+            SceneManager.LoadScene("DeckChooseScene");
+        });
     }
 }

@@ -60,6 +60,7 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
     public RectTransform SettingPanel => settingPanel;
     [SerializeField] private Button optionButton;
 
+    [Header("Enemy")]
     [SerializeField] private TextMeshProUGUI enemyCostText;
     [SerializeField] private Image enemyTokenImage;
 
@@ -69,6 +70,7 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
     [SerializeField] private Button enemyInfoPanelButton;
     [SerializeField] private TextMeshProUGUI enemyInfoDeckHandText;
 
+    [Header("Result")]
     [SerializeField] private RectTransform resultPanel;
     public RectTransform ResultPanel => resultPanel;
     [SerializeField] private Image honorMarkImage;
@@ -149,10 +151,12 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
     /// 한번만 설정하면 되는 정보들
     /// </summary>
     /// <param name="enemyPlayer"></param>
-    public void SetEnemyInfo(OppoPlayerBehaviour enemyPlayer)
+    public void SetEnemyInfo(string nickname, uint win, uint lose)
     {
         //닉네임
+        enemyInfoPanel.GetChild(1).GetComponent<TextMeshProUGUI>().text = nickname;
         //승패전적
+        enemyInfoPanel.GetChild(2).GetComponent<TextMeshProUGUI>().text = $"{win} Win | {lose} Lose";
     }
 
     /// <summary>

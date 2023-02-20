@@ -188,8 +188,11 @@ public class GameManager : SingletonBehavior<GameManager>
     public void StartGame()
     {
         LocalPlayer.DrawCards(5);
-        LocalPlayer.ResetCost(); // temp
+        LocalPlayer.ResetCost();
         LocalPlayer.ShootTokenAvailable = true;
+        OppoPlayer.DrawCards(5);
+        OppoPlayer.ResetCost();
+        OppoPlayer.ShootTokenAvailable = true;
         UpdateTurnEndButtonText();
         if (isLocalGoFirst)
         {

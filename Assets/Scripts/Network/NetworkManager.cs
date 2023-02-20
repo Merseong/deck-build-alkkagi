@@ -206,6 +206,67 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     }
 
     #region User actions
+    /// <summary>
+    /// update self (local user)
+    /// </summary>
+    /// <returns></returns>
+    public void UpdateUserData(Action<UserDataPacket> updatedCallback = null)
+    {
+        AddReceiveDelegate(UserInfoReceiveNetworkAction);
+        SendData(new MessagePacket
+        {
+            senderID = NetworkId
+        }, PacketType.USER_INFO);
+
+        void UserInfoReceiveNetworkAction(Packet packet)
+        {
+            if (packet.Type != (short)PacketType.USER_INFO) return;
+            var msg = UserDataPacket.Deserialize(packet.Data);
+
+            if (msg.isSuccess)
+            {
+                UserData = msg;
+                updatedCallback?.Invoke(msg);
+            }
+            else
+            {
+                Debug.LogError("[LOCAL] get local user info from server is failed");
+            }
+
+            RemoveReceiveDelegate(UserInfoReceiveNetworkAction);
+        }
+    }
+
+    /// <summary>
+    /// Get userdata about user with uid
+    /// </summary>
+    /// <param name="uid"></param>
+    /// <param name="updatedCallback"></param>
+    public void UpdateUserData(uint uid, Action<UserDataPacket> otherUserCallback)
+    {
+        AddReceiveDelegate(OtherUserInfoReceiveNetworkAction);
+        SendData(new MessagePacket
+        {
+            senderID = uid
+        }, PacketType.USER_INFO);
+
+        void OtherUserInfoReceiveNetworkAction(Packet packet)
+        {
+            if (packet.Type != (short)PacketType.USER_INFO) return;
+            var msg = UserDataPacket.Deserialize(packet.Data);
+
+            if (msg.isSuccess && msg.uid == uid)
+            {
+                otherUserCallback(msg);
+            }
+            else
+            {
+                Debug.LogError("[LOCAL] get other user info from server is failed");
+            }
+
+            RemoveReceiveDelegate(OtherUserInfoReceiveNetworkAction);
+        }
+    }
     #endregion
 
     #region Delegate Control functions
@@ -324,6 +385,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
             // 선턴ID 상대ID 내덱 상대덱장수
             // arr[1]의 플레이어가 선턴을 잡고 시작함
             Debug.Log($"[room{roomNumber}] game start! with first player {arr[1]}");
+            Debug.Log(mp.message);
             ConnectionStatus = ConnectionStatusEnum.INGAME;
             GameManager.Inst.InitializeGame(NetworkId == int.Parse(arr[1]), arr[3], uint.Parse(arr[2]), arr[4]);
         }

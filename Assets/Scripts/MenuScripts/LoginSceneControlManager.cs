@@ -177,7 +177,6 @@ public class LoginSceneControlManager : MonoBehaviour
                 NetworkManager.Inst.AddReceiveDelegate(NetworkManager.Inst.ParsePacketAction);
                 NetworkManager.Inst.RemoveReceiveDelegate(LoginDataReceiveNetworkAction);
                 // 씬이동
-                Debug.Log(msg.uid);
                 SceneManager.LoadScene("DeckChooseScene");
             }
             else

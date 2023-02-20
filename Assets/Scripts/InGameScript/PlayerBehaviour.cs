@@ -99,7 +99,6 @@ public abstract class PlayerBehaviour : MonoBehaviour
             nextStoneId = 1;
         }
         ShootTokenAvailable = true;
-
         
         GameManager.Inst.SetPlayerData(() =>
         {
