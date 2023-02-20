@@ -31,13 +31,13 @@ public class Guard : MonoBehaviour, AkgRigidbodyInterface
         {
             gameObject.transform.GetComponent<MeshRenderer>().material.color = Color.green;
             //gameObject.layer = LayerMask.NameToLayer("LocalGuard");
-            akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.LOCAL;
+            akgRigidbody.layerMask = AkgLayerMask.LOCAL;
         }
         else
         {
             gameObject.transform.GetComponent<MeshRenderer>().material.color = Color.red;
             //gameObject.layer = LayerMask.NameToLayer("OppoGuard");
-            akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.OPPO;
+            akgRigidbody.layerMask = AkgLayerMask.OPPO;
         } 
     }
 

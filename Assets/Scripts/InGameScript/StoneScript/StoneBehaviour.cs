@@ -171,12 +171,12 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         belongingPlayer = owner;
         if (BelongingPlayer == GameManager.PlayerEnum.LOCAL)
         {
-            akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.LOCAL | AkgPhysicsManager.AkgLayerMaskEnum.STONE;
+            akgRigidbody.layerMask = AkgLayerMask.LOCAL | AkgLayerMask.STONE;
             OnEnter();
         }
         else
         {
-            akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.OPPO | AkgPhysicsManager.AkgLayerMaskEnum.STONE;
+            akgRigidbody.layerMask = AkgLayerMask.OPPO | AkgLayerMask.STONE;
             // oppo stone의 경우, 이후 추가 action을 수신하면 그때 OnEnter를 호출한다.
         }
     }
@@ -401,7 +401,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         Debug.Log($"{cardData.name} is collided with {collider.GetComponent<StoneBehaviour>()?.cardData.name}: {isCollided}");
         OnHit?.Invoke(collider);
 
-        if (collider.layerMask.HasFlag(AkgPhysicsManager.AkgLayerMaskEnum.COLLIDED))
+        if (collider.layerMask.HasFlag(AkgLayerMask.COLLIDED))
         {
             if (HasAccelShield())
             {

@@ -4,6 +4,18 @@ using UnityEngine;
 using System.Linq;
 using System;
 
+[Flags]
+public enum AkgLayerMask
+{
+    DEFAULT = 0,
+    LOCAL = 1,
+    OPPO = 1 << 1,
+    STONE = 1 << 2,
+    GHOST = 1 << 3,
+    SHIELD = 1 << 4,
+    COLLIDED = 1 << 5,
+}
+
 public class AkgPhysicsManager : SingletonBehavior<AkgPhysicsManager>
 {
     /// <summary>
@@ -18,17 +30,6 @@ public class AkgPhysicsManager : SingletonBehavior<AkgPhysicsManager>
     private HashSet<AkgRigidbody> rigidbodies;
     [SerializeField] private int rigidbodyCounter = 0;
 
-    [Flags]
-    public enum AkgLayerMaskEnum
-    {
-        DEFAULT = 0,
-        LOCAL = 1,
-        OPPO = 1 << 1,
-        STONE = 1 << 2,
-        GHOST = 1 << 3,
-        SHIELD = 1 << 4,
-        COLLIDED = 1 << 5,
-    }
     //[Tooltip(@"
     //    비트마스킹으로 쓰면됨
     //    ex) OPPOSTONE(0)은 OPPOGUARD와 OPPOSTONE끼리 -> (10001),
@@ -77,28 +78,28 @@ public class AkgPhysicsManager : SingletonBehavior<AkgPhysicsManager>
     #endregion
 
     #region Layer control
-    public bool GetLayerCollide(AkgLayerMaskEnum l1, AkgLayerMaskEnum l2)
+    public bool GetLayerCollide(AkgLayerMask l1, AkgLayerMask l2)
     {
-        if (l1 == AkgLayerMaskEnum.DEFAULT || l2 == AkgLayerMaskEnum.DEFAULT)
+        if (l1 == AkgLayerMask.DEFAULT || l2 == AkgLayerMask.DEFAULT)
             return true;
 
-        if (!l1.HasFlag(AkgLayerMaskEnum.STONE))
+        if (!l1.HasFlag(AkgLayerMask.STONE))
             return false;
 
-        if (!l2.HasFlag(AkgLayerMaskEnum.STONE))
+        if (!l2.HasFlag(AkgLayerMask.STONE))
         {
             if (!IsSameSide(l1, l2))
                 return false;
 
-            return !l2.HasFlag(AkgLayerMaskEnum.COLLIDED) || l1.HasFlag(AkgLayerMaskEnum.SHIELD);
+            return !l2.HasFlag(AkgLayerMask.COLLIDED) || l1.HasFlag(AkgLayerMask.SHIELD);
         }
 
-        return !l1.HasFlag(AkgLayerMaskEnum.GHOST) && !l2.HasFlag(AkgLayerMaskEnum.GHOST);
+        return !l1.HasFlag(AkgLayerMask.GHOST) && !l2.HasFlag(AkgLayerMask.GHOST);
     }
 
-    private bool IsSameSide(AkgLayerMaskEnum l1, AkgLayerMaskEnum l2)
+    private bool IsSameSide(AkgLayerMask l1, AkgLayerMask l2)
     {
-        return (~(l1 ^ l2) & (AkgLayerMaskEnum.LOCAL | AkgLayerMaskEnum.OPPO)) != 0;
+        return (~(l1 ^ l2) & (AkgLayerMask.LOCAL | AkgLayerMask.OPPO)) != 0;
     }
     #endregion
 }

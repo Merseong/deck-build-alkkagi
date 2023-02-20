@@ -15,14 +15,14 @@ public class ShieldProperty : StoneProperty
     {
         base.OnAdded(isReplaced);
 
-        baseStone.GetComponent<AkgRigidbody>().layerMask |= AkgPhysicsManager.AkgLayerMaskEnum.SHIELD;
+        baseStone.GetComponent<AkgRigidbody>().layerMask |= AkgLayerMask.SHIELD;
     }
 
     public override void OnRemoved(bool isReplaced = false)
     {
         base.OnRemoved(isReplaced);
 
-        baseStone.GetComponent<AkgRigidbody>().layerMask &= ~AkgPhysicsManager.AkgLayerMaskEnum.SHIELD;
+        baseStone.GetComponent<AkgRigidbody>().layerMask &= ~AkgLayerMask.SHIELD;
     }
 
     public override int ShieldCount(int value) { return value + shieldCount; }

@@ -66,7 +66,8 @@ public class AkgRigidbody : MonoBehaviour
     public float circleRadius;
     [Tooltip("x, y에 작은 x, 작은 z를 / z, w에 큰 x, 큰 z를 넣는다")]
     public Vector4 rectPoints;
-    public AkgPhysicsManager.AkgLayerMaskEnum layerMask = AkgPhysicsManager.AkgLayerMaskEnum.DEFAULT;
+
+    public AkgLayerMask layerMask = AkgLayerMask.DEFAULT;
 
     private AkgRigidbody[] collidableList;
     private bool isForecasting = false;

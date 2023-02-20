@@ -268,6 +268,6 @@ public class GameBoard : MonoBehaviour
         playerGuards.TryGetValue(id, out var guard);
         guard.GetComponent<Renderer>().enabled = false;
         AkgRigidbody akgRigidbody = guard.GetComponent<AkgRigidbody>();
-        akgRigidbody.layerMask |= AkgPhysicsManager.AkgLayerMaskEnum.COLLIDED;
+        akgRigidbody.layerMask |= AkgLayerMask.COLLIDED;
     }
 }
