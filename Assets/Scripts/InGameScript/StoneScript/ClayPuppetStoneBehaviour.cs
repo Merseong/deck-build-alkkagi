@@ -9,7 +9,6 @@ public class ClayPuppetStoneBehaviour : StoneBehaviour
     {
         OnShootEnter += () =>{
             GameManager.Inst.players[(int)BelongingPlayer].GetCost(1);
-            Debug.Log("shoot!!!");
         };
     }
 

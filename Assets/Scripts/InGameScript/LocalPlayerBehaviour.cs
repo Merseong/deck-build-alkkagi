@@ -415,6 +415,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         GameManager.Inst.SetLocalDoAction();
         ShootTokenAvailable = false;
         selectedStone.ChangeSpriteAndRot("Shoot", IsLocalRotated);
+        selectedStone.InvokeShootEnter();
         StartCoroutine(EShootStone(selectedStone));
         selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);
     }
