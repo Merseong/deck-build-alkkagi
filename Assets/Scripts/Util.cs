@@ -261,6 +261,9 @@ public static class Util
         return result;
     }
 
+    public static CardData GetCardDataFromID(int id, List<CardData> CardDataDic) =>
+        GetCardDataFromID(id, CardDataListToDictionary(CardDataDic));
+
     //TODO : Derive CardData from DB
     public static CardData GetCardDataFromID(int id, Dictionary<int, CardData> CardDataDic)
     {
@@ -271,9 +274,9 @@ public static class Util
     public static Dictionary<int, CardData> CardDataListToDictionary(List<CardData> list)
     {
         var dict = new Dictionary<int, CardData>();
-        for (int i = 0; i < list.Count; ++i)
+        foreach(var item in list)
         {
-            dict.Add(i, list[i]);
+            dict.Add(item.CardID, item);
         }
         return dict;
     }

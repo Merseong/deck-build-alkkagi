@@ -766,9 +766,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1500342745}
     - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: deck.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: cardDragThreshold
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: deck.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 2620d0c0e39281641ae3dd845f4cbe27, type: 2}
     - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: cardDataSource.Array.size
       value: 29

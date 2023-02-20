@@ -23,13 +23,17 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     #region StoneTyes
     public static Type GetStoneWithID(int id)
     {
-        switch (id)
+        
+        Type type = Type.GetType(Util.GetCardDataFromID(id, GameManager.Inst.CardDatas).cardEngName + "StoneBehaviour");
+        Debug.Log(id + ", " + type);
+        if(type == null)
         {
-            case 3: return typeof(TinyRobotStoneBehaviour);
-            case 10: return typeof(MagicianStoneBehaviour);
-            case 32: return typeof(CycloneStoneBehaviour);
-            default: return typeof(StoneBehaviour);
-        }
+            return typeof(StoneBehaviour);
+        } 
+        else
+        {
+            return type;
+        } 
     }
     #endregion
 

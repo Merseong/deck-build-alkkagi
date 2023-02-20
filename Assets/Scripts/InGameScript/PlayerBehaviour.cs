@@ -145,6 +145,13 @@ public abstract class PlayerBehaviour : MonoBehaviour
         }
             
     }
+
+    public void GetCost(int gained) => GetCost((ushort)gained);
+    public void GetCost(ushort gained)
+    {
+        Cost += gained;
+    }
+
     #endregion
 
     #region Card functions

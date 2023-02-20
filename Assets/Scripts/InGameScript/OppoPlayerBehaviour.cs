@@ -40,6 +40,7 @@ public class OppoPlayerBehaviour : PlayerBehaviour
         GameObject spawnedStone = Instantiate(StonePrefab, spawnPosition, Quaternion.identity);
         //var stoneBehaviour = spawnedStone.GetComponent<StoneBehaviour>();
         Type stoneType = StoneBehaviour.GetStoneWithID(cardData.CardID);
+        Debug.Log(stoneType);
         var stoneBehaviour = spawnedStone.AddComponent(stoneType) as StoneBehaviour;
         var newStoneId = AddStone(stoneBehaviour);
         stoneBehaviour.SetCardData(cardData, newStoneId, Player);
