@@ -104,7 +104,7 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         if(!isDeckAvailable[idx])
         {
             deckUnlockSelectedIdx = idx;
-            deckUnlockInformText.text = "Will you unlock " + deckNames[idx] +"?";
+            deckUnlockInformText.text = deckNames[idx] + "을 해금하시겠습니까?";
 
             deckUnlockPanel.gameObject.SetActive(true);
             return;

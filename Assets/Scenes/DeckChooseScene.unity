@@ -727,8 +727,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: profile
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
+  m_sharedMaterial: {fileID: -159030982959892821, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -752,7 +752,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36.4
+  m_fontSize: 35.5
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -957,11 +957,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 12985c4e161e61c4f90e73f2a4b37943, type: 2}
   - {fileID: 11400000, guid: 7bb324639ab464649a3ec1cef64cd434, type: 2}
   deckNames:
-  - Knight deck
-  - Aggro deck
-  - Ghost deck
-  - Curse deck
-  - Big deck
+  - "\uAE30\uC0AC\uB371"
+  - "\uBB3C\uB7C9 \uC9C8\uC8FC"
+  - "\uBCF4\uD638 \uACE0\uC2A4\uD2B8\uB371"
+  - "\uC800\uC8FC \uAE30\uB984\uB371"
+  - "\uBE45\uB371"
   deckCodes:
   - 0109190E1221
   - 14030D1D1F20
@@ -1212,8 +1212,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Nickname
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
+  m_sharedMaterial: {fileID: -159030982959892821, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1592,8 +1592,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Win N game against honor skipped opponent
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
+  m_sharedMaterial: {fileID: -159030982959892821, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1617,7 +1617,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 43.55
+  m_fontSize: 45.85
   m_fontSizeBase: 47.8
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1861,8 +1861,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Win N game after honor skip
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
+  m_sharedMaterial: {fileID: -159030982959892821, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1886,7 +1886,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50.8
+  m_fontSize: 56.7
   m_fontSizeBase: 47.8
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2550,8 +2550,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Card Desciption here
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
+  m_sharedMaterial: {fileID: -159030982959892821, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2575,7 +2575,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 64.55
+  m_fontSize: 65.8
   m_fontSizeBase: 90
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2761,8 +2761,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: N wins, M loses
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
+  m_sharedMaterial: {fileID: -159030982959892821, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2786,7 +2786,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 66.95
+  m_fontSize: 72
   m_fontSizeBase: 47.8
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2896,8 +2896,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Card Name
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
+  m_sharedMaterial: {fileID: -159030982959892821, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3409,8 +3409,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Will you unlock ~~deck?
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
+  m_sharedMaterial: {fileID: -159030982959892821, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3434,7 +3434,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 58.85
+  m_fontSize: 65.75
   m_fontSizeBase: 47.8
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4479,10 +4479,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Cancel
+  m_text: "\uCDE8\uC18C"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
+  m_sharedMaterial: {fileID: -159030982959892821, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4805,8 +4805,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Lose N game after honor skip
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
+  m_sharedMaterial: {fileID: -159030982959892821, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4830,7 +4830,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 51.4
+  m_fontSize: 57.4
   m_fontSizeBase: 47.8
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5187,8 +5187,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Sound
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
+  m_sharedMaterial: {fileID: -159030982959892821, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5401,8 +5401,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Menu
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
+  m_sharedMaterial: {fileID: -159030982959892821, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5734,8 +5734,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 3
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
+  m_sharedMaterial: {fileID: -159030982959892821, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5869,8 +5869,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Logout
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
+  m_sharedMaterial: {fileID: -159030982959892821, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
