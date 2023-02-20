@@ -61,8 +61,8 @@ public class AkgRigidbody : MonoBehaviour
         Circle,
         Rect
     }
-
-    public Vector3 circleCenter;
+    public Vector3 CircleCenterPosition => transform.position + circleCenterOffset;
+    public Vector3 circleCenterOffset;
     public float circleRadius;
     [Tooltip("x, y에 작은 x, 작은 z를 / z, w에 큰 x, 큰 z를 넣는다")]
     public Vector4 rectPoints;
@@ -70,7 +70,9 @@ public class AkgRigidbody : MonoBehaviour
 
     private AkgRigidbody[] collidableList;
     private bool isForecasting = false;
-    private int collidableForecastLimit = 3;
+    private readonly int collidableRaycastForecastLimit = 3;
+    private readonly int collidableNearbyForecastLimit = 1;
+    private int CollidableForecastLimit => collidableRaycastForecastLimit + collidableNearbyForecastLimit;
     private List<int> collidedList;
 
     public void Init() => Init(0, 1f);
@@ -83,7 +85,7 @@ public class AkgRigidbody : MonoBehaviour
 
         stone = GetComponent<StoneBehaviour>();
 
-        collidableList = new AkgRigidbody[collidableForecastLimit];
+        collidableList = new AkgRigidbody[CollidableForecastLimit];
         collidedList = new();
         AkgPhysicsManager.Inst.AddAkgRigidbody(this);
     }
@@ -109,7 +111,7 @@ public class AkgRigidbody : MonoBehaviour
 
         if (!isForecasting) return;
 
-        for (int i = 0; i < collidableForecastLimit; ++i)
+        for (int i = 0; i < CollidableForecastLimit; ++i)
         {
             if (!collidableList[i]) continue;
             if (i > 0 && collidableList[i] == collidableList[i - 1]) continue;
@@ -162,7 +164,7 @@ public class AkgRigidbody : MonoBehaviour
     {
         return ColliderType switch
         {
-            ColliderTypeEnum.Circle => Vector3.Distance(transform.position + circleCenter, point) < circleRadius,
+            ColliderTypeEnum.Circle => Vector3.Distance(transform.position + circleCenterOffset, point) < circleRadius,
             ColliderTypeEnum.Rect => (point.x > transform.position.x + rectPoints.x && point.x < transform.position.x + rectPoints.z &&
                                         point.z > transform.position.z + rectPoints.y && point.z < transform.position.z + rectPoints.w),
             _ => false,
@@ -180,12 +182,12 @@ public class AkgRigidbody : MonoBehaviour
 
         if (ColliderType != ColliderTypeEnum.Circle) return false;
 
-        var collideCenter = transform.position + circleCenter;
+        var collideCenter = CircleCenterPosition;
 
         switch (targetAkg.ColliderType)
         {
             case ColliderTypeEnum.Circle:
-                var targetCenter = targetAkg.transform.position + targetAkg.circleCenter;
+                var targetCenter = targetAkg.CircleCenterPosition;
                 point = Vector3.Lerp(collideCenter, targetCenter, circleRadius / (circleRadius + targetAkg.circleRadius));
                 return Vector3.Distance(collideCenter, targetCenter) < circleRadius + targetAkg.circleRadius;
             case ColliderTypeEnum.Rect:
@@ -271,24 +273,62 @@ public class AkgRigidbody : MonoBehaviour
         return collideObject != null;
     }
 
+    private void GetNearbyCollidable(out AkgRigidbody collideObject)
+    {
+        var candidates = AkgPhysicsManager.Inst.GetFilteredRigidbodies((e) =>
+        {
+            if (e == this) return false;
+            if (collidedList.Contains(e.GetInstanceID())) return false;
+            if (!AkgPhysicsManager.Inst.GetLayerCollide(layerMask, e.layerMask)) return false;
+            return true;
+        });
+        if (candidates.Length == 0)
+        {
+            collideObject = null;
+            return;
+        }
+
+        collideObject = candidates[0];
+        var closestDist = Vector3.Distance(collideObject.CircleCenterPosition, CircleCenterPosition);
+
+        foreach (var targetAkg in candidates)
+        {
+            if (!targetAkg)
+            {
+                Debug.Log(targetAkg.GetInstanceID());
+                Debug.Break();
+                break;
+            }
+
+            var dist = Vector3.Distance(targetAkg.CircleCenterPosition, CircleCenterPosition);
+            if (dist < closestDist)
+            {
+                closestDist = dist;
+                collideObject = targetAkg;
+            }
+        }
+    }
+
     private void CollideForecast()
     {
         if (IsStatic) return;
         if (isForecasting) return;
         if (ColliderType != ColliderTypeEnum.Circle) return;
 
-        var rightPoint = transform.position + circleCenter + Vector3.Cross(velocity, Vector3.up).normalized * circleRadius;
-        var leftPoint = transform.position + circleCenter + Vector3.Cross(Vector3.up, velocity).normalized * circleRadius;
+        var rightPoint = transform.position + circleCenterOffset + Vector3.Cross(velocity, Vector3.up).normalized * circleRadius;
+        var leftPoint = transform.position + circleCenterOffset + Vector3.Cross(Vector3.up, velocity).normalized * circleRadius;
 
-        var startings = new Vector3[collidableForecastLimit];
-        startings[0] = transform.position + circleCenter;
+        var startings = new Vector3[collidableRaycastForecastLimit];
+        startings[0] = transform.position + circleCenterOffset;
         startings[1] = rightPoint;
         startings[2] = leftPoint;
 
-        for (int i = 0; i < collidableForecastLimit; ++i)
+        for (int i = 0; i < collidableRaycastForecastLimit; ++i)
         {
             Raycast(startings[i], velocity, out collidableList[i]);
         }
+
+        GetNearbyCollidable(out collidableList[3]);
 
         isForecasting = true;
     }
@@ -299,6 +339,8 @@ public class AkgRigidbody : MonoBehaviour
 
         Vector3 acceleration = force / Mass;
         velocity += Time.fixedDeltaTime * acceleration;
+
+        Time.timeScale = 0.2f;
 
         RecordVelocity();
         CollideForecast();
@@ -319,7 +361,7 @@ public class AkgRigidbody : MonoBehaviour
 
         Debug.Log($"Collision/ {transform.position} {point} {akg.velocity}");
 
-        Vector3 normal = transform.position + circleCenter - point;
+        Vector3 normal = transform.position + circleCenterOffset - point;
         normal.y = 0;
         normal = normal.normalized;
 
@@ -393,7 +435,7 @@ public class AkgRigidbody : MonoBehaviour
         switch (ColliderType)
         {
             case ColliderTypeEnum.Circle:
-                Gizmos.DrawWireSphere(transform.position + circleCenter, circleRadius);
+                Gizmos.DrawWireSphere(CircleCenterPosition, circleRadius);
                 break;
             case ColliderTypeEnum.Rect:
                 Gizmos.DrawWireCube(transform.position, new Vector3(rectPoints.z - rectPoints.x, 0.2f, rectPoints.w - rectPoints.y));
