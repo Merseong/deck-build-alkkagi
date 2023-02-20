@@ -31,19 +31,19 @@ public class Guard : MonoBehaviour, AkgRigidbodyInterface
         {
             gameObject.transform.GetComponent<MeshRenderer>().material.color = Color.green;
             //gameObject.layer = LayerMask.NameToLayer("LocalGuard");
-            akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.LOCALGUARD;
+            akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.LOCAL;
         }
         else
         {
             gameObject.transform.GetComponent<MeshRenderer>().material.color = Color.red;
             //gameObject.layer = LayerMask.NameToLayer("OppoGuard");
-            akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.OPPOGUARD;
+            akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.OPPO;
         } 
     }
 
     public void OnCollide(AkgRigidbody collider, Vector3 collidePoint, bool isCollided)
     {
-        if (isAlreadyCollided) return;
+        //if (isAlreadyCollided) return;
         if (collider.gameObject.CompareTag("Stone"))
         {
             isAlreadyCollided = true;

@@ -44,7 +44,7 @@ public abstract class StoneProperty
     // 애니메이션 같은거 여기다 넣으면 될듯
     public virtual void OnAdded(bool isReplaced = false)
     {
-        Debug.Log($"{this.GetType().Name} is added to {baseStone.CardData.name}");
+        Debug.Log($"{this.GetType().Name} is added to {baseStone.CardData?.name}");
         GameManager.Inst.GetPlayer(baseStone.BelongingPlayer).OnTurnStart += DecreaseRemainingTurn;
 
         if (!isReplaced)

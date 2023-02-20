@@ -353,6 +353,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         stoneBehaviour.enabled = true;
         var newStoneId = AddStone(stoneBehaviour);
         stoneBehaviour.SetCardData(cardData, newStoneId, Player);
+        stoneBehaviour.InitProperty();
+        stoneBehaviour.PrintProperty();
 
         //temp code
         stoneBehaviour.ChangeSpriteAndRot("Idle", IsLocalRotated);

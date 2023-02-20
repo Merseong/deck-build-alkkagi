@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class AkgPhysicsManager : SingletonBehavior<AkgPhysicsManager>
 {
@@ -17,31 +18,36 @@ public class AkgPhysicsManager : SingletonBehavior<AkgPhysicsManager>
     private HashSet<AkgRigidbody> rigidbodies;
     [SerializeField] private int rigidbodyCounter = 0;
 
+    [Flags]
     public enum AkgLayerMaskEnum
     {
         DEFAULT = 0,
-        LOCALSTONE = 1,
-        OPPOSTONE = 1 << 1,
-        LOCALGHOST = 1 << 2,
-        OPPOGHOST = 1 << 3,
-        LOCALGUARD = 1 << 4,
-        OPPOGUARD = 1 << 5,
+        LOCAL = 1,
+        OPPO = 1 << 1,
+        STONE = 1 << 2,
+        GHOST = 1 << 3,
+        SHIELD = 1 << 4,
+        COLLIDED = 1 << 5,
     }
-    [Tooltip(@"
-        비트마스킹으로 쓰면됨
-        ex) OPPOSTONE(0)은 OPPOGUARD와 OPPOSTONE끼리 -> (10001),
-            LOCALSTONE과 충돌 가능 -> LOCALSTONE에 (0100'1'1)
-    ")]
-    [SerializeField]
-    private Dictionary<AkgLayerMaskEnum, short> layerMasks = new Dictionary<AkgLayerMaskEnum, short>
-    {
-        { AkgLayerMaskEnum.LOCALSTONE,      0b_010011 },
-        { AkgLayerMaskEnum.OPPOSTONE,       0b_10001_0 },
-        { AkgLayerMaskEnum.LOCALGHOST,      0b_0100_00 },
-        { AkgLayerMaskEnum.OPPOGHOST,       0b_100_000 },
-        { AkgLayerMaskEnum.LOCALGUARD,      0b_00_0000 },
-        { AkgLayerMaskEnum.OPPOGUARD,       0b_0_00000 },
-    };
+    //[Tooltip(@"
+    //    비트마스킹으로 쓰면됨
+    //    ex) OPPOSTONE(0)은 OPPOGUARD와 OPPOSTONE끼리 -> (10001),
+    //        LOCALSTONE과 충돌 가능 -> LOCALSTONE에 (0100'1'1)
+    //")]
+    //[SerializeField]
+    //private Dictionary<AkgLayerMaskEnum, short> layerMasks = new Dictionary<AkgLayerMaskEnum, short>
+    //{
+    //    { AkgLayerMaskEnum.LOCALSTONE,          0b_0001110011 },
+    //    { AkgLayerMaskEnum.OPPOSTONE,           0b_0010110010 },
+    //    { AkgLayerMaskEnum.LOCALGHOST,          0b_0001000000 },
+    //    { AkgLayerMaskEnum.OPPOGHOST,           0b_0010000000 },
+    //    { AkgLayerMaskEnum.LOCALSHIELD,         0b_0101110000 },
+    //    { AkgLayerMaskEnum.OPPOSHIELD,          0b_1010110000 },
+    //    { AkgLayerMaskEnum.LOCALGUARD,          0b_0000000000 },
+    //    { AkgLayerMaskEnum.OPPOGUARD,           0b_0000000000 },
+    //    { AkgLayerMaskEnum.LOCALCOLLIDEDGUARD,  0b_0000000000 },
+    //    { AkgLayerMaskEnum.OPPOCOLLIDEDGUARD,   0b_0000000000 },
+    //};
 
     protected override void Awake()
     {
@@ -73,7 +79,26 @@ public class AkgPhysicsManager : SingletonBehavior<AkgPhysicsManager>
     #region Layer control
     public bool GetLayerCollide(AkgLayerMaskEnum l1, AkgLayerMaskEnum l2)
     {
-        return l1 == AkgLayerMaskEnum.DEFAULT || l2 == AkgLayerMaskEnum.DEFAULT || (layerMasks[l1] & (short)l2) != 0;
+        if (l1 == AkgLayerMaskEnum.DEFAULT || l2 == AkgLayerMaskEnum.DEFAULT)
+            return true;
+
+        if (!l1.HasFlag(AkgLayerMaskEnum.STONE))
+            return false;
+
+        if (!l2.HasFlag(AkgLayerMaskEnum.STONE))
+        {
+            if (!IsSameSide(l1, l2))
+                return false;
+
+            return !l2.HasFlag(AkgLayerMaskEnum.COLLIDED) || l1.HasFlag(AkgLayerMaskEnum.SHIELD);
+        }
+
+        return !l1.HasFlag(AkgLayerMaskEnum.GHOST) && !l2.HasFlag(AkgLayerMaskEnum.GHOST);
+    }
+
+    private bool IsSameSide(AkgLayerMaskEnum l1, AkgLayerMaskEnum l2)
+    {
+        return (~(l1 ^ l2) & (AkgLayerMaskEnum.LOCAL | AkgLayerMaskEnum.OPPO)) != 0;
     }
     #endregion
 }

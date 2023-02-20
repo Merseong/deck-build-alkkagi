@@ -260,9 +260,14 @@ public class GameBoard : MonoBehaviour
 
     public void RemoveGuard(int id)
     {
-        playerGuards.TryGetValue(id, out var guard);
-        playerGuards.Remove(id);
+        //playerGuards.TryGetValue(id, out var guard);
+        //playerGuards.Remove(id);
 
-        Destroy(guard);
+        //Destroy(guard);
+
+        playerGuards.TryGetValue(id, out var guard);
+        guard.GetComponent<Renderer>().enabled = false;
+        AkgRigidbody akgRigidbody = guard.GetComponent<AkgRigidbody>();
+        akgRigidbody.layerMask |= AkgPhysicsManager.AkgLayerMaskEnum.COLLIDED;
     }
 }

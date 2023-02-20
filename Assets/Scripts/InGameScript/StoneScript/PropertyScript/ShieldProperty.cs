@@ -17,6 +17,7 @@ public class ShieldProperty : StoneProperty
 
         baseStone.OnHit += OnHit;
 
+        baseStone.GetComponent<AkgRigidbody>().layerMask |= AkgPhysicsManager.AkgLayerMaskEnum.SHIELD;
     }
 
     public override void OnRemoved(bool isReplaced = false)
@@ -24,14 +25,16 @@ public class ShieldProperty : StoneProperty
         base.OnRemoved(isReplaced);
 
         baseStone.OnHit -= OnHit;
+
+        baseStone.GetComponent<AkgRigidbody>().layerMask &= ~AkgPhysicsManager.AkgLayerMaskEnum.SHIELD;
     }
 
     public override int ShieldCount(int value) { return value + shieldCount; }
 
     private void OnHit(AkgRigidbody akg)
     {
-        // TODO: 비어있는 guard일경우 튕겨나도록 수정
-        DecreaseShieldCount();
+        if (akg.layerMask.HasFlag(AkgPhysicsManager.AkgLayerMaskEnum.COLLIDED))
+            DecreaseShieldCount();
     }
 
     private void DecreaseShieldCount()

@@ -94,8 +94,6 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         followingStone = ParticleManager.Inst.followingStonePrefab;
         ParticleManager.Inst.RegisterParticle(collideParticle);
         ParticleManager.Inst.RegisterParticle(directExitParticle);
-
-        InitProperty();
     }
 
     private void Update()
@@ -168,12 +166,12 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         belongingPlayer = owner;
         if (BelongingPlayer == GameManager.PlayerEnum.LOCAL)
         {
-            akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.LOCALSTONE;
+            akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.LOCAL | AkgPhysicsManager.AkgLayerMaskEnum.STONE;
             OnEnter();
         }
         else
         {
-            akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.OPPOSTONE;
+            akgRigidbody.layerMask = AkgPhysicsManager.AkgLayerMaskEnum.OPPO | AkgPhysicsManager.AkgLayerMaskEnum.STONE;
             // oppo stone의 경우, 이후 추가 action을 수신하면 그때 OnEnter를 호출한다.
         }
     }
@@ -185,8 +183,6 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     public virtual void InitProperty()
     {
         Properties = new List<StoneProperty>();
-
-        PrintProperty();
     }
 
     public void AddProperty<T>(T property) where T : StoneProperty
@@ -213,7 +209,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     public void PrintProperty()
     {
-        Debug.Log($"{cardData.cardEngName} has {Properties.Count} properties");
+        Debug.Log($"{cardData?.cardEngName} has {Properties.Count} properties");
         foreach (StoneProperty property in Properties)
         {
             Debug.Log($"{property.GetType().Name}");
