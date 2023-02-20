@@ -1110,6 +1110,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 501744208}
+    - target: {fileID: 6927077438993056207, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7354582962282333413, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_RaycastTarget
       value: 0
@@ -1126,6 +1130,10 @@ PrefabInstance:
       propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8728277597245068727, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8785121465290946009, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -1136,7 +1144,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
     - target: {fileID: 8969840003157641205, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_hasFontAssetChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8971597998010432332, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1148,7 +1156,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
     - target: {fileID: 9216127350743106739, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_hasFontAssetChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
