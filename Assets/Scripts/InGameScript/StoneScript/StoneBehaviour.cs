@@ -435,7 +435,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         Destroy(gameObject);
     }
 
-    private IEnumerator EIndirectExit()
+    public IEnumerator EIndirectExit(bool isDirected = false)
     {
         transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = GetSpriteState("Break");
 
@@ -443,7 +443,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         float curTime = indirectExitTime;
         while(curTime >= 0)
         {
-            if(isStoneLeaveScreen())
+            if(isStoneLeaveScreen() || isDirected)
             {
                 DirectExit();
                 yield break;

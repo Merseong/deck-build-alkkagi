@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class RhinoElephantStoneBehaviour : StoneBehaviour
 {
-    public override void OnEnter()
+    public override void InitProperty()
     {
-        AddProperty(new PinnedProperty(this,1));
+        base.InitProperty();
+
+        AddProperty(new PinnedProperty(this, 1));
     }
 }

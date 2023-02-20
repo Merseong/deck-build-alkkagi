@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class GhostGolemStoneBehaviour : StoneBehaviour
 {
-    public override void OnEnter()
+    public override void InitProperty()
     {
+        base.InitProperty();
+
         AddProperty(new GhostProperty(this, 2));
     }
 }

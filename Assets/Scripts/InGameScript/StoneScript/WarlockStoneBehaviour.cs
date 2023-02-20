@@ -14,7 +14,10 @@ public class WarlockStoneBehaviour : StoneBehaviour
                 oppoStones.Add(stone);
             }
         }
-        int randNum = UnityEngine.Random.Range(0, oppoStones.Count);
-        oppoStones[randNum].AddProperty(new CursedProperty(oppoStones[randNum]));
+        if (oppoStones.Count != 0)
+        {
+            int randNum = UnityEngine.Random.Range(0, oppoStones.Count);
+            oppoStones[randNum].AddProperty(new CursedProperty(oppoStones[randNum]));
+        }
     }
 }

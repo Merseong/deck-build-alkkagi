@@ -14,6 +14,7 @@ public class DeadBallStoneBehaviour : StoneBehaviour
                 if (property is CursedProperty)
                 {
                     stone.RemoveStoneFromGame();
+                    stone.StartCoroutine(stone.EIndirectExit(true));
                 }
             }
         };
