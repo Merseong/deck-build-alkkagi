@@ -12,16 +12,18 @@ public class AccelShieldProperty : StoneProperty
     {
         base.OnAdded(isReplaced);
 
-        GameManager.Inst.GetPlayer(baseStone.BelongingPlayer).OnTurnStart += ResetAccelShield;
-        baseStone.OnShootEnter += UseAccelShield;
+        //GameManager.Inst.GetPlayer(baseStone.BelongingPlayer).OnTurnStart += ResetAccelShield;
+        baseStone.OnShootEnter += ResetAccelShield;
+        baseStone.OnShootExit += UseAccelShield;
     }
 
     public override void OnRemoved(bool isReplaced = false)
     {
         base.OnRemoved(isReplaced);
 
-        GameManager.Inst.GetPlayer(baseStone.BelongingPlayer).OnTurnStart -= ResetAccelShield;
-        baseStone.OnShootEnter -= UseAccelShield;
+        //GameManager.Inst.GetPlayer(baseStone.BelongingPlayer).OnTurnStart -= ResetAccelShield;
+        baseStone.OnShootEnter -= ResetAccelShield;
+        baseStone.OnShootExit -= UseAccelShield;
     }
 
     public override bool HasAccelShield(bool value) { return value || hasAccelShield; }
@@ -31,7 +33,7 @@ public class AccelShieldProperty : StoneProperty
         hasAccelShield = true;
     }
 
-    private void UseAccelShield()
+    public void UseAccelShield()
     {
         hasAccelShield = false;
     }

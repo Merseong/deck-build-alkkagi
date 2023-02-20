@@ -395,6 +395,33 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     {
         Debug.Log($"{cardData.name} is collided with {collider.GetComponent<StoneBehaviour>()?.cardData.name}: {isCollided}");
         OnHit?.Invoke(collider);
+
+        if (collider.layerMask.HasFlag(AkgPhysicsManager.AkgLayerMaskEnum.COLLIDED))
+        {
+            if (HasAccelShield())
+            {
+                foreach (StoneProperty property in Properties)
+                {
+                    if (property is AccelShieldProperty accelShield)
+                    {
+                        accelShield.UseAccelShield();
+                        return;
+                    }
+                }
+            }
+            else if (ShieldCount() > 0)
+            {
+                foreach (StoneProperty property in Properties)
+                {
+                    if (property is ShieldProperty shield)
+                    {
+                        shield.DecreaseShieldCount();
+                        return;
+                    }
+                }
+            }
+        }
+
         //TODO : should prevent doubly occuring particle between two stone collision
         StartCoroutine(ParticleManager.Inst.PlayParticle(collideParticle, collidePoint, curVelocity / 20f, curVelocity / 20f));
         if (isCollided)
