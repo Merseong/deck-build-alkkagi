@@ -868,6 +868,116 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 401668262}
   m_CullTransparentMesh: 1
+--- !u!1 &415196834
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 415196836}
+  - component: {fileID: 415196837}
+  m_Layer: 0
+  m_Name: DeckSceneManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &415196836
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415196834}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &415196837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415196834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d65e94a4f1c689344beb632efc890ffc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stoneAtlas: {fileID: 4343727234628468602, guid: 15417bec6ed96894fa69a9c23e6fd69d, type: 2}
+  UIAtlas: {fileID: 4343727234628468602, guid: 40be7c9c230f36343a4cffcd02f542e9, type: 2}
+  cardDataSource:
+  - {fileID: 11400000, guid: a564fef86eef2c445850603f81599cf9, type: 2}
+  - {fileID: 11400000, guid: 496ef489890ede146b69ae6fe4d3e1af, type: 2}
+  - {fileID: 11400000, guid: 28e861c4b941ae646ba6b06ec2374604, type: 2}
+  - {fileID: 11400000, guid: 12a28ffd7caf1a34e84ffa02681060ba, type: 2}
+  - {fileID: 11400000, guid: 7d206d13b4e238546a5598604226a860, type: 2}
+  - {fileID: 11400000, guid: 8457863b85a974640b7f5fd91ed2472c, type: 2}
+  - {fileID: 11400000, guid: 95995268e2f9939409ece5d1d7d759c3, type: 2}
+  - {fileID: 11400000, guid: 07884d0dcbf438c44bb8aa20f387a832, type: 2}
+  - {fileID: 11400000, guid: 1746fd9ff4c80eb48b0452848afaba60, type: 2}
+  - {fileID: 11400000, guid: d8b7be31bbdf6a84fa26201c7017817f, type: 2}
+  - {fileID: 11400000, guid: 1a699cd8e41fe4547822762daef94d79, type: 2}
+  - {fileID: 11400000, guid: d0f59c4c2f3fa0b429c2c31d7d8a3f71, type: 2}
+  - {fileID: 11400000, guid: d3a820ae21f0d1644bba91fb20064ffb, type: 2}
+  - {fileID: 11400000, guid: 517ab329aca387c42879c1afd05e3056, type: 2}
+  - {fileID: 11400000, guid: c4c645f30b523b1458dd284504bb8d30, type: 2}
+  - {fileID: 11400000, guid: c63d0f8263dbbd3478b822897e439d0f, type: 2}
+  - {fileID: 11400000, guid: f70e838b2d9caad49a564e585d800f85, type: 2}
+  - {fileID: 11400000, guid: 2620d0c0e39281641ae3dd845f4cbe27, type: 2}
+  - {fileID: 11400000, guid: f1f2ce7fc49c2e14193cacbcc118388d, type: 2}
+  - {fileID: 11400000, guid: ef7ca51b33b000f4bbcfba2f9d9ae90c, type: 2}
+  - {fileID: 11400000, guid: c2484515b47dbfd4599e14ff5ea63d31, type: 2}
+  - {fileID: 11400000, guid: 771b6bcf09bce7c469d53fea58eb76ad, type: 2}
+  - {fileID: 11400000, guid: a531c3ca1b2cf0841bd4bd32a50eb6f2, type: 2}
+  - {fileID: 11400000, guid: 53a0a2d1f48cb5546a37a25ef7e5edd9, type: 2}
+  - {fileID: 11400000, guid: 37bf74fb2beb4474e8d45b4a87275204, type: 2}
+  - {fileID: 11400000, guid: 23568d4562b0a8e48bdbb6f16ed3cd34, type: 2}
+  - {fileID: 11400000, guid: 70d23d0614bddaa49b618b632e75eaba, type: 2}
+  - {fileID: 11400000, guid: 12985c4e161e61c4f90e73f2a4b37943, type: 2}
+  - {fileID: 11400000, guid: 7bb324639ab464649a3ec1cef64cd434, type: 2}
+  deckNames:
+  - Knight deck
+  - Aggro deck
+  - Ghost deck
+  - Curse deck
+  - Big deck
+  deckCodes:
+  - 0109190E1221
+  - 14030D1D1F20
+  - 0411020B0A10
+  - 150C1B1E2223
+  - 24091A130F02
+  isDeckAvailable: 0100000000
+  CurrentSelectedDeckIdx: -1
+  deckListPrefab: {fileID: 510714388249941805, guid: 82e0919760497f34e8c666d27b58d8d4, type: 3}
+  cardDisplayPrefab: {fileID: 5534593511224668582, guid: cb8656573fe0368429aaffddce07b2bc, type: 3}
+  deckList: {fileID: 1864114147}
+  deckUnlockPanel: {fileID: 457608254}
+  deckUnlockCancelButton: {fileID: 176500524}
+  deckUnlockInformText: {fileID: 1054838302}
+  unlockRequirementGoldText: {fileID: 1049644090}
+  profilePanel: {fileID: 401668263}
+  profileCloseButton: {fileID: 1093981953}
+  profileOpenButton: {fileID: 1156361416}
+  menuPanel: {fileID: 730389204}
+  menuBackgroundPanel: {fileID: 997501339}
+  menuOpenButton: {fileID: 1043578787}
+  menuCloseButton: {fileID: 997501340}
+  cardInformPanel: {fileID: 416043640}
+  moneyText: {fileID: 1341717676}
+  nicknameText: {fileID: 426025780}
+  recordText: {fileID: 929469060}
+  honorWinText: {fileID: 565825578}
+  honorLoseText: {fileID: 1603855689}
 --- !u!1 &416043638
 GameObject:
   m_ObjectHideFlags: 0
@@ -2316,7 +2426,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 875813226}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 415196837}
+        m_TargetAssemblyTypeName: DeckChooseManager, Assembly-CSharp
+        m_MethodName: OnClickMatchButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &875813226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4514,7 +4636,6 @@ GameObject:
   - component: {fileID: 1554551438}
   - component: {fileID: 1554551437}
   - component: {fileID: 1554551436}
-  - component: {fileID: 1554551439}
   m_Layer: 5
   m_Name: deckList
   m_TagString: Untagged
@@ -4611,79 +4732,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1554551434}
   m_CullTransparentMesh: 1
---- !u!114 &1554551439
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1554551434}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d65e94a4f1c689344beb632efc890ffc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stoneAtlas: {fileID: 4343727234628468602, guid: 15417bec6ed96894fa69a9c23e6fd69d, type: 2}
-  UIAtlas: {fileID: 4343727234628468602, guid: 40be7c9c230f36343a4cffcd02f542e9, type: 2}
-  cardDataSource:
-  - {fileID: 11400000, guid: a564fef86eef2c445850603f81599cf9, type: 2}
-  - {fileID: 11400000, guid: 496ef489890ede146b69ae6fe4d3e1af, type: 2}
-  - {fileID: 11400000, guid: 28e861c4b941ae646ba6b06ec2374604, type: 2}
-  - {fileID: 11400000, guid: 12a28ffd7caf1a34e84ffa02681060ba, type: 2}
-  - {fileID: 11400000, guid: 7d206d13b4e238546a5598604226a860, type: 2}
-  - {fileID: 11400000, guid: 8457863b85a974640b7f5fd91ed2472c, type: 2}
-  - {fileID: 11400000, guid: 95995268e2f9939409ece5d1d7d759c3, type: 2}
-  - {fileID: 11400000, guid: 07884d0dcbf438c44bb8aa20f387a832, type: 2}
-  - {fileID: 11400000, guid: 1746fd9ff4c80eb48b0452848afaba60, type: 2}
-  - {fileID: 11400000, guid: d8b7be31bbdf6a84fa26201c7017817f, type: 2}
-  - {fileID: 11400000, guid: 1a699cd8e41fe4547822762daef94d79, type: 2}
-  - {fileID: 11400000, guid: d0f59c4c2f3fa0b429c2c31d7d8a3f71, type: 2}
-  - {fileID: 11400000, guid: d3a820ae21f0d1644bba91fb20064ffb, type: 2}
-  - {fileID: 11400000, guid: 517ab329aca387c42879c1afd05e3056, type: 2}
-  - {fileID: 11400000, guid: c4c645f30b523b1458dd284504bb8d30, type: 2}
-  - {fileID: 11400000, guid: c63d0f8263dbbd3478b822897e439d0f, type: 2}
-  - {fileID: 11400000, guid: f70e838b2d9caad49a564e585d800f85, type: 2}
-  - {fileID: 11400000, guid: 2620d0c0e39281641ae3dd845f4cbe27, type: 2}
-  - {fileID: 11400000, guid: f1f2ce7fc49c2e14193cacbcc118388d, type: 2}
-  - {fileID: 11400000, guid: ef7ca51b33b000f4bbcfba2f9d9ae90c, type: 2}
-  - {fileID: 11400000, guid: c2484515b47dbfd4599e14ff5ea63d31, type: 2}
-  - {fileID: 11400000, guid: 771b6bcf09bce7c469d53fea58eb76ad, type: 2}
-  - {fileID: 11400000, guid: a531c3ca1b2cf0841bd4bd32a50eb6f2, type: 2}
-  - {fileID: 11400000, guid: 53a0a2d1f48cb5546a37a25ef7e5edd9, type: 2}
-  - {fileID: 11400000, guid: 37bf74fb2beb4474e8d45b4a87275204, type: 2}
-  - {fileID: 11400000, guid: 23568d4562b0a8e48bdbb6f16ed3cd34, type: 2}
-  - {fileID: 11400000, guid: 70d23d0614bddaa49b618b632e75eaba, type: 2}
-  - {fileID: 11400000, guid: 12985c4e161e61c4f90e73f2a4b37943, type: 2}
-  - {fileID: 11400000, guid: 7bb324639ab464649a3ec1cef64cd434, type: 2}
-  deckNames:
-  - Knight deck
-  - Aggro deck
-  - Ghost deck
-  - Curse deck
-  - Big deck
-  deckCodes:
-  - 0109190E1221
-  - 14030D1D1F20
-  - 0411020B0A10
-  - 150C1B1E2223
-  - 24091A130F02
-  isDeckAvailable: 0100000000
-  CurrentSelectedDeckIdx: -1
-  deckListPrefab: {fileID: 510714388249941805, guid: 82e0919760497f34e8c666d27b58d8d4, type: 3}
-  cardDisplayPrefab: {fileID: 5534593511224668582, guid: cb8656573fe0368429aaffddce07b2bc, type: 3}
-  deckList: {fileID: 1864114147}
-  deckUnlockPanel: {fileID: 457608254}
-  deckUnlockCancelButton: {fileID: 176500524}
-  deckUnlockInformText: {fileID: 1054838302}
-  unlockRequirementGoldText: {fileID: 1049644090}
-  profilePanel: {fileID: 401668263}
-  profileCloseButton: {fileID: 1093981953}
-  profileOpenButton: {fileID: 1156361416}
-  menuPanel: {fileID: 730389204}
-  menuBackgroundPanel: {fileID: 997501339}
-  menuOpenButton: {fileID: 1043578787}
-  menuCloseButton: {fileID: 997501340}
-  cardInformPanel: {fileID: 416043640}
 --- !u!1 &1603855687
 GameObject:
   m_ObjectHideFlags: 0

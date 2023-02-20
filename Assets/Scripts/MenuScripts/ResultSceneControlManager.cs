@@ -25,13 +25,10 @@ public class ResultSceneControlManager : SingletonBehavior<ResultSceneControlMan
 
         Destroy(result.gameObject);
         result = null;
-
-        // control network manager canvas
-        NetworkManager.Inst.RefreshUI(true);
     }
 
     public void MoveToMenuScene()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("DeckChooseScene");
     }
 }

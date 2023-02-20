@@ -14,7 +14,7 @@ public class DeckDisplayUI : MonoBehaviour
     private void Start()
     {
         selectButton.onClick.AddListener(() => {
-            transform.parent.parent.parent.GetComponent<DeckChooseManager>().DeckSelection(deckIdx);
+            DeckChooseManager.Inst.DeckSelection(deckIdx);
         });
     }
     

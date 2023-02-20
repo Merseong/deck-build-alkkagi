@@ -10,6 +10,9 @@ public abstract class PlayerBehaviour : MonoBehaviour
     [SerializeField] private GameManager.PlayerEnum player;
     public GameManager.PlayerEnum Player => player;
 
+    [SerializeField] private uint uid = 0;
+    public uint Uid => uid;
+
     [SerializeField] protected ushort cost;
     public ushort Cost
     {
@@ -81,9 +84,10 @@ public abstract class PlayerBehaviour : MonoBehaviour
         OnTurnEnd?.Invoke();
     }
 
-    public virtual void InitPlayer(GameManager.PlayerEnum pEnum)
+    public virtual void InitPlayer(GameManager.PlayerEnum pEnum, uint uid)
     {
         player = pEnum;
+        this.uid = uid;
         Stones.Clear();
         if (GameManager.Inst.isLocalGoFirst && player == GameManager.PlayerEnum.LOCAL ||
             !GameManager.Inst.isLocalGoFirst && player == GameManager.PlayerEnum.OPPO)
@@ -145,6 +149,14 @@ public abstract class PlayerBehaviour : MonoBehaviour
     #endregion
 
     #region Card functions
+    public virtual void InitDeck(string deckCode)
+    {
+        if (!ushort.TryParse(deckCode, out deckCount))
+        {
+            deckCount = 100;
+        }
+    }
+
     public virtual void DrawCards(int number)
     {
         HandCount += (ushort)number;

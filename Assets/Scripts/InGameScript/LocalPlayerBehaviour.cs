@@ -99,15 +99,13 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             DrawCards(1);
     }
 
-    public override void InitPlayer(GameManager.PlayerEnum pEnum)
+    public override void InitPlayer(GameManager.PlayerEnum pEnum, uint uid)
     {
-        base.InitPlayer(pEnum);
+        base.InitPlayer(pEnum, uid);
         if (pEnum != GameManager.PlayerEnum.LOCAL)
         {
             Debug.LogError("[LOCAL] player enum not matched!!");
         }
-
-        InitDeck();
 
         if (!GameManager.Inst.isLocalGoFirst)
         {
@@ -136,20 +134,21 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         stoneGhost.SetActive(false);
     }
 
-    private void InitDeck()
+    public override void InitDeck(string deckCode)
     {
         deck.Clear();
 
         foreach(var item in cardDataSource) cardDataDic.Add(item.CardID, item);
 
         //TODO : Should generate deck from user DB
-        var cardData = Util.GenerateDeckFromDeckCode("0109190E1221", cardDataDic);
+        var cardData = Util.GenerateDeckFromDeckCode(deckCode, cardDataDic);
 
         foreach(var item in cardData)
         {
             for(int i=0; i<item.inDeckNumber; i++) deck.Add(item);
         }
 
+        DeckCount = (ushort)cardData.Count;
         ShuffleDeck();
     }
 

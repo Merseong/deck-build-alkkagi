@@ -28,7 +28,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     public uint NetworkId => networkId;
     [SerializeField] private int roomNumber = -1;
     
-    enum ConnectionStatusEnum
+    public enum ConnectionStatusEnum
     {
         DISCONNECTED,
         CONNECTING,
@@ -37,15 +37,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         ROOM,
         INGAME,
     }
-    [SerializeField] private ConnectionStatusEnum _connectionStatus;
-    private ConnectionStatusEnum ConnectionStatus
-    {
-        get => _connectionStatus;
-        set
-        {
-            _connectionStatus = value;
-        }
-    }
+    public ConnectionStatusEnum ConnectionStatus;
 
     public delegate void ParsePacketDelegate(Packet packet);
     private ParsePacketDelegate ParsePacket;
@@ -189,6 +181,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         }
         if (networkId != 0) return;
         networkId = id;
+        ConnectionStatus = ConnectionStatusEnum.IDLE;
     }
 
     public void SendData<T>(Data<T> data, PacketType type) where T : class
@@ -212,7 +205,10 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         syncVarDict[netID] = (data, callback);
     }
 
-#region Delegate Control functions
+    #region User actions
+    #endregion
+
+    #region Delegate Control functions
     public void AddReceiveDelegate(ParsePacketDelegate func)
     {
         ParsePacket += func;
@@ -234,21 +230,6 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 #endregion
 
 #region Send Actions
-
-    public void EnterGameRoom()
-    {
-        if (!m_isNetworkMode) return;
-
-        if (ConnectionStatus != ConnectionStatusEnum.IDLE) return;
-
-        ConnectionStatus = ConnectionStatusEnum.MATCHMAKING;
-
-        var toSend = new MessagePacket();
-        toSend.senderID = networkId;
-        toSend.message = "ENTER";
-        var sendPacket = new Packet().Pack(PacketType.ROOM_CONTROL, toSend);
-        Client.Send(sendPacket);
-    }
 
     /// <summary>
     /// 임시, 겜매니저로 옮기든 할듯
@@ -315,7 +296,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     private void CheckMessageEntered(MessagePacket mp)
     {
         var arr = mp.message.Split(" ");
-        if (arr[0] == "ENTERED")
+        if (arr[0] == "ENTERED/")
         {
             roomNumber = int.Parse(arr[1]);
             Debug.Log($"[room{roomNumber}] room {roomNumber} matched!");
@@ -325,7 +306,8 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
             IEnumerator ELoadScene()
             {
-                AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(1);
+                // 씬이름 바꿔야됨
+                AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("DM");
 
                 yield return new WaitUntil(() => asyncLoad.isDone);
 
@@ -337,12 +319,13 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
                 Client.Send(sendPacket);
             }
         }
-        else if (arr[0] == "START")
+        else if (arr[0] == "START/")
         {
+            // 선턴ID 상대ID 내덱 상대덱장수
             // arr[1]의 플레이어가 선턴을 잡고 시작함
             Debug.Log($"[room{roomNumber}] game start! with first player {arr[1]}");
             ConnectionStatus = ConnectionStatusEnum.INGAME;
-            GameManager.Inst.InitializeGame(NetworkId == int.Parse(arr[1]));
+            GameManager.Inst.InitializeGame(NetworkId == int.Parse(arr[1]), arr[3], uint.Parse(arr[2]), arr[4]);
         }
         else if (arr[0] == "EXIT/")
         {

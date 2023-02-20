@@ -104,7 +104,7 @@ public class GameManager : SingletonBehavior<GameManager>
         NetworkManager.Inst.AddReceiveDelegate(RoomExitReceiveNetworkAction);
 
 #if UNITY_EDITOR
-        if (!NetworkManager.Inst.IsNetworkMode) InitializeGame(isLocalGoFirst);
+        if (!NetworkManager.Inst.IsNetworkMode) InitializeGame(isLocalGoFirst, "0109190E1221", 0, 100.ToString());
 #endif
     }
 
@@ -161,7 +161,7 @@ public class GameManager : SingletonBehavior<GameManager>
     #endregion
 
     #region Turn Control
-    public void InitializeGame(bool localFirst)
+    public void InitializeGame(bool localFirst, string localDeckCode, uint oppoUid, string oppoDeckCount)
     {
         OnTurnStart += StartTurnBasis;
         OnTurnStart += OppoStartTurnBasis;
@@ -176,11 +176,17 @@ public class GameManager : SingletonBehavior<GameManager>
         IngameUIManager.Inst.TempCurrentTurnText.text = LocalTurnState.ToString();
 
         // inspector에서 직접 설정 필요
-        players[0].InitPlayer(PlayerEnum.LOCAL);
-        players[1].InitPlayer(PlayerEnum.OPPO);
+        players[0].InitPlayer(PlayerEnum.LOCAL, NetworkManager.Inst.NetworkId);
+        players[0].InitDeck(localDeckCode);
+        players[1].InitPlayer(PlayerEnum.OPPO, oppoUid);
+        players[1].InitDeck(oppoDeckCount);
         GameBoard.InitGameBoard();
 
-        // Start game
+        StartGame();
+    }
+
+    public void StartGame()
+    {
         LocalPlayer.DrawCards(5);
         LocalPlayer.ResetCost(); // temp
         LocalPlayer.ShootTokenAvailable = true;

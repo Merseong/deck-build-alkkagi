@@ -19,9 +19,9 @@ public class OppoPlayerBehaviour : PlayerBehaviour
             NetworkManager.Inst.RemoveReceiveDelegate(PlayCardReceiveNetworkAction);
     }
 
-    public override void InitPlayer(GameManager.PlayerEnum pEnum)
+    public override void InitPlayer(GameManager.PlayerEnum pEnum, uint uid)
     {
-        base.InitPlayer(pEnum);
+        base.InitPlayer(pEnum, uid);
         if (pEnum != GameManager.PlayerEnum.OPPO)
         {
             Debug.LogError("[OPPO] player enum not matched!!");

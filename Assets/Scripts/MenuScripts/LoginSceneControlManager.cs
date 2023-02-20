@@ -36,7 +36,8 @@ public class LoginSceneControlManager : MonoBehaviour
 
     private void Start()
     {
-        NetworkManager.Inst.OnConnected += () =>
+        NetworkManager.Inst.RefreshReceiveDelegate();
+        NetworkManager.Inst.OnConnected = () =>
         {
             WaitPanelObject.SetActive(false);
             LoginCanvasObject.SetActive(true);
@@ -133,7 +134,6 @@ public class LoginSceneControlManager : MonoBehaviour
 
     public void OnLoginButtonClicked()
     {
-        Debug.Log($"{idValue} / {passwordValue} / {isAutoLogin}");
         LoginDataSendNetworkAction(idValue, passwordValue);
     }
 
@@ -141,25 +141,25 @@ public class LoginSceneControlManager : MonoBehaviour
     {
         if (isLoginDataSent) return;
         isLoginDataSent = true;
-        LoginCanvasObject.SetActive(false);
-        WaitPanelObject.SetActive(true);
         NetworkManager.Inst.SendData(new MessagePacket
         {
             senderID = 1,
             message = $"{loginId}@{password}",
         }, PacketType.USER_LOGIN);
+        LoginCanvasObject.SetActive(false);
+        WaitPanelObject.SetActive(true);
     }
 
     private void RegisterSendNetworkAction(string loginId, string password, string nickname)
     {
         if (isRegisterSent) return;
         isRegisterSent = true;
-        WaitPanelObject.SetActive(true);
         NetworkManager.Inst.SendData(new MessagePacket
         {
             senderID = 0,
             message = $"{loginId} {password} {nickname}",
         }, PacketType.USER_LOGIN);
+        WaitPanelObject.SetActive(true);
     }
 
     private void LoginDataReceiveNetworkAction(Packet p)
@@ -174,6 +174,7 @@ public class LoginSceneControlManager : MonoBehaviour
                 isLoginDataSent = false;
                 NetworkManager.Inst.UserData = msg;
                 NetworkManager.Inst.SetNetworkId(msg.uid);
+                NetworkManager.Inst.AddReceiveDelegate(NetworkManager.Inst.ParsePacketAction);
                 NetworkManager.Inst.RemoveReceiveDelegate(LoginDataReceiveNetworkAction);
                 // 씬이동
                 Debug.Log(msg.uid);

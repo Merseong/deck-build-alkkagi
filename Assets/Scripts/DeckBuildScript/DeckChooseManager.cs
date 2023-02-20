@@ -44,6 +44,15 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
     [SerializeField] Button menuCloseButton;
     [SerializeField] InformationPanel cardInformPanel;
 
+    [Header("Main view")]
+    [SerializeField] private TextMeshProUGUI moneyText;
+
+    [Header("User profile")]
+    [SerializeField] private TextMeshProUGUI nicknameText;
+    [SerializeField] private TextMeshProUGUI recordText;
+    [SerializeField] private TextMeshProUGUI honorWinText;
+    [SerializeField] private TextMeshProUGUI honorLoseText;
+
     private void Start()
     {
         Initiallize();
@@ -52,7 +61,7 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
     private void Initiallize()
     {
         //TODO : Later should derived from DB
-        foreach(var item in cardDataSource)
+        foreach (var item in cardDataSource)
         {
             CardDataDic.Add(item.CardID, item);
         }
@@ -83,7 +92,6 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
             menuPanel.gameObject.SetActive(false);
             menuBackgroundPanel.gameObject.SetActive(false);
         });
-
 
         SetPlayerProfile();
     }
@@ -117,7 +125,15 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
 
     public void SetPlayerProfile()
     {
+        if (NetworkManager.Inst.UserData == null) return;
 
+        // set ui from userdata
+        var userData = NetworkManager.Inst.UserData;
+        moneyText.text = $"{userData.moneyPoint} G";
+        nicknameText.text = userData.nickname;
+        recordText.text = $"{userData.win} win / {userData.lose} lose";
+        honorWinText.text = $"{userData.honorWin} wins with HONOR";
+        honorLoseText.text = $"{userData.honorLose} loses with HONOR";
     }
 
     public string GenerateDeckCode(List<CardData> data)
@@ -156,4 +172,22 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         }
     }
 
+    public void OnClickMatchButton()
+    {
+        EnterRoomSendNetworkAction();
+    }
+
+    private void EnterRoomSendNetworkAction()
+    {
+        if (NetworkManager.Inst.ConnectionStatus != NetworkManager.ConnectionStatusEnum.IDLE) return;
+        if (CurrentSelectedDeckIdx < 0) return;
+
+        NetworkManager.Inst.ConnectionStatus = NetworkManager.ConnectionStatusEnum.MATCHMAKING;
+
+        NetworkManager.Inst.SendData(new MessagePacket
+        {
+            senderID = NetworkManager.Inst.NetworkId,
+            message = $"ENTER/ {deckCodes[CurrentSelectedDeckIdx]}" // ENTER/ (덱코드 혹은 덱인덱스)
+        }, PacketType.ROOM_CONTROL);
+    }
 }
