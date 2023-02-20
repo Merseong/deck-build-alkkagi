@@ -79,7 +79,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     public bool isExiting = false;
     public bool isExitingByPlaying = false;
-    [SerializeField] float indirectExitTime;
+    [SerializeField] float indirectExitTime = 1f;
     [SerializeField] float indirectExitSpeed;
 
     public List<StoneProperty> Properties { get; private set; }
@@ -159,6 +159,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
                 zPosition = transform.position.z,
             });
         OnExit();
+        GameManager.Inst.players[(int)BelongingPlayer].InvokeCowardGhosts();
         GameManager.Inst.players[(int)BelongingPlayer].RemoveStone(stoneId);
         akgRigidbody.SetDragAccel(0);
         akgRigidbody.BeforeDestroy();
