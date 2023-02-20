@@ -420,7 +420,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 415196837}
         m_TargetAssemblyTypeName: DeckChooseManager, Assembly-CSharp
-        m_MethodName: OnClickDeckUnlockButtonClick
+        m_MethodName: OnDeckUnlockButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1751,9 +1751,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: SurrenderButtonAction
+      - m_Target: {fileID: 415196837}
+        m_TargetAssemblyTypeName: DeckChooseManager, Assembly-CSharp
+        m_MethodName: OnLogoutButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2442,7 +2442,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 415196837}
         m_TargetAssemblyTypeName: DeckChooseManager, Assembly-CSharp
-        m_MethodName: OnClickMatchButton
+        m_MethodName: OnMatchButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -151,6 +151,10 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
     public void ConnectServer()
     {
+        if (ConnectionStatus == ConnectionStatusEnum.CONNECTING && m_client.Driver.IsCreated)
+        { // 로그아웃 한 후 재호출되었을때
+            OnConnected?.Invoke();
+        }
         if (!m_isNetworkMode || ConnectionStatus != ConnectionStatusEnum.DISCONNECTED)
         {
             return;
@@ -174,9 +178,11 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
     public void SetNetworkId(uint id, bool reset = false)
     {
-        if (reset)
+        if (reset) // 로그아웃시에도 사용
         {
             networkId = 0;
+            UserData = null;
+            ConnectionStatus = ConnectionStatusEnum.CONNECTING;
             return;
         }
         if (networkId != 0) return;
@@ -290,7 +296,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     }
 #endregion
 
-#region Send Actions
+    #region Send Actions
 
     /// <summary>
     /// 임시, 겜매니저로 옮기든 할듯
@@ -325,9 +331,9 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
             Client.Send(p);
         }
     }
-#endregion
+    #endregion
 
-#region Receive Actions
+    #region Receive Actions
     public void BasicProcessPacket(Packet packet)
     {
         if ((PacketType)packet.Type != PacketType.PACKET_TEST) return;
@@ -407,5 +413,5 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         SyncVarDict[sp.NetID] = (_data, _callback);
         _callback();
     }
-#endregion
+    #endregion
 }

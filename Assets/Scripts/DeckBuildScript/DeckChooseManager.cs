@@ -6,6 +6,7 @@ using System.Text;
 using UnityEngine.U2D;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
 {
@@ -119,7 +120,7 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         CurrentSelectedDeckIdx = idx;
     }
 
-    public void OnClickDeckUnlockButtonClick()
+    public void OnDeckUnlockButtonClick()
     {
         if (deckUnlockSelectedIdx < 0) return;
         if (isDeckAvailable[deckUnlockSelectedIdx]) return;
@@ -140,7 +141,18 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         deckUnlockPanel.gameObject.SetActive(false);
         deckUnlockSelectedIdx = -1;
     }
-    
+
+    public void OnMatchButtonClick()
+    {
+        if (CurrentSelectedDeckIdx < 0) return;
+        EnterRoomSendNetworkAction();
+    }
+
+    public void OnLogoutButtonClick()
+    {
+        LogoutSendNetworkAction();
+    }
+
     public void CardSelection(int cardID)
     {
         cardInformPanel.gameObject.SetActive(true);
@@ -212,22 +224,26 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         }
     }
 
-    public void OnClickMatchButton()
-    {
-        EnterRoomSendNetworkAction();
-    }
-
     private void EnterRoomSendNetworkAction()
     {
         if (NetworkManager.Inst.ConnectionStatus != NetworkManager.ConnectionStatusEnum.IDLE) return;
-        if (CurrentSelectedDeckIdx < 0) return;
 
         NetworkManager.Inst.ConnectionStatus = NetworkManager.ConnectionStatusEnum.MATCHMAKING;
-
         NetworkManager.Inst.SendData(new MessagePacket
         {
             senderID = NetworkManager.Inst.NetworkId,
             message = $"ENTER/ {deckCodes[CurrentSelectedDeckIdx]}" // ENTER/ (덱코드 혹은 덱인덱스)
         }, PacketType.ROOM_CONTROL);
+    }
+
+    private void LogoutSendNetworkAction()
+    {
+        NetworkManager.Inst.SendData(new MessagePacket
+        {
+            senderID = 0,
+        }, PacketType.USER_LOGIN);
+
+        NetworkManager.Inst.SetNetworkId(0, true);
+        SceneManager.LoadScene("LoginScene");
     }
 }
