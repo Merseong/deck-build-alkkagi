@@ -140,6 +140,11 @@ public enum PacketType
     /// </summary>
     /// <remarks> UserDataPacket </remarks>
     USER_INFO,
+    /// <summary>
+    /// 상점 구매, 닉네임 변경 등 유저 정보의 수정사항이 있을 경우 사용
+    /// </summary>
+    /// <remarks>MessagePacket</remarks>
+    USER_ACTION,
     ROOM_BROADCAST,
     /// <summary>
     /// 룸의 상대편에게 메세지를 보낼 때 사용
@@ -267,7 +272,7 @@ public class UserDataPacket : Data<UserDataPacket>
     public uint win;
     public uint lose;
     public uint rating;
-    public uint deckUnlock;
+    public string deckUnlock;
     public uint moneyPoint;
     public uint honorPoint;
 }

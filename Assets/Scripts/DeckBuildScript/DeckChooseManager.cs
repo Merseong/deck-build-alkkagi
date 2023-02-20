@@ -22,6 +22,7 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
     //Temporal deck validity checker
     [SerializeField] private List<bool> isDeckAvailable = new();
     [SerializeField] private Dictionary<string, DeckDisplayUI> curDisplayingDeck = new();
+    [SerializeField] private int deckUnlockSelectedIdx = -1;
 
     [SerializeField] private int CurrentSelectedDeckIdx = -1;
 
@@ -66,11 +67,6 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
             CardDataDic.Add(item.CardID, item);
         }
 
-        foreach(var item in deckCodes)
-        {
-            DisplayDeckFromDeckcode(item);
-        }
-
         deckUnlockCancelButton.onClick.AddListener(()=>{
             deckUnlockPanel.gameObject.SetActive(false);
         });
@@ -94,6 +90,11 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         });
 
         SetPlayerProfile();
+
+        foreach (var item in deckCodes)
+        {
+            DisplayDeckFromDeckcode(item);
+        }
     }
 
     public void DeckSelection(int idx)
@@ -101,6 +102,7 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         //Selected deck is not available
         if(!isDeckAvailable[idx])
         {
+            deckUnlockSelectedIdx = idx;
             deckUnlockInformText.text = "Will you unlock " + deckNames[idx] +"?";
 
             deckUnlockPanel.gameObject.SetActive(true);
@@ -115,6 +117,28 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         curDisplayingDeck[deckCodes[idx]].SetActivation(true);
 
         CurrentSelectedDeckIdx = idx;
+    }
+
+    public void OnClickDeckUnlockButtonClick()
+    {
+        if (deckUnlockSelectedIdx < 0) return;
+        if (isDeckAvailable[deckUnlockSelectedIdx]) return;
+        if (NetworkManager.Inst.UserData.moneyPoint < 5) return; // 덱의 가격
+
+        NetworkManager.Inst.UserData.moneyPoint -= 5;
+        isDeckAvailable[deckUnlockSelectedIdx] = true;
+        var deckUnlockString = GetDeckAvailableString();
+        NetworkManager.Inst.UserData.deckUnlock = deckUnlockString;
+        NetworkManager.Inst.SendData(new MessagePacket
+        {
+            senderID = NetworkManager.Inst.NetworkId,
+            message = $"SHOP/ {deckUnlockString} 5 0"
+        }, PacketType.USER_ACTION);
+
+        SetPlayerProfile();
+        curDisplayingDeck[deckCodes[deckUnlockSelectedIdx]].SetValidity(true);
+        deckUnlockPanel.gameObject.SetActive(false);
+        deckUnlockSelectedIdx = -1;
     }
     
     public void CardSelection(int cardID)
@@ -134,6 +158,22 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         recordText.text = $"{userData.win} win / {userData.lose} lose";
         honorWinText.text = $"{userData.honorWin} wins with HONOR";
         honorLoseText.text = $"{userData.honorLose} loses with HONOR";
+
+        for (int i = 0; i < isDeckAvailable.Count; ++i)
+        {
+            isDeckAvailable[i] = (userData.deckUnlock.Length > i && userData.deckUnlock[i] == '1');
+        }
+        isDeckAvailable[0] = true; // 반드시 해금되어있음
+    }
+
+    private string GetDeckAvailableString()
+    {
+        string output = "";
+        for (int i = 0; i < isDeckAvailable.Count; ++i)
+        {
+            output += isDeckAvailable[i] ? '1' : '0';
+        }
+        return output;
     }
 
     public string GenerateDeckCode(List<CardData> data)

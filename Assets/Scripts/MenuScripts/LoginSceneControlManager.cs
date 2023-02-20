@@ -134,6 +134,16 @@ public class LoginSceneControlManager : MonoBehaviour
 
     public void OnLoginButtonClicked()
     {
+        if (idValue.Length == 0)
+        {
+            Alert("ID를 확인해주세요", Color.red);
+            return;
+        }
+        if (passwordValue.Length == 0)
+        {
+            Alert("비밀번호를 확인해주세요", Color.red);
+            return;
+        }
         LoginDataSendNetworkAction(idValue, passwordValue);
     }
 
