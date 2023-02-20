@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
@@ -298,6 +299,60 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     }
 
     #endregion
+
+    public void Shoot(Vector3 vec, bool isRotated)
+    {
+        PlayerBehaviour player = GameManager.Inst.GetPlayer(BelongingPlayer);
+
+        GameManager.Inst.SetLocalDoAction();
+        if (!CanSprint())
+            player.ShootTokenAvailable = false;
+        ChangeSpriteAndRot("Shoot", isRotated);
+        OnShootEnter?.Invoke();
+        StartCoroutine(EShoot(isRotated));
+        GetComponent<AkgRigidbody>().AddForce(vec);
+    }
+
+    private IEnumerator EShoot(bool isRotated)
+    {
+        var recorder = AkgPhysicsManager.Inst.rigidbodyRecorder;
+        recorder.StartRecord(Time.time);
+
+        //if (!ShootTokenAvailable)
+        //{
+        //    recorder.AppendEventRecord(new EventRecord
+        //    {
+        //        time = Time.time,
+        //        stoneId = firedStone.StoneId,
+        //        eventEnum = EventEnum.SPENDTOKEN,
+        //    });
+        //}
+
+        yield return null;
+        bool isAllStoneStop = false;
+
+        while (!isAllStoneStop)
+        {
+            yield return new WaitUntil(() =>
+                (GameManager.Inst.AllStones.Count == 0 ||
+                GameManager.Inst.AllStones.Values.All(x => !x.isMoving))
+            );
+
+            isAllStoneStop = true;
+        }
+
+        // shoot end
+        foreach (StoneBehaviour stone in GameManager.Inst.AllStones.Values)
+        {
+            stone.ChangeSpriteAndRot("Idle", isRotated);
+        }
+
+        // send physics records, stone final poses, event list
+        recorder.EndRecord(out var velocityRecords, out var eventRecords);
+        recorder.SendRecord(velocityRecords, eventRecords);
+
+        OnShootExit?.Invoke();
+    }
 
     public virtual Sprite GetSpriteState(string state)
     {

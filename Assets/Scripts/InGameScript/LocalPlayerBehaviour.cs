@@ -413,52 +413,16 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if (pauseEditorOnShoot) UnityEditor.EditorApplication.isPaused = true;
 #endif
         GameManager.Inst.SetLocalDoAction();
-        ShootTokenAvailable = false;
-        selectedStone.ChangeSpriteAndRot("Shoot", IsLocalRotated);
-        selectedStone.InvokeShootEnter();
         strikingStone = selectedStone;
-        StartCoroutine(EShootStone(selectedStone));
-        selectedStone.GetComponent<AkgRigidbody>().AddForce(vec);
+        selectedStone.OnShootExit += OnShootExit;
+
+        selectedStone.Shoot(vec, IsLocalRotated);
     }
 
-    private IEnumerator EShootStone(StoneBehaviour firedStone)
+    private void OnShootExit()
     {
-        var recorder = AkgPhysicsManager.Inst.rigidbodyRecorder;
-        recorder.StartRecord(Time.time);
-        
-        if (!ShootTokenAvailable)
-        {
-            recorder.AppendEventRecord(new EventRecord
-            {
-                time = Time.time,
-                stoneId = firedStone.StoneId,
-                eventEnum = EventEnum.SPENDTOKEN,
-            });
-        }
-
-        yield return null;
-        bool isAllStoneStop = false;
-
-        while (!isAllStoneStop)
-        {
-            yield return new WaitUntil(() =>
-                (GameManager.Inst.AllStones.Count == 0 ||
-                GameManager.Inst.AllStones.Values.All(x => !x.isMoving))
-            );
-
-            isAllStoneStop = true;
-        }
-
+        strikingStone.OnShootExit -= OnShootExit;
         strikingStone = null;
-        firedStone.InvokeShootExit();
-
-        foreach (StoneBehaviour stone in GameManager.Inst.AllStones.Values)
-        {
-            stone.ChangeSpriteAndRot("Idle", IsLocalRotated);
-        }
-        // send physics records, stone final poses, event list
-        recorder.EndRecord(out var velocityRecords, out var eventRecords);
-        recorder.SendRecord(velocityRecords, eventRecords);
     }
 
     private void SetInformPanel(CardData data)
@@ -1033,7 +997,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if (selectedStone != null)
         {
             selectedStone.isClicked = true;
-            if (canShoot && !isOpenStoneInform && selectedStone.BelongingPlayer == GameManager.PlayerEnum.LOCAL && Cost > 0 && ShootTokenAvailable)
+            if (canShoot && !isOpenStoneInform && selectedStone.BelongingPlayer == GameManager.PlayerEnum.LOCAL && Cost > 0 && (ShootTokenAvailable || selectedStone.CanSprint()))
             {
                 //Simply select current stone and move to shooting phase
                 ShootDragRoutine(true);
@@ -1076,7 +1040,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         {
 
             // shoot token이 없는 경우, 쏘지 못하게 리셋
-            if (!ShootTokenAvailable)
+            if (!(ShootTokenAvailable || selectedStone.CanSprint()))
             {
                 Debug.LogWarning("공격토큰이 존재하지 않습니다.");
                 IngameUIManager.Inst.UserAlertPanel.Alert("No attack token"); // "공격 토큰이 존재하지 않습니다"
