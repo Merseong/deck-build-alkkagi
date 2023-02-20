@@ -265,6 +265,32 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         DeckCount = (ushort)deck.Count;
     }
 
+    public override void CardToHand(CardData cardData, int number)
+    {
+        if (hand.Count + number > maxHandSize)
+        {
+            number = 7 - hand.Count;
+        }
+        if (number == 0)
+        {
+            return;
+        }
+        var cardRot = Quaternion.identity;
+        if (IsLocalRotated)
+            cardRot = Quaternion.Euler(0, 180, 0);
+        for (int i = 0; i < number; i++)
+        {
+            var cardObject = Instantiate(cardPrefab, cardSpawnPoint.position, cardRot, IngameUIManager.Inst.HandCardTransform);
+            var card = cardObject.GetComponent<Card>();
+            card.Setup(cardData);
+            hand.Add(card);
+
+            SetOriginOrder();
+        }
+        ArrangeHand(true);
+        HandCount = (ushort)hand.Count;
+    }
+
     protected override void RemoveCards(int idx)
     {
         base.RemoveCards(idx);

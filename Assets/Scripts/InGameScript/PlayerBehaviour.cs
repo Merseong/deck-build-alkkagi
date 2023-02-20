@@ -168,6 +168,10 @@ public abstract class PlayerBehaviour : MonoBehaviour
         HandCount += (ushort)number;
         DeckCount -= (ushort)number;
     }
+    public virtual void CardToHand(CardData cardData, int number)
+    {
+        HandCount += (ushort)number;
+    }
 
     protected virtual void RemoveCards(int idx)
     {
