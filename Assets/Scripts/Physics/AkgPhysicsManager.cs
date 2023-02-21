@@ -88,10 +88,13 @@ public class AkgPhysicsManager : SingletonBehavior<AkgPhysicsManager>
 
         if (!l2.HasFlag(AkgLayerMask.STONE))
         {
+            if (l1.HasFlag(AkgLayerMask.SHIELD))
+                return true;
+
             if (!IsSameSide(l1, l2))
                 return false;
 
-            return !l2.HasFlag(AkgLayerMask.COLLIDED) || l1.HasFlag(AkgLayerMask.SHIELD);
+            return !l2.HasFlag(AkgLayerMask.COLLIDED);
         }
 
         return !l1.HasFlag(AkgLayerMask.GHOST) && !l2.HasFlag(AkgLayerMask.GHOST);
