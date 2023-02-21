@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: "\uAE30\uC0AC"
   cardEngName: Knight
   stoneSize: 1
-  stoneWeight: 1
+  stoneWeight: 2
   cardCost: 2
   inDeckNumber: 3
   description: 

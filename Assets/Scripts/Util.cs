@@ -160,6 +160,27 @@ public static class Util
         }
         return sprite;
     }
+    public static string GetStringSize(CardData cardData)
+    {
+        string sizeText;
+        switch (cardData.stoneSize)
+        {
+            case CardData.StoneSize.Small:
+                sizeText = "소";
+                break;
+            case CardData.StoneSize.Medium:
+                sizeText = "중";
+                break;
+            case CardData.StoneSize.Large:
+                sizeText = "대";
+                break;
+            case CardData.StoneSize.SuperLarge:
+            default:
+                sizeText = "특대";
+                break;
+        }
+        return sizeText;
+    }
     public static Sprite GetSpriteWeight(CardData cardData, SpriteAtlas uiAtlas)
     {
         Sprite sprite;
@@ -177,6 +198,24 @@ public static class Util
                 break;
         }
         return sprite;
+    }
+    public static string GetStringWeight(CardData cardData)
+    {
+        string str;
+        switch (cardData.stoneWeight)
+        {
+            case CardData.StoneWeight.Light:
+                str = "경량";
+                break;
+            case CardData.StoneWeight.Standard:
+                str = "표준";
+                break;
+            case CardData.StoneWeight.Heavy:
+            default:
+                str = "중량";
+                break;
+        }
+        return str;
     }
     public static bool IsPointerOverUIObject()
     {

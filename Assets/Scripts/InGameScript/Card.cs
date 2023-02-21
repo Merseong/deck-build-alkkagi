@@ -12,6 +12,8 @@ public class Card : MonoBehaviour
     [SerializeField] private SpriteRenderer character;
     [SerializeField] private TextMeshPro costText;
     [SerializeField] private TextMeshPro nameText;
+    [SerializeField] private TextMeshPro sizeText;
+    [SerializeField] private TextMeshPro weightText;
     // public CardData CardData { set { cardData = value; } }
     public CardData CardData { get { return cardData; } set { cardData = value; } }
 
@@ -35,6 +37,8 @@ public class Card : MonoBehaviour
         character.sprite = Util.GetSpriteState(cardData,"Idle",GameManager.Inst.stoneAtlas);
         costText.text = cardData.cardCost.ToString();
         nameText.text = cardData.cardName;
+        sizeText.text = Util.GetStringSize(cardData);
+        weightText.text = Util.GetStringWeight(cardData);
     }
 
 
