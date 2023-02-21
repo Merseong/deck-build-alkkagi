@@ -6,14 +6,14 @@ public class CowardGhostStoneBehaviour : StoneBehaviour
 {
     public override void OnEnter(bool calledByPacket = false, string options = "")
     {
-        GameManager.Inst.players[(int)BelongingPlayer].OnStoneHit += AbilityActivated;
+        BelongingPlayer.OnStoneHit += AbilityActivated;
 
         base.OnEnter(calledByPacket, options);
     }
 
     public override void OnExit(bool calledByPacket = false, string options = "")
     {
-        GameManager.Inst.players[(int)BelongingPlayer].OnStoneHit -= AbilityActivated;
+        BelongingPlayer.OnStoneHit -= AbilityActivated;
 
         base.OnExit(calledByPacket, options);
     }

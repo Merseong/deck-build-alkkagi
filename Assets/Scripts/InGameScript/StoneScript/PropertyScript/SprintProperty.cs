@@ -12,7 +12,7 @@ public class SprintProperty : StoneProperty
     {
         base.OnAdded(isReplaced);
 
-        GameManager.Inst.GetPlayer(baseStone.BelongingPlayer).OnTurnStart += ResetCanSprint;
+        baseStone.BelongingPlayer.OnTurnStart += ResetCanSprint;
         baseStone.OnShootEnter += UseSprint;
     }
 
@@ -20,7 +20,7 @@ public class SprintProperty : StoneProperty
     {
         base.OnRemoved(isReplaced);
 
-        GameManager.Inst.GetPlayer(baseStone.BelongingPlayer).OnTurnStart -= ResetCanSprint;
+        baseStone.BelongingPlayer.OnTurnStart -= ResetCanSprint;
         baseStone.OnShootEnter -= UseSprint;
     }
 

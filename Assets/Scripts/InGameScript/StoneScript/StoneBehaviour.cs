@@ -26,7 +26,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     /// <param name="options">"@ @ @ ... @" 꼴, Split(' ')으로 쪼개서 사용하면됨</param>
     public virtual void OnEnter(bool calledByPacket = false, string options = "")
     {
-        GameManager.Inst.GetPlayer(BelongingPlayer).OnStoneEnter?.Invoke(this);
+        BelongingPlayer.OnStoneEnter?.Invoke(this);
 
         if (!calledByPacket)
         {
@@ -37,7 +37,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     /// <param name="options">"@ @ @ ... @" 꼴, Split(' ')으로 쪼개서 사용하면됨</param>
     public virtual void OnExit(bool calledByPacket = false, string options = "")
     {
-        GameManager.Inst.GetPlayer(BelongingPlayer).OnStoneExit?.Invoke(this);
+        BelongingPlayer.OnStoneExit?.Invoke(this);
 
         if (!calledByPacket)
         {
@@ -79,8 +79,9 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     public float _ChasingSpeed = 0.1f;
     public bool isClicked = false;
 
-    [SerializeField] private GameManager.PlayerEnum belongingPlayer;
-    public GameManager.PlayerEnum BelongingPlayer => belongingPlayer;
+    [SerializeField] private GameManager.PlayerEnum belongingPlayerEnum;
+    public GameManager.PlayerEnum BelongingPlayerEnum => belongingPlayerEnum;
+    public PlayerBehaviour BelongingPlayer => GameManager.Inst.GetPlayer(belongingPlayerEnum);
 
     public bool isExiting = false;
     public bool isExitingByPlaying = false;
@@ -169,7 +170,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
                 zPosition = transform.position.z,
             });
         OnExit();
-        GameManager.Inst.players[(int)BelongingPlayer].RemoveStone(stoneId);
+        BelongingPlayer.RemoveStone(stoneId);
         akgRigidbody.SetDragAccel(0);
         akgRigidbody.BeforeDestroy();
     }
@@ -178,8 +179,8 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     {
         cardData = data;
         stoneId = id;
-        belongingPlayer = owner;
-        if (BelongingPlayer == GameManager.PlayerEnum.LOCAL)
+        belongingPlayerEnum = owner;
+        if (BelongingPlayerEnum == GameManager.PlayerEnum.LOCAL)
         {
             akgRigidbody.layerMask = AkgLayerMask.LOCAL | AkgLayerMask.STONE;
             OnEnter();
@@ -326,11 +327,9 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
 
     public void Shoot(Vector3 vec, bool isRotated)
     {
-        PlayerBehaviour player = GameManager.Inst.GetPlayer(BelongingPlayer);
-
         GameManager.Inst.SetLocalDoAction();
         if (!CanSprint())
-            player.ShootTokenAvailable = false;
+            BelongingPlayer.ShootTokenAvailable = false;
         ChangeSpriteAndRot("Shoot", isRotated);
         OnShootEnter?.Invoke();
         StartCoroutine(EShoot(isRotated));
@@ -485,7 +484,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     {
         Debug.Log($"{cardData.name} is collided with {collider.GetComponent<StoneBehaviour>()?.cardData.name}: {isCollided}");
         OnHit?.Invoke(collider);
-        GameManager.Inst.GetPlayer(BelongingPlayer).OnStoneHit?.Invoke(this);
+        BelongingPlayer.OnStoneHit?.Invoke(this);
 
         if (collider.layerMask.HasFlag(AkgLayerMask.COLLIDED))
         {

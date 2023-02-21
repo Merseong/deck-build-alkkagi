@@ -45,7 +45,7 @@ public abstract class StoneProperty
     public virtual void OnAdded(bool isReplaced = false)
     {
         Debug.Log($"{this.GetType().Name} is added to {baseStone.CardData?.name}");
-        GameManager.Inst.GetPlayer(baseStone.BelongingPlayer).OnTurnStart += DecreaseRemainingTurn;
+        baseStone.BelongingPlayer.OnTurnStart += DecreaseRemainingTurn;
 
         if (!isReplaced)
         {
@@ -56,7 +56,7 @@ public abstract class StoneProperty
     public virtual void OnRemoved(bool isReplaced = false)
     {
         Debug.Log($"{this.GetType().Name} is removed from {baseStone.CardData.name}");
-        GameManager.Inst.GetPlayer(baseStone.BelongingPlayer).OnTurnStart -= DecreaseRemainingTurn;
+        baseStone.BelongingPlayer.OnTurnStart -= DecreaseRemainingTurn;
 
         if (!isReplaced)
         {

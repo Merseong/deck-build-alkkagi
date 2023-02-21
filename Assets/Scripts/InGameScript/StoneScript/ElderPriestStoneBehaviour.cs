@@ -9,7 +9,7 @@ public class ElderPriestStoneBehaviour : StoneBehaviour
     {
         if(isCollided) return;
         if(!collider.layerMask.HasFlag(AkgLayerMask.LOCAL) || !collider.layerMask.HasFlag(AkgLayerMask.STONE)) return;
-        if(GameManager.Inst.players[(int)BelongingPlayer].StrikingStone == (this as StoneBehaviour))
+        if(BelongingPlayer.StrikingStone == (this as StoneBehaviour))
         {
             ApplyShield(collider.GetComponent<StoneBehaviour>());
             

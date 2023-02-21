@@ -9,7 +9,7 @@ public class GasolineSnailStoneBehaviour : StoneBehaviour
         OnHit += (akg) =>
         {
             StoneBehaviour stone = akg.gameObject.GetComponent<StoneBehaviour>();
-            if (stone.BelongingPlayer == GameManager.PlayerEnum.OPPO)
+            if (stone.BelongingPlayerEnum == GameManager.PlayerEnum.OPPO)
             {
                 stone.AddProperty(new GreasedProperty(stone));
             }

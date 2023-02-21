@@ -13,7 +13,7 @@ public class WarlockStoneBehaviour : StoneBehaviour
         }
         else
         {
-            PlayerBehaviour oppo = GameManager.Inst.GetOppoPlayer(BelongingPlayer);
+            PlayerBehaviour oppo = GameManager.Inst.GetOppoPlayer(BelongingPlayerEnum);
 
             if (oppo.Stones.Count > 0)
             {

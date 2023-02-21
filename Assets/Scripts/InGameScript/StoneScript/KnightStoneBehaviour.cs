@@ -8,7 +8,7 @@ public class KnightStoneBehaviour : StoneBehaviour
     {
         base.OnExit(calledByPacket, options);
 
-        if(BelongingPlayer == GameManager.PlayerEnum.LOCAL)
+        if(BelongingPlayerEnum == GameManager.PlayerEnum.LOCAL)
         {
             GameManager.Inst.knightEnterCount += 1;
             (GameManager.Inst.LocalPlayer as LocalPlayerBehaviour).SetKnightCommanderCost();

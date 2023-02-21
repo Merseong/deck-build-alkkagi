@@ -6,7 +6,7 @@ public class TinyRobotStoneBehaviour: StoneBehaviour
 {
     public override void OnExit(bool calledByPacket = false, string options = "")
     {
-        GameManager.Inst.players[(int)BelongingPlayer].DrawCards(1);
+        BelongingPlayer.DrawCards(1);
 
         base.OnExit(calledByPacket, options);
     }

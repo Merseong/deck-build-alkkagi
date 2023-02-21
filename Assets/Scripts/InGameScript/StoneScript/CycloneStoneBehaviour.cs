@@ -6,8 +6,7 @@ public class CycloneStoneBehaviour : StoneBehaviour
 {
     public override void OnEnter(bool calledByPacket = false, string options = "")
     {
-        PlayerBehaviour player = GameManager.Inst.players[(int)BelongingPlayer];
-        foreach (StoneBehaviour stone in player.Stones.Values)
+        foreach (StoneBehaviour stone in BelongingPlayer.Stones.Values)
         {
             if (stone != this)
                 stone.AddProperty(new SprintProperty(stone));
