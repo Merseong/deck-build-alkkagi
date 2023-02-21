@@ -16,6 +16,7 @@ public class GameManager : SingletonBehavior<GameManager>
     public PlayerBehaviour CurrentPlayer => players[(int)WhoseTurn];
 
     public PlayerBehaviour GetPlayer(PlayerEnum playerEnum) => players[(int)playerEnum];
+    public PlayerBehaviour GetOppoPlayer(PlayerEnum playerEnum) => players[1 - (int)playerEnum];
 
     // Card List 임시용
     public List<CardData> CardDatas;
