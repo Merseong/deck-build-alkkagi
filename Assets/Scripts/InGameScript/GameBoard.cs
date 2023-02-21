@@ -155,7 +155,8 @@ public class GameBoard : MonoBehaviour
         var stoneOnBoard = GameManager.Inst.AllStones.Values;
         foreach (StoneBehaviour stone in stoneOnBoard)
         {
-            if (Vector3.Distance(pos, stone.gameObject.transform.position) <= stoneRadius)
+            var colAkg = stone.GetComponent<AkgRigidbody>();
+            if (Vector3.Distance(pos, colAkg.CircleCenterPosition) <= stoneRadius + colAkg.circleRadius)
             {
                 return false;
             }
