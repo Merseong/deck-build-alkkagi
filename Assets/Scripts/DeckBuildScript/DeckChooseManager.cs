@@ -45,6 +45,8 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
     [SerializeField] Button menuOpenButton;
     [SerializeField] Button menuCloseButton;
     [SerializeField] InformationPanel cardInformPanel;
+    [SerializeField] RectTransform matchmakingLoadingPanel;
+    [SerializeField] RectTransform matchmakingLoadingImage;
 
     [Header("Main view")]
     [SerializeField] private TextMeshProUGUI moneyText;
@@ -144,8 +146,18 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
 
     public void OnMatchButtonClick()
     {
-        if (CurrentSelectedDeckIdx < 0) return;
+        if (CurrentSelectedDeckIdx < 0)
+        {
+            Debug.LogError("덱을 선택해주세요.");
+            return;
+        }
+
         EnterRoomSendNetworkAction();
+    }
+
+    public void OnMatchCancelButtonClick()
+    {
+        ExitMatchingSendNetworkAction();
     }
 
     public void OnLogoutButtonClick()
@@ -229,11 +241,35 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         if (NetworkManager.Inst.ConnectionStatus != NetworkManager.ConnectionStatusEnum.IDLE) return;
 
         NetworkManager.Inst.ConnectionStatus = NetworkManager.ConnectionStatusEnum.MATCHMAKING;
+        StartCoroutine(EMatchmakingAnimation(100));
         NetworkManager.Inst.SendData(new MessagePacket
         {
             senderID = NetworkManager.Inst.NetworkId,
             message = $"ENTER/ {deckCodes[CurrentSelectedDeckIdx]}" // ENTER/ (덱코드 혹은 덱인덱스)
         }, PacketType.ROOM_CONTROL);
+    }
+
+    private void ExitMatchingSendNetworkAction()
+    {
+        if (NetworkManager.Inst.ConnectionStatus != NetworkManager.ConnectionStatusEnum.MATCHMAKING) return;
+
+        NetworkManager.Inst.ConnectionStatus = NetworkManager.ConnectionStatusEnum.IDLE;
+        NetworkManager.Inst.SendData(new MessagePacket
+        {
+            senderID = NetworkManager.Inst.NetworkId,
+            message = $"EXIT/"
+        }, PacketType.ROOM_CONTROL);
+    }
+
+    private IEnumerator EMatchmakingAnimation(float speed)
+    {
+        matchmakingLoadingPanel.gameObject.SetActive(true);
+        while (NetworkManager.Inst.ConnectionStatus == NetworkManager.ConnectionStatusEnum.MATCHMAKING)
+        {
+            matchmakingLoadingImage.Rotate(new Vector3(0, 0, -1 * Time.deltaTime * speed));
+            yield return null;
+        }
+        matchmakingLoadingPanel.gameObject.SetActive(false);
     }
 
     private void LogoutSendNetworkAction()

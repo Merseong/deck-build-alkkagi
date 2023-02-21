@@ -32,6 +32,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
     {
         DISCONNECTED,
         CONNECTING,
+        CONNECTED,
         IDLE,
         MATCHMAKING,
         ROOM,
@@ -97,6 +98,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
             if (cmd == NetworkEvent.Type.Connect)
             {
                 Debug.Log("hello network!");
+                ConnectionStatus = ConnectionStatusEnum.CONNECTED;
                 OnConnected?.Invoke();
 
                 // Send test data
@@ -119,6 +121,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
             else if (cmd == NetworkEvent.Type.Disconnect)
             {
                 Debug.LogWarning("Client got disconnected from server.");
+                ConnectionStatus = ConnectionStatusEnum.DISCONNECTED;
                 Client.Connection = default;
             }
         }
@@ -151,7 +154,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
     public void ConnectServer()
     {
-        if (ConnectionStatus == ConnectionStatusEnum.CONNECTING && m_client.Driver.IsCreated)
+        if (ConnectionStatus == ConnectionStatusEnum.CONNECTED)
         { // 로그아웃 한 후 재호출되었을때
             OnConnected?.Invoke();
         }
@@ -182,7 +185,7 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
         {
             networkId = 0;
             UserData = null;
-            ConnectionStatus = ConnectionStatusEnum.CONNECTING;
+            ConnectionStatus = ConnectionStatusEnum.CONNECTED;
             return;
         }
         if (networkId != 0) return;
