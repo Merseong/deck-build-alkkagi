@@ -110,6 +110,9 @@ public class AkgRigidbody : MonoBehaviour
 
         Move(Time.deltaTime * velocity);
 
+        // TODO: 속도변환시 해당 돌의 위치도 받아서 출발점, 속도를 이용해 좀더 정확하게 보여줄수있도록
+        // TODO2: 매번 제일 가까운 돌과의 충돌도 체크해야될듯 (fixed나 late써야하나)
+        if (AkgPhysicsManager.Inst.IsRecordPlaying) return;
         if (!isForecasting) return;
 
         for (int i = 0; i < CollidableForecastLimit; ++i)
