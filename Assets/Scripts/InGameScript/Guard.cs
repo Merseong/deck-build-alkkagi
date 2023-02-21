@@ -38,19 +38,29 @@ public class Guard : MonoBehaviour, IAkgRigidbodyInterface
         } 
     }
 
-    public void OnCollide(AkgRigidbody collider, Vector3 collidePoint, bool isCollided)
+    public void OnCollide(AkgRigidbody collider, Vector3 collidePoint, bool isCollided, bool calledByPacket = false)
     {
         //if (isAlreadyCollided) return;
-        if (collider.gameObject.CompareTag("Stone"))
+        if (collider.layerMask.HasFlag(AkgLayerMask.STONE))
         {
-            AkgPhysicsManager.Inst.rigidbodyRecorder.AppendEventRecord(new EventRecord
-            {
-                stoneId = guardId,
-                time = Time.time,
-                eventEnum = EventEnum.GUARDCOLLIDE,
-            });
+            StoneBehaviour stone = collider.GetComponent<StoneBehaviour>();
 
-            GameManager.Inst.GameBoard.RemoveGuard(guardId);
+            if (!calledByPacket)
+            {
+                AkgPhysicsManager.Inst.rigidbodyRecorder.AppendEventRecord(new EventRecord
+                {
+                    stoneId = stone.StoneId,
+                    time = Time.time,
+                    eventMessage = guardId.ToString(),
+                    eventEnum = EventEnum.GUARDCOLLIDE,
+                    xPosition = collidePoint.x,
+                    zPosition = collidePoint.z,
+                });
+            }
+
+            if (stone.HasAccelShield() || stone.ShieldCount() > 0)
+                return;
+            GameManager.Inst.GameBoard.RemoveGuard(this);
         }
     }
 }

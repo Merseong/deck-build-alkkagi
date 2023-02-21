@@ -34,7 +34,7 @@ public class GameBoard : MonoBehaviour
                 return player1PutMarks;
         }
     }
-    [SerializeField] private Dictionary<int, GameObject> playerGuards = new();
+    [SerializeField] private Dictionary<int, Guard> playerGuards = new();
     [SerializeField] private int guardHorizontalCnt;
     [SerializeField] private int guardVerticalCnt;
 
@@ -164,7 +164,7 @@ public class GameBoard : MonoBehaviour
             }
         }
         var guards = playerGuards.Values;
-        foreach (GameObject guard in guards)
+        foreach (var guard in guards)
         {
             if (Vector3.Distance(pos, guard.transform.position) <= stoneRadius)
             {
@@ -252,8 +252,9 @@ public class GameBoard : MonoBehaviour
             new Vector4(-scale.x / 2, -scale.z / 2, scale.x / 2, scale.z / 2) :
             new Vector4(-scale.z / 2, -scale.x / 2, scale.z / 2, scale.x / 2);
         var idx = playerGuards.Count;
-        go.GetComponent<Guard>().SetGuardData(idx, true);
-        playerGuards.Add(idx, go);
+        var guard = go.GetComponent<Guard>();
+        guard.SetGuardData(idx, true);
+        playerGuards.Add(idx, guard);
     }
 
     public void AddOppoGuard(Vector3 position, Quaternion rotation)
@@ -265,18 +266,30 @@ public class GameBoard : MonoBehaviour
             new Vector4(-scale.x / 2, -scale.z / 2, scale.x / 2, scale.z / 2) :
             new Vector4(-scale.z / 2, -scale.x / 2, scale.z / 2, scale.x / 2);
         var idx = playerGuards.Count;
-        go.GetComponent<Guard>().SetGuardData(idx, false);
-        playerGuards.Add(idx, go);
+        var guard = go.GetComponent<Guard>();
+        guard.SetGuardData(idx, false);
+        playerGuards.Add(idx, guard);
     }
 
-    public void RemoveGuard(int id)
+    public Guard FindGuard(int guardId)
+    {
+        var isFound = playerGuards.TryGetValue(guardId, out var guard);
+
+        if (!isFound)
+        {
+            Debug.LogError($"[GAME] guard id {guardId} not found");
+        }
+
+        return guard;
+    }
+
+    public void RemoveGuard(Guard guard)
     {
         //playerGuards.TryGetValue(id, out var guard);
         //playerGuards.Remove(id);
 
         //Destroy(guard);
 
-        playerGuards.TryGetValue(id, out var guard);
         guard.GetComponent<Renderer>().enabled = false;
         AkgRigidbody akgRigidbody = guard.GetComponent<AkgRigidbody>();
         akgRigidbody.layerMask |= AkgLayerMask.COLLIDED;

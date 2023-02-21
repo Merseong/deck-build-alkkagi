@@ -98,8 +98,11 @@ public class AkgRigidbodyRecorder
                         GameManager.Inst.OppoPlayer.ShootTokenAvailable = false;
                         break;
                     case EventEnum.GUARDCOLLIDE:
-                        // stoneId => 충돌한 guard의 번호
-                        GameManager.Inst.GameBoard.RemoveGuard(eventRec.stoneId);
+                        stone = GameManager.Inst.FindStone(eventRec.stoneId);
+                        Guard guard = GameManager.Inst.GameBoard.FindGuard(int.Parse(eventRec.eventMessage));
+                        Vector3 point = new Vector3(eventRec.xPosition, 0, eventRec.zPosition);
+                        stone.OnCollide(guard.GetComponent<AkgRigidbody>(), point, false, true);
+                        guard.OnCollide(stone.GetComponent<AkgRigidbody>(), point, true, true);
                         break;
                     case EventEnum.DROPOUT:
                         stone = GameManager.Inst.FindStone(eventRec.stoneId);
