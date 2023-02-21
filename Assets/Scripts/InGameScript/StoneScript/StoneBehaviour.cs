@@ -395,11 +395,8 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     private bool CheckStoneDropByTransform()
     {
         if (isExiting) return true;
-        if (AkgPhysicsManager.Inst.IsRecordPlaying)
-        {
-            if (isExitingByPlaying) return false;
-            return true;
-        }
+        if (isExitingByPlaying) return false;
+        if (AkgPhysicsManager.Inst.IsRecordPlaying) return true;
         if (transform.position.x > boardTransform.transform.position.x + boardTransform.transform.localScale.x * 5f) return false;
         if (transform.position.x < boardTransform.transform.position.x - boardTransform.transform.localScale.x * 5f) return false;
         if (transform.position.z > boardTransform.transform.position.z + boardTransform.transform.localScale.z * 5f) return false;
