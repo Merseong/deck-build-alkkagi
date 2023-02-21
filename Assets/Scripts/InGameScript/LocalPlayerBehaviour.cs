@@ -862,7 +862,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         Color dragColor;
         Vector3 deltaVec = new Vector3(TouchManager.Inst.GetTouchDelta().x, 0, TouchManager.Inst.GetTouchDelta().y);
 
-        if(Cost < 2)
+        if(Cost < 2 && selectedStone.CardData.CardID != 33)
         {
             curDragMagnitude = moveVec.magnitude;
             needCost = 1;
@@ -871,12 +871,13 @@ public class LocalPlayerBehaviour : PlayerBehaviour
                 curDragMagnitude = maxDragLimit/2;
             }
             dragColor = Cost1Color;
+            IngameUIManager.Inst.CostPanel.CostEmphasize(needCost);
         }
         else if (moveVec.magnitude >= maxDragLimit)
         {
             curDragMagnitude = maxDragLimit;
             dragColor = Cost2Color;
-            needCost = 2;
+            needCost = selectedStone.CardData.CardID == 33 ? 1 : 2;
         }
         else
         {
@@ -911,7 +912,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
                 needCost = 1;
                 curDragMagnitude = maxDragLimit / 2;
                 dragColor = Cost1Color;
-                IngameUIManager.Inst.CostPanel.CostEmphasize(1);
+                IngameUIManager.Inst.CostPanel.CostEmphasize(needCost);
             }
             //Increasing Power
             else if (cur > avg && cur < avg * (1f + maxClippingPercentage) && reachedAvg && (!leftHighEnd || Vector3.Dot(deltaVec, moveVec) < 0))
@@ -919,19 +920,19 @@ public class LocalPlayerBehaviour : PlayerBehaviour
                 needCost = 1;
                 curDragMagnitude = maxDragLimit / 2;
                 dragColor = Cost1Color;
-                IngameUIManager.Inst.CostPanel.CostEmphasize(1);
+                IngameUIManager.Inst.CostPanel.CostEmphasize(needCost);
             }
             else if (moveVec.magnitude > maxDragLimit / 2)
             {
-                needCost = 2;
+                needCost = selectedStone.CardData.CardID == 33 ? 1 : 2;
                 dragColor = Cost2Color;
-                IngameUIManager.Inst.CostPanel.CostEmphasize(2);
+                IngameUIManager.Inst.CostPanel.CostEmphasize(needCost);
             } 
             else
             {
                 needCost = 1;
                 dragColor = Cost1Color;
-                IngameUIManager.Inst.CostPanel.CostEmphasize(1);
+                IngameUIManager.Inst.CostPanel.CostEmphasize(needCost);
             }
         }
 
@@ -1120,7 +1121,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             nearPutTransform = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
         } 
         
-        if(GameManager.Inst.turnStates[0] == GameManager.TurnState.PREPARE)
+        if(GameManager.Inst.turnStates[0] == GameManager.TurnState.PREPARE && selectedCard.CardData.CardID == 14)
         {
             IngameUIManager.Inst.UserAlertPanel.Alert("Unavailable turn to spawn stone"); // 돌을 놓을 수 있는 턴이 아닙니다
             GameManager.Inst.GameBoard.UnhightlightPossiblePos();

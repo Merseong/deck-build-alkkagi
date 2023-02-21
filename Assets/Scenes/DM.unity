@@ -777,11 +777,11 @@ PrefabInstance:
     - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: deck.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: c63d0f8263dbbd3478b822897e439d0f, type: 2}
+      objectReference: {fileID: 11400000, guid: 70d23d0614bddaa49b618b632e75eaba, type: 2}
     - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: deck.Array.data[1]
       value: 
-      objectReference: {fileID: 11400000, guid: c63d0f8263dbbd3478b822897e439d0f, type: 2}
+      objectReference: {fileID: 11400000, guid: 70d23d0614bddaa49b618b632e75eaba, type: 2}
     - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: cardDataSource.Array.size
       value: 29
@@ -1014,6 +1014,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 984495492826000294, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 984495493291973990, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2541405846502629878, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: handCardTransform
       value: 
@@ -1022,10 +1030,18 @@ PrefabInstance:
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1170189266}
+    - target: {fileID: 4862763409863515246, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6211080835878945003, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 501744208}
+    - target: {fileID: 7302192160034470073, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8785121465290946009, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
