@@ -1106,8 +1106,24 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 4862763409863515246, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_Type
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5008387881249118914, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5421132784732193580, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5421132784732193580, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5421132784732193580, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_LocalScale.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5445182910899885815, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
