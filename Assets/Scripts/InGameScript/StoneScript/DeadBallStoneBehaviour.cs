@@ -6,19 +6,27 @@ public class DeadBallStoneBehaviour : StoneBehaviour
 {
     public override void OnEnter(bool calledByPacket = false, string options = "")
     {
-        OnHit += (akg) =>
-        {
-            StoneBehaviour stone = akg.gameObject.GetComponent<StoneBehaviour>();
-            foreach (var property in stone.Properties)
-            {
-                if (property is CursedProperty)
-                {
-                    stone.RemoveStoneFromGame();
-                    stone.StartCoroutine(stone.EIndirectExit(true));
-                }
-            }
-        };
+        OnHit += KickCursed;
 
         base.OnEnter(calledByPacket, options);
+    }
+
+    public override void OnExit(bool calledByPacket = false, string options = "")
+    {
+        OnHit -= KickCursed;
+
+        base.OnExit(calledByPacket, options);
+    }
+
+    private void KickCursed(StoneBehaviour other)
+    {
+        foreach (var property in other.Properties)
+        {
+            if (property is CursedProperty)
+            {
+                other.RemoveStoneFromGame();
+                other.StartCoroutine(other.EIndirectExit(true));
+            }
+        }
     }
 }
