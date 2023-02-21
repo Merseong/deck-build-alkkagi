@@ -128,9 +128,9 @@ public class AkgRigidbody : MonoBehaviour
                 colAkgObject.OnCollision(this, point);
                 OnCollision(colAkgObject, point);
 
-                if (TryGetComponent<AkgRigidbodyInterface>(out var localAkgI))
+                if (TryGetComponent<IAkgRigidbodyInterface>(out var localAkgI))
                     localAkgI.OnCollide(colAkgObject, point, false);
-                if (colAkgObject.TryGetComponent<AkgRigidbodyInterface>(out var akgI))
+                if (colAkgObject.TryGetComponent<IAkgRigidbodyInterface>(out var akgI))
                     akgI.OnCollide(this, point, true);
 
                 Move(Time.deltaTime * velocity);

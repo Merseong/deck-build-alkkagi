@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(AkgRigidbody))]
-public class Guard : MonoBehaviour, AkgRigidbodyInterface
+public class Guard : MonoBehaviour, IAkgRigidbodyInterface
 {
     private int guardId;
     private bool isBelongLocal;

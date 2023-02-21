@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class KnightStoneBehaviour : StoneBehaviour
 {
-    public override void OnEnter()
+    public override void OnExit(bool calledByPacket = false, string options = "")
     {
+        base.OnExit(calledByPacket, options);
+
         if(BelongingPlayer == GameManager.PlayerEnum.LOCAL)
         {
             GameManager.Inst.knightEnterCount += 1;

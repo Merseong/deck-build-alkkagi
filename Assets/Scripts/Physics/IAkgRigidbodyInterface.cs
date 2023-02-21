@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface AkgRigidbodyInterface
+public interface IAkgRigidbodyInterface
 {
     /// <param name="collider">충돌한 상대의 정보</param>
     /// <param name="collidePoint">충돌점의 좌표</param>
