@@ -583,14 +583,14 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             yield return null;
         }
 
-        IngameUIManager.Inst.ShootReadyEmphasizeUI.GetChild(3).gameObject.SetActive(true);
+        //IngameUIManager.Inst.ShootReadyEmphasizeUI.GetChild(3).gameObject.SetActive(true);
         IngameUIManager.Inst.ActivateUI(cancelPanel.GetComponent<RectTransform>());
         isMoving = false;
     }
 
     private IEnumerator EShootDragEndUIRoutine()
     {
-        IngameUIManager.Inst.ShootReadyEmphasizeUI.GetChild(3).gameObject.SetActive(false);
+        //IngameUIManager.Inst.ShootReadyEmphasizeUI.GetChild(3).gameObject.SetActive(false);
         isMoving = true;
         float curTime = (IngameUIManager.Inst.ShootReadyEmphasizeUI.anchoredPosition.y + 150) / 150;
         while(curTime < endTotTime)
