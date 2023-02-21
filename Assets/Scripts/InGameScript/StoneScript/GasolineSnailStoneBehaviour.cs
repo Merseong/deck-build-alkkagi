@@ -18,11 +18,12 @@ public class GasolineSnailStoneBehaviour : StoneBehaviour
         base.OnExit(calledByPacket, options);
     }
 
-    private void Grease(StoneBehaviour other)
+    private void Grease(AkgRigidbody other)
     {
-        if (other.BelongingPlayerEnum != BelongingPlayerEnum)
+        StoneBehaviour stone = other.GetComponent<StoneBehaviour>();
+        if (stone.BelongingPlayerEnum != BelongingPlayerEnum)
         {
-            other.AddProperty(new GreasedProperty(other));
+            stone.AddProperty(new GreasedProperty(stone));
         }
     }
 }

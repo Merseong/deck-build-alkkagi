@@ -18,14 +18,15 @@ public class DeadBallStoneBehaviour : StoneBehaviour
         base.OnExit(calledByPacket, options);
     }
 
-    private void KickCursed(StoneBehaviour other)
+    private void KickCursed(AkgRigidbody other)
     {
-        foreach (var property in other.Properties)
+        StoneBehaviour stone = other.GetComponent<StoneBehaviour>();
+        foreach (var property in stone.Properties)
         {
             if (property is CursedProperty)
             {
-                other.RemoveStoneFromGame();
-                other.StartCoroutine(other.EIndirectExit(true));
+                stone.RemoveStoneFromGame();
+                stone.StartCoroutine(stone.EIndirectExit(true));
             }
         }
     }

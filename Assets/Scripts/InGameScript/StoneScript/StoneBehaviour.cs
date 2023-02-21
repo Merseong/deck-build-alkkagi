@@ -47,7 +47,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
 
     public event Action OnShootEnter;
     public event Action OnShootExit;
-    public event Action<StoneBehaviour> OnHit;
+    public event Action<AkgRigidbody> OnHit;
 
     [SerializeField] private int stoneId;
     public int StoneId => stoneId;
