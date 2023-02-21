@@ -457,6 +457,28 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         return new Vector3(curTouchPosition.x, 0f, curTouchPosition.z);
     }
 
+    private Vector3 Get8directionVector(Vector3 vec)
+    {
+        float maxDot = 0;
+        Vector3 maxDirection = Vector3.zero;
+
+        List<Vector3> directions = new List<Vector3>(){
+            Vector3.forward,new Vector3(1f,0,1f).normalized,    Vector3.right,  new Vector3(1f,0,-1f).normalized,
+            Vector3.back,   new Vector3(-1f,0,-1f).normalized,   Vector3.left,  new Vector3(-1f,0,1f).normalized
+        };
+
+        foreach(var item in directions)
+        {
+            if(Vector3.Dot(vec, item) > maxDot)
+            {
+                maxDot = Vector3.Dot(vec, item);
+                maxDirection = item;
+            }    
+        }
+        
+        return maxDirection * vec.magnitude;
+    }
+
     ///<summary>
     ///Arrange cards in hand regarding card index at hand[]<br/>
     ///</summary>
@@ -942,7 +964,12 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         dragEffectObj.SetPosition(1, dragStartPoint - moveVec.normalized * curDragMagnitude);
         stoneArrowObj.stemLength = curDragMagnitude;
-
+    
+        if(selectedStone.CardData.CardID == 19) 
+        {
+            moveVec = Get8directionVector(moveVec);
+        }
+    
         if (moveVec.z >= 0)
         {
             float angle = Mathf.Acos(Vector3.Dot(Vector3.left, moveVec.normalized)) * 180 / Mathf.PI + 180;
