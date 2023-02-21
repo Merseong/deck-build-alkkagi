@@ -6,38 +6,20 @@ public class CowardGhostStoneBehaviour : StoneBehaviour
 {
     public override void OnEnter(bool calledByPacket = false, string options = "")
     {
-        GameManager.Inst.players[(int)BelongingPlayer].AddCowardGhost(this);
+        GameManager.Inst.players[(int)BelongingPlayer].OnStoneHit += AbilityActivated;
 
         base.OnEnter(calledByPacket, options);
     }
 
     public override void OnExit(bool calledByPacket = false, string options = "")
     {
-        GameManager.Inst.players[(int)BelongingPlayer].RemoveCowardGhost(this);
+        GameManager.Inst.players[(int)BelongingPlayer].OnStoneHit -= AbilityActivated;
 
         base.OnExit(calledByPacket, options);
     }
 
-    public void AbilityActivated()
+    public void AbilityActivated(StoneBehaviour stone)
     {
         AddProperty(new GhostProperty(this, 1));
-
-        // AkgPhysicsManager.Inst.rigidbodyRecorder.SendEventOnly(new EventRecord
-        // {
-        //     eventEnum = EventEnum.POWER,
-        //     stoneId = StoneId,
-        //     eventMessage = "ENTER",
-        //     time = Time.time,
-        // });
     }
-
-    // public override void ParseActionString(string actionStr)
-    // {
-    //     base.ParseActionString(actionStr);
-    //     if (actionStr.StartsWith("ENTER"))
-    //     {
-    //         AbilityActivated();
-    //     }
-    // }
-
 }

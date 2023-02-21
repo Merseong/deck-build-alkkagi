@@ -26,6 +26,8 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     /// <param name="options">"@ @ @ ... @" 꼴, Split(' ')으로 쪼개서 사용하면됨</param>
     public virtual void OnEnter(bool calledByPacket = false, string options = "")
     {
+        GameManager.Inst.GetPlayer(BelongingPlayer).OnStoneEnter?.Invoke(this);
+
         if (!calledByPacket)
         {
             StoneActionSendNetworkAction("ENTER/ " + options);
@@ -35,6 +37,8 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     /// <param name="options">"@ @ @ ... @" 꼴, Split(' ')으로 쪼개서 사용하면됨</param>
     public virtual void OnExit(bool calledByPacket = false, string options = "")
     {
+        GameManager.Inst.GetPlayer(BelongingPlayer).OnStoneExit?.Invoke(this);
+
         if (!calledByPacket)
         {
             StoneActionSendNetworkAction("EXIT/ " + options);
@@ -165,7 +169,6 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
                 zPosition = transform.position.z,
             });
         OnExit();
-        GameManager.Inst.players[(int)BelongingPlayer].InvokeCowardGhosts();
         GameManager.Inst.players[(int)BelongingPlayer].RemoveStone(stoneId);
         akgRigidbody.SetDragAccel(0);
         akgRigidbody.BeforeDestroy();
@@ -482,6 +485,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     {
         Debug.Log($"{cardData.name} is collided with {collider.GetComponent<StoneBehaviour>()?.cardData.name}: {isCollided}");
         OnHit?.Invoke(collider);
+        GameManager.Inst.GetPlayer(BelongingPlayer).OnStoneHit?.Invoke(this);
 
         if (collider.layerMask.HasFlag(AkgLayerMask.COLLIDED))
         {

@@ -70,6 +70,9 @@ public abstract class PlayerBehaviour : MonoBehaviour
 
     public event Action OnTurnStart;
     public event Action OnTurnEnd;
+    public Action<StoneBehaviour> OnStoneEnter;
+    public Action<StoneBehaviour> OnStoneExit;
+    public Action<StoneBehaviour> OnStoneHit;
 
     //플레이어가 발사한 스톤, 다른 스톤들에서는 이 스톤의 충돌 여부를 확인하여 타격 여부를 결정하여야 함
     protected StoneBehaviour strikingStone;
@@ -234,26 +237,4 @@ public abstract class PlayerBehaviour : MonoBehaviour
     {
         return $"|{vec3.x}|{vec3.y}|{vec3.z}|";
     }
-
-#region CowardGhostStone
-    protected List<CowardGhostStoneBehaviour> cowardGhosts = new();
-    public void AddCowardGhost(CowardGhostStoneBehaviour CGStoneBehaviour)
-    {
-        cowardGhosts.Add(CGStoneBehaviour);
-    }
-
-    public void RemoveCowardGhost(CowardGhostStoneBehaviour CGStoneBehaviour)
-    {
-        cowardGhosts.Remove(CGStoneBehaviour);
-    }
-
-    public void InvokeCowardGhosts()
-    {
-        foreach(var ghost in cowardGhosts)
-        {
-            ghost.AbilityActivated();
-        }
-    }
-#endregion CowardGhostStone
-
 }
