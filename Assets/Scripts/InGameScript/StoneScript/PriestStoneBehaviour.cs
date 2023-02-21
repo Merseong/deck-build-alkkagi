@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class PriestStoneBehaviour : StoneBehaviour
 {
-    public override void OnEnter(bool calledByPacket = false)
+    public override void OnEnter(bool calledByPacket = false, string options = "")
     {
-        base.OnEnter(calledByPacket);
-
         PlayerBehaviour player = GameManager.Inst.players[(int)BelongingPlayer];
         float minDist = 10000f;
         StoneBehaviour minDistStone = null;
@@ -27,5 +25,7 @@ public class PriestStoneBehaviour : StoneBehaviour
         {
             minDistStone.AddProperty(new ShieldProperty(minDistStone));
         }
+
+        base.OnEnter(calledByPacket, options);
     }
 }

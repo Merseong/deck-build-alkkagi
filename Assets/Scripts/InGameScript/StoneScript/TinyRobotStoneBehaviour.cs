@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class TinyRobotStoneBehaviour: StoneBehaviour
 {
-    public override void OnExit(bool calledByPacket = false)
+    public override void OnExit(bool calledByPacket = false, string options = "")
     {
-        base.OnExit(calledByPacket);
-
         GameManager.Inst.players[(int)BelongingPlayer].DrawCards(1);
+
+        base.OnExit(calledByPacket, options);
     }
 }

@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class ClayShamanStoneBehaviour : StoneBehaviour
 {
-    public override void OnExit(bool calledByPacket = false)
+    public override void OnExit(bool calledByPacket = false, string options = "")
     {
-        base.OnExit(calledByPacket);
-
         GameManager.Inst.players[(int)BelongingPlayer].CardToHand(Util.GetCardDataFromID(13, GameManager.Inst.CardDatas), 3);
+
+        base.OnExit(calledByPacket, options);
     }
 }

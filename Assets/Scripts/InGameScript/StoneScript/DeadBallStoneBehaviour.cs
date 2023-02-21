@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class DeadBallStoneBehaviour : StoneBehaviour
 {
-    public override void OnEnter(bool calledByPacket = false)
+    public override void OnEnter(bool calledByPacket = false, string options = "")
     {
-        base.OnEnter(calledByPacket);
-
         OnHit += (akg) =>
         {
             StoneBehaviour stone = akg.gameObject.GetComponent<StoneBehaviour>();
@@ -20,5 +18,7 @@ public class DeadBallStoneBehaviour : StoneBehaviour
                 }
             }
         };
+
+        base.OnEnter(calledByPacket, options);
     }
 }

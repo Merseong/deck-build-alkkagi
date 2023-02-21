@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class GasolineSnailStoneBehaviour : StoneBehaviour
 {
-    public override void OnEnter(bool calledByPacket = false)
+    public override void OnEnter(bool calledByPacket = false, string options = "")
     {
-        base.OnEnter(calledByPacket);
-
         OnHit += (akg) =>
         {
             StoneBehaviour stone = akg.gameObject.GetComponent<StoneBehaviour>();
@@ -16,5 +14,7 @@ public class GasolineSnailStoneBehaviour : StoneBehaviour
                 stone.AddProperty(new GreasedProperty(stone));
             }
         };
+
+        base.OnEnter(calledByPacket, options);
     }
 }

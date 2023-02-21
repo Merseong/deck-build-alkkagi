@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class WarlockStoneBehaviour : StoneBehaviour
 {
-    public override void OnEnter(bool calledByPacket = false)
+    public override void OnEnter(bool calledByPacket = false, string options = "")
     {
-        base.OnEnter(calledByPacket);
-
         List<StoneBehaviour> oppoStones = new List<StoneBehaviour>();
         foreach (var stone in GameManager.Inst.AllStones.Values)
         {
@@ -21,5 +19,7 @@ public class WarlockStoneBehaviour : StoneBehaviour
             int randNum = UnityEngine.Random.Range(0, oppoStones.Count);
             oppoStones[randNum].AddProperty(new CursedProperty(oppoStones[randNum]));
         }
+
+        base.OnEnter(calledByPacket, options);
     }
 }

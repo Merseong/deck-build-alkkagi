@@ -5,13 +5,13 @@ using UnityEngine;
 public class ClayPuppetStoneBehaviour : StoneBehaviour
 {
 
-    public override void OnEnter(bool calledByPacket = false)
+    public override void OnEnter(bool calledByPacket = false, string options = "")
     {
-        base.OnEnter(calledByPacket);
-
         OnShootEnter += () =>{
             GameManager.Inst.players[(int)BelongingPlayer].GetCost(1);
         };
+
+        base.OnEnter(calledByPacket, options);
     }
 
 }

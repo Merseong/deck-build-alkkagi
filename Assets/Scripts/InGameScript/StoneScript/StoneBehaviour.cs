@@ -38,7 +38,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     }
     #endregion
 
-    public virtual void OnEnter(bool calledByPacket = false)
+    public virtual void OnEnter(bool calledByPacket = false, string options = "")
     {
         if (!calledByPacket)
         {
@@ -51,7 +51,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
             });
         }
     }
-    public virtual void OnExit(bool calledByPacket = false)
+    public virtual void OnExit(bool calledByPacket = false, string options = "")
     {
         if (!calledByPacket)
         {
@@ -220,7 +220,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         }
         else if (actionStr.StartsWith("EXIT"))
         {
-            OnExit();
+            OnExit(true);
         }
     }
 
