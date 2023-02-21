@@ -31,10 +31,15 @@ public class AccelShieldProperty : StoneProperty
     private void ResetAccelShield()
     {
         hasAccelShield = true;
+
+        baseStone.GetComponent<AkgRigidbody>().layerMask |= AkgLayerMask.SHIELD;
     }
 
     public void UseAccelShield()
     {
         hasAccelShield = false;
+
+        if (!baseStone.HasAccelShield() && baseStone.ShieldCount() <= 0)
+            baseStone.GetComponent<AkgRigidbody>().layerMask &= ~AkgLayerMask.SHIELD;
     }
 }

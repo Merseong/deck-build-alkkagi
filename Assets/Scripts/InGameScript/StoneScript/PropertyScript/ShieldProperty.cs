@@ -22,7 +22,8 @@ public class ShieldProperty : StoneProperty
     {
         base.OnRemoved(isReplaced);
 
-        baseStone.GetComponent<AkgRigidbody>().layerMask &= ~AkgLayerMask.SHIELD;
+        if (!baseStone.HasAccelShield() && baseStone.ShieldCount() <= 0)
+            baseStone.GetComponent<AkgRigidbody>().layerMask &= ~AkgLayerMask.SHIELD;
     }
 
     public override int ShieldCount(int value) { return value + shieldCount; }
