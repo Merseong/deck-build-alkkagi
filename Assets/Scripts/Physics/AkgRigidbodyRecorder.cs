@@ -96,7 +96,7 @@ public class AkgRigidbodyRecorder
                         // stoneId => 토큰을 사용한 stone의 번호
                         if (!GameManager.Inst.OppoPlayer.ShootTokenAvailable)
                         {
-                            Debug.LogError("[OPPO] Shoot token already spent!");
+                            Debug.Log("[OPPO] Shoot token already spent!");
                         }
                         GameManager.Inst.OppoPlayer.ShootTokenAvailable = false;
                         break;

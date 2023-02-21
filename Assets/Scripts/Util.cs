@@ -41,7 +41,7 @@ public static class Util
                 return .95f;
 
             default:
-                Debug.Log("Invalid Stone Size!");
+                Debug.LogError("Invalid Stone Size!");
                 return 1f;
         }
     }
@@ -66,7 +66,7 @@ public static class Util
                         return .13f;
 
                     default:
-                        Debug.Log("Invalid Stone Size!");
+                        Debug.LogError("Invalid Stone Size!");
                         return 0f;
                 }
 
@@ -86,7 +86,7 @@ public static class Util
                         return .16f;
 
                     default:
-                        Debug.Log("Invalid Stone Size!");
+                        Debug.LogError("Invalid Stone Size!");
                         return 0f;
                 }
 
@@ -106,7 +106,7 @@ public static class Util
                         return .19f;
 
                     default:
-                        Debug.Log("Invalid Stone Size!");
+                        Debug.LogError("Invalid Stone Size!");
                         return 0f;
                 }
 

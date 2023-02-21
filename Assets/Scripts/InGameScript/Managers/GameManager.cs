@@ -218,7 +218,7 @@ public class GameManager : SingletonBehavior<GameManager>
 
         if (loser == PlayerEnum.LOCAL)
         {
-            Debug.LogError("Game over!");
+            Debug.Log("Game over!");
             LocalTurnState = TurnState.END;
             OppoTurnState = TurnState.END;
             StartCoroutine(ERoomExitSendNetworkAction());
@@ -387,12 +387,12 @@ public class GameManager : SingletonBehavior<GameManager>
 #endif
         if (isTurnEndSent)
         {
-            Debug.LogWarning("[ME] Turn end already sent!");
+            Debug.Log("[ME] Turn end already sent!");
             return;
         }
         if (WhoseTurn == PlayerEnum.OPPO)
         {
-            Debug.LogError("Waiting player ended turn!");
+            Debug.Log("Waiting player ended turn!");
             return;
         }
         if (isInHonorSkipRoutine)

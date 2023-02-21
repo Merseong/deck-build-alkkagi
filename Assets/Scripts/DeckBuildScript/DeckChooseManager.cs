@@ -148,7 +148,7 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
     {
         if (CurrentSelectedDeckIdx < 0)
         {
-            Debug.LogError("덱을 선택해주세요.");
+            Debug.Log("덱을 선택해주세요.");
             return;
         }
 
