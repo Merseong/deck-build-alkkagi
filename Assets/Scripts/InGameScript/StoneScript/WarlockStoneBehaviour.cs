@@ -6,19 +6,25 @@ public class WarlockStoneBehaviour : StoneBehaviour
 {
     public override void OnEnter(bool calledByPacket = false, string options = "")
     {
-        List<StoneBehaviour> oppoStones = new List<StoneBehaviour>();
-        foreach (var stone in GameManager.Inst.AllStones.Values)
+        if (calledByPacket)
         {
-            if (stone.BelongingPlayer == GameManager.PlayerEnum.OPPO)
+            StoneBehaviour stone = GameManager.Inst.FindStone(int.Parse(options));
+            stone.AddProperty(new CursedProperty(stone));
+        }
+        else
+        {
+            PlayerBehaviour oppo = GameManager.Inst.GetOppoPlayer(BelongingPlayer);
+
+            if (oppo.Stones.Count > 0)
             {
-                oppoStones.Add(stone);
+                int randNum = UnityEngine.Random.Range(0, oppo.Stones.Count);
+                StoneBehaviour randStone = oppo.Stones[randNum];
+                options = randStone.StoneId.ToString();
+
+                randStone.AddProperty(new CursedProperty(randStone));
             }
         }
-        if (oppoStones.Count != 0)
-        {
-            int randNum = UnityEngine.Random.Range(0, oppoStones.Count);
-            oppoStones[randNum].AddProperty(new CursedProperty(oppoStones[randNum]));
-        }
+
 
         base.OnEnter(calledByPacket, options);
     }
