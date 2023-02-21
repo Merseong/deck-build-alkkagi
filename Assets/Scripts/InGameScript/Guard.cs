@@ -6,8 +6,6 @@ using UnityEngine;
 public class Guard : MonoBehaviour, IAkgRigidbodyInterface
 {
     private int guardId;
-    private bool isBelongLocal;
-    private bool isAlreadyCollided = false;
 
     private AkgRigidbody akgRigidbody;
 
@@ -19,7 +17,6 @@ public class Guard : MonoBehaviour, IAkgRigidbodyInterface
     public void SetGuardData(int id, bool isLocal)
     {
         guardId = id;
-        isBelongLocal = isLocal;
         akgRigidbody = GetComponent<AkgRigidbody>();
         akgRigidbody.Init();
         SetSide(isLocal);
@@ -46,7 +43,6 @@ public class Guard : MonoBehaviour, IAkgRigidbodyInterface
         //if (isAlreadyCollided) return;
         if (collider.gameObject.CompareTag("Stone"))
         {
-            isAlreadyCollided = true;
             AkgPhysicsManager.Inst.rigidbodyRecorder.AppendEventRecord(new EventRecord
             {
                 stoneId = guardId,
