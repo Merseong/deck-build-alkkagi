@@ -235,14 +235,14 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         }
         if (deck.Count < number)
         {
-            Debug.LogError("Card 부족");
+            Debug.Log("Card 부족");
             // TODO: 일단 alert할거까진 아닌듯
             //IngameUIManager.Inst.UserAlertPanel.Alert("No cards in deck"); //"덱에 카드가 부족합니다"
             return;
         }
         if (number == 0)
         {
-            Debug.LogError("손패가 가득 찼습니다!");
+            Debug.Log("손패가 가득 찼습니다!");
             IngameUIManager.Inst.UserAlertPanel.Alert("Hand is full"); // "손패가 가득 찼습니다"
             return;
         }
@@ -1101,7 +1101,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             // shoot token이 없는 경우, 쏘지 못하게 리셋
             if (!(ShootTokenAvailable || selectedStone.CanSprint()))
             {
-                Debug.LogWarning("공격토큰이 존재하지 않습니다.");
+                Debug.Log("공격토큰이 존재하지 않습니다.");
                 IngameUIManager.Inst.UserAlertPanel.Alert("No attack token"); // "공격 토큰이 존재하지 않습니다"
                 selectedStone.ChangeSpriteAndRot("Idle", isLocalRotated);
                 isDragging = false;
@@ -1115,7 +1115,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
                 selectedStone.ChangeSpriteAndRot("Idle", isLocalRotated);
                 isDragging = false;
                 selectedStone = null;
-                Debug.LogError("You have not enough cost for shooting stone!");
+                Debug.Log("You have not enough cost for shooting stone!");
                 IngameUIManager.Inst.UserAlertPanel.Alert("Not enough cost for shooting stone!"); // "코스트가 부족합니다"
                 return;
             }
@@ -1158,7 +1158,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         if(nearPutTransform == null)
         {
-            Debug.LogError("Unavailiable place to spawn stone!");
+            Debug.Log("Unavailiable place to spawn stone!");
             IngameUIManager.Inst.UserAlertPanel.Alert("Unavailiable place to spawn stone"); // 돌을 놓을 수 있는 위치가 아닙니다
             GameManager.Inst.GameBoard.UnhightlightPossiblePos();
             selectedCard.EnlargeCard(false);
@@ -1166,7 +1166,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         }
         else if(!SpendCost(selectedCard.CardData.cardCost))
         {
-            Debug.LogError("Not enough cost to play card!");
+            Debug.Log("Not enough cost to play card!");
             IngameUIManager.Inst.UserAlertPanel.Alert("Not enough cost to play card"); // 코스트가 부족합니다
             GameManager.Inst.GameBoard.UnhightlightPossiblePos();
             selectedCard.EnlargeCard(false);

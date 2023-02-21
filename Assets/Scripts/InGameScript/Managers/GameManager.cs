@@ -101,7 +101,8 @@ public class GameManager : SingletonBehavior<GameManager>
     public ushort normalTurnCost = 3;
 
     public int knightEnterCount = 0;
-
+    public List<int> localDeadStones = new();
+    
     public void Start()
     {
         NetworkManager.Inst.AddReceiveDelegate(TurnInfoReceiveNetworkAction);

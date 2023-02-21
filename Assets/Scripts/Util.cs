@@ -257,6 +257,11 @@ public static class Util
         return builder.ToString();
     }
 
+    public static string ConvertIDtoString(int id)
+    {
+        return BinaryStringToHexString(ConvertIdToBinary(id));
+    }
+
     public static string BinaryStringToHexString(string binary)
     {
         if (string.IsNullOrEmpty(binary))
@@ -306,7 +311,7 @@ public static class Util
     //TODO : Derive CardData from DB
     public static CardData GetCardDataFromID(int id, Dictionary<int, CardData> CardDataDic)
     {
-        if(id == 0) return null;
+        if(id == 0) return CardDataDic[1];
         return CardDataDic[id];
     }
 

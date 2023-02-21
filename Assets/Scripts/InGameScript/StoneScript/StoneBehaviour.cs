@@ -11,7 +11,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     {
         
         Type type = Type.GetType(Util.GetCardDataFromID(id, GameManager.Inst.CardDatas).cardEngName + "StoneBehaviour");
-        Debug.Log(id + ", " + type);
+        // Debug.Log(id + ", " + type);
         if(type == null)
         {
             return typeof(StoneBehaviour);
@@ -37,6 +37,8 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     /// <param name="options">"@ @ @ ... @" 꼴, Split(' ')으로 쪼개서 사용하면됨</param>
     public virtual void OnExit(bool calledByPacket = false, string options = "")
     {
+        GameManager.Inst.localDeadStones.Add(CardData.CardID);
+
         BelongingPlayer.OnStoneExit?.Invoke(this);
     }
 
@@ -378,7 +380,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         if(sprite == null)
         {
             sprite = GameManager.Inst.stoneAtlas.GetSprite($"{cardData.cardEngName}_Idle");
-            Debug.LogError($"There is no sprite named \"{cardData.cardEngName}_{state}\""); 
+            Debug.Log($"There is no sprite named \"{cardData.cardEngName}_{state}\""); 
         } 
         return sprite;
     }

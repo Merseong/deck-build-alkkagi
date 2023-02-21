@@ -174,6 +174,36 @@ public class GameBoard : MonoBehaviour
         return true;
     }
 
+    public List<Transform> GetPossiblePutTransform(GameManager.PlayerEnum playerEnum, CardData cardData)
+    {
+        List<Transform> result = new();
+        
+        switch(playerEnum)
+        {
+            case GameManager.PlayerEnum.LOCAL:
+                foreach(var item in localPlayerPutMarks)
+                {
+                    if(IsPossibleToPut(item.transform.position, Util.GetRadiusFromStoneSize(cardData.stoneSize)))
+                    {
+                        result.Add(item.transform);
+                    }
+                }
+                break;
+
+            case GameManager.PlayerEnum.OPPO:
+                foreach(var item in oppoPlayerPutMarks)
+                {
+                    if(IsPossibleToPut(item.transform.position, Util.GetRadiusFromStoneSize(cardData.stoneSize)))
+                    {
+                        result.Add(item.transform);
+                    }
+                }
+                break;
+        }
+        
+        return result;
+    }
+
     public void ResetMarkState(bool setBoth = false)
     {
         foreach(var mark in localPlayerPutMarks)
