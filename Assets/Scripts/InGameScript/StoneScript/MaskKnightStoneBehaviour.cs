@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RookieKnightStoneBehaviour : StoneBehaviour
+public class MaskKnightStoneBehaviour : StoneBehaviour
 {
     public override void OnEnter(bool calledByPacket = false, string options = "")
     {
@@ -14,4 +14,5 @@ public class RookieKnightStoneBehaviour : StoneBehaviour
             (GameManager.Inst.LocalPlayer as LocalPlayerBehaviour).SetKnightCommanderCost();
         }
     }
+
 }

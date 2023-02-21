@@ -70,9 +70,9 @@ public class GameBoard : MonoBehaviour
     // 떨어짐 판정
 
     // 스톤을 놓을 수 있는 모든 위치 제공
-    public void HighlightPossiblePos(GameManager.PlayerEnum player, float stoneRadius)
+    public void HighlightPossiblePos(GameManager.PlayerEnum player, float stoneRadius, bool highlightBoth = false)
     {
-        if (player == GameManager.PlayerEnum.LOCAL)
+        if (player == GameManager.PlayerEnum.LOCAL || highlightBoth)
         {
             for (int i = 0; i < localPlayerPutMarks.Length; i++)
             {
@@ -88,16 +88,18 @@ public class GameBoard : MonoBehaviour
                 }
             }
         }
-        else
+        if (player == GameManager.PlayerEnum.OPPO || highlightBoth)
         {
             for (int i = 0; i < oppoPlayerPutMarks.Length; i++)
             {
                 if (IsPossibleToPut(oppoPlayerPutMarks[i].transform.position, stoneRadius))
                 {
+                    oppoPlayerPutMarks[i].SetActive(true);
                     oppoPlayerPutMarks[i].GetComponent<SpriteRenderer>().color = Color.yellow;
                 }
                 else
                 {
+                    oppoPlayerPutMarks[i].SetActive(false);
                     oppoPlayerPutMarks[i].GetComponent<SpriteRenderer>().color = Color.red;
                 }
             }
@@ -117,12 +119,12 @@ public class GameBoard : MonoBehaviour
     }
 
     // 해당 위치 근처에 스톤 놓을 수 있는 위치 제공
-    public Transform GiveNearbyPos(Vector3 pos, GameManager.PlayerEnum player, float stoneRadius)
+    public Transform GiveNearbyPos(Vector3 pos, GameManager.PlayerEnum player, float stoneRadius, bool giveFromBoth = false)
     {
         var localCanStone = GameManager.Inst.isLocalGoFirst ? BoardData.player1CanStone : BoardData.player2CanStone;
         var oppoCanStone = GameManager.Inst.isLocalGoFirst ? BoardData.player2CanStone : BoardData.player1CanStone;
 
-        if (player == GameManager.PlayerEnum.LOCAL)
+        if (player == GameManager.PlayerEnum.LOCAL || giveFromBoth)
         {
             foreach (BoardPos boardPos in localCanStone)
             {
@@ -135,14 +137,14 @@ public class GameBoard : MonoBehaviour
                 }
             }
         }
-        else
+        if(player == GameManager.PlayerEnum.OPPO || giveFromBoth)
         {
             foreach (BoardPos boardPos in oppoCanStone)
             {
                 Vector3 nearbyPos = new Vector3(boardPos.x, 0, boardPos.y);
                 if (Vector3.Distance(pos, nearbyPos) <= nearbyRadius && IsPossibleToPut(nearbyPos, stoneRadius))
                 {
-                    return oppoPlayerPutMarks[System.Array.IndexOf(localCanStone, boardPos)].transform;
+                    return oppoPlayerPutMarks[System.Array.IndexOf(oppoCanStone, boardPos)].transform;
                 }
             }
         }
@@ -172,11 +174,19 @@ public class GameBoard : MonoBehaviour
         return true;
     }
 
-    public void ResetMarkState()
+    public void ResetMarkState(bool setBoth = false)
     {
         foreach(var mark in localPlayerPutMarks)
         {
             mark.GetComponent<SpriteRenderer>().material.color = Color.yellow;
+        }
+
+        if(setBoth)
+        {
+            foreach(var mark in oppoPlayerPutMarks)
+            {
+                mark.GetComponent<SpriteRenderer>().material.color = Color.yellow;
+            }
         }
     }
 

@@ -4,5 +4,14 @@ using UnityEngine;
 
 public class KnightCommanderStoneBehaviour : StoneBehaviour
 {
+    public override void OnEnter(bool calledByPacket = false, string options = "")
+    {
+        base.OnEnter(calledByPacket, options);
 
+        if(BelongingPlayerEnum == GameManager.PlayerEnum.LOCAL)  // TODO
+        {
+            GameManager.Inst.knightEnterCount += 1;
+            (GameManager.Inst.LocalPlayer as LocalPlayerBehaviour).SetKnightCommanderCost();
+        }
+    }
 }

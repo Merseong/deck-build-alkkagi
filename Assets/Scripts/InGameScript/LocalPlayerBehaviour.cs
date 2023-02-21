@@ -132,7 +132,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     public override void InitDeck(string deckCode)
     {
-        deck.Clear();
+        // deck.Clear();
 
         //TODO : Should generate deck from user DB
         var cardData = Util.GenerateDeckFromDeckCode(deckCode, GameManager.Inst.CardDatas);
@@ -143,7 +143,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         }
 
         DeckCount = (ushort)cardData.Count;
-        ShuffleDeck();
+        // ShuffleDeck();
     }
 
     private void ShuffleDeck()
@@ -971,14 +971,25 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         if (IsPlayingCardOnBoard(curTouchPositionNormalized))
         {
-            //TODO : 스톤 미리보기 추가해주어야 함
             selectedCard.GetComponent<MeshRenderer>().enabled = false;
             selectedCard.transform.GetChild(0).gameObject.SetActive(false);
             stoneGhost.SetActive(true);
 
-            gameBoard.ResetMarkState();
-            GameManager.Inst.GameBoard.HighlightPossiblePos(GameManager.PlayerEnum.LOCAL, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
-            Transform putMarkTransform = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
+            gameBoard.ResetMarkState(selectedCard.CardData.CardID == 14);
+
+            GameManager.Inst.GameBoard.HighlightPossiblePos(GameManager.PlayerEnum.LOCAL, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize), selectedCard.CardData.CardID == 14);
+            
+            Transform putMarkTransform;
+            if(selectedCard.CardData.CardID == 14)
+            {
+                putMarkTransform = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize), true);    
+            }
+            else
+            {
+                putMarkTransform = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
+            }
+            
+            
             if(putMarkTransform != null)
             {                
                 putMarkTransform.GetComponent<SpriteRenderer>().material.color = Color.blue;
@@ -1099,7 +1110,24 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         selectedCard.transform.GetChild(0).gameObject.SetActive(true);
         stoneGhost.SetActive(false);
 
-        Transform nearPutTransform = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
+        Transform nearPutTransform;
+        if(selectedCard.CardData.CardID == 14)
+        {
+            nearPutTransform = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize), true);
+        } 
+        else
+        {
+            nearPutTransform = gameBoard.GiveNearbyPos(curTouchPositionNormalized, GameManager.PlayerEnum.LOCAL, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize));
+        } 
+        
+        if(GameManager.Inst.turnStates[0] == GameManager.TurnState.PREPARE)
+        {
+            IngameUIManager.Inst.UserAlertPanel.Alert("Unavailable turn to spawn stone"); // 돌을 놓을 수 있는 턴이 아닙니다
+            GameManager.Inst.GameBoard.UnhightlightPossiblePos();
+            selectedCard.EnlargeCard(false);
+            return;
+        }
+
         if(nearPutTransform == null)
         {
             Debug.LogError("Unavailiable place to spawn stone!");
