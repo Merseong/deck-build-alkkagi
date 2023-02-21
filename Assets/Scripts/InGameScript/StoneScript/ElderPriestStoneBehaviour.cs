@@ -5,33 +5,29 @@ using System;
 
 public class ElderPriestStoneBehaviour : StoneBehaviour
 {
-    protected override void StoneCollisionProperty(AkgRigidbody collider, Vector3 collidePoint, bool isCollided)
+    public override void OnEnter(bool calledByPacket = false, string options = "")
     {
-        if(isCollided) return;
-        if(!collider.layerMask.HasFlag(AkgLayerMask.LOCAL) || !collider.layerMask.HasFlag(AkgLayerMask.STONE)) return;
-        if(BelongingPlayer.StrikingStone == (this as StoneBehaviour))
+        OnHit += ApplyShield;
+
+        base.OnEnter(calledByPacket, options);
+    }
+
+    public override void OnExit(bool calledByPacket = false, string options = "")
+    {
+        OnHit -= ApplyShield;
+
+        base.OnExit(calledByPacket, options);
+    }
+
+    private void ApplyShield(AkgRigidbody other)
+    {
+        if (other.layerMask.HasFlag(AkgLayerMask.STONE) && BelongingPlayer.StrikingStone == this)
         {
-            ApplyShield(collider.GetComponent<StoneBehaviour>());
-            
-            AkgPhysicsManager.Inst.rigidbodyRecorder.SendEventOnly(new EventRecord
+            StoneBehaviour stone = other.GetComponent<StoneBehaviour>();
+            if (stone.BelongingPlayerEnum == BelongingPlayerEnum)
             {
-                eventEnum = EventEnum.POWER,
-                stoneId = StoneId,
-                eventMessage = collider.GetComponent<StoneBehaviour>().StoneId.ToString(),
-                time = Time.time,
-            });
+                stone.AddProperty(new ShieldProperty(stone));
+            }
         }
-    }
-
-    public void ApplyShield(StoneBehaviour SB)
-    {
-        // Debug.Log(SB.StoneId);
-        AddProperty(new ShieldProperty(SB, 1));
-    }
-
-    public override void ParseActionString(string actionStr)
-    {
-        base.ParseActionString(actionStr);
-        ApplyShield(GameManager.Inst.FindStone(Int32.Parse(actionStr)));
     }
 }

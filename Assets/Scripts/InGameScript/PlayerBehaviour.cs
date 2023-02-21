@@ -72,7 +72,8 @@ public abstract class PlayerBehaviour : MonoBehaviour
     public event Action OnTurnEnd;
     public Action<StoneBehaviour> OnStoneEnter;
     public Action<StoneBehaviour> OnStoneExit;
-    public Action<StoneBehaviour> OnStoneHit;
+    [Tooltip("충돌한 돌, 돌이 충돌한 상대 AkgRigidbody")]
+    public Action<StoneBehaviour, AkgRigidbody> OnStoneHit;
 
     //플레이어가 발사한 스톤, 다른 스톤들에서는 이 스톤의 충돌 여부를 확인하여 타격 여부를 결정하여야 함
     protected StoneBehaviour strikingStone;

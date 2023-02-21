@@ -20,10 +20,13 @@ public class GasolineSnailStoneBehaviour : StoneBehaviour
 
     private void Grease(AkgRigidbody other)
     {
-        StoneBehaviour stone = other.GetComponent<StoneBehaviour>();
-        if (stone.BelongingPlayerEnum != BelongingPlayerEnum)
+        if (other.layerMask.HasFlag(AkgLayerMask.STONE))
         {
-            stone.AddProperty(new GreasedProperty(stone));
+            StoneBehaviour stone = other.GetComponent<StoneBehaviour>();
+            if (stone.BelongingPlayerEnum != BelongingPlayerEnum)
+            {
+                stone.AddProperty(new GreasedProperty(stone));
+            }
         }
     }
 }

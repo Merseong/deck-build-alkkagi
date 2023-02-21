@@ -20,13 +20,16 @@ public class DeadBallStoneBehaviour : StoneBehaviour
 
     private void KickCursed(AkgRigidbody other)
     {
-        StoneBehaviour stone = other.GetComponent<StoneBehaviour>();
-        foreach (var property in stone.Properties)
+        if (other.layerMask.HasFlag(AkgLayerMask.STONE))
         {
-            if (property is CursedProperty)
+            StoneBehaviour stone = other.GetComponent<StoneBehaviour>();
+            foreach (var property in stone.Properties)
             {
-                stone.RemoveStoneFromGame();
-                stone.StartCoroutine(stone.EIndirectExit(true));
+                if (property is CursedProperty)
+                {
+                    stone.RemoveStoneFromGame();
+                    stone.StartCoroutine(stone.EIndirectExit(true));
+                }
             }
         }
     }

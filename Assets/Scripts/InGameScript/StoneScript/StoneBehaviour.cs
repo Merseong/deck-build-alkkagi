@@ -484,7 +484,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     {
         Debug.Log($"{cardData.name} is collided with {collider.GetComponent<StoneBehaviour>()?.cardData.name}: {isCollided}");
         OnHit?.Invoke(collider);
-        BelongingPlayer.OnStoneHit?.Invoke(this);
+        BelongingPlayer.OnStoneHit?.Invoke(this, collider);
 
         if (collider.layerMask.HasFlag(AkgLayerMask.COLLIDED))
         {
