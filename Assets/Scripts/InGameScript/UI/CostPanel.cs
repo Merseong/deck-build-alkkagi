@@ -64,11 +64,18 @@ public class CostPanel : MonoBehaviour
     {
         costText.text = cost.ToString();
 
-        if(cost == 0) costTextBackground.gameObject.SetActive(false);
-        else costTextBackground.gameObject.SetActive(true);
-
+        if (cost == 0)
+        {
+            costTextBackground.color = Color.white;
+            costTextBackground.sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Cost_1");
+        }
+        else
+        {
+            costTextBackground.color = Color.white;
+            costTextBackground.sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Cost_2");
+        }
         //코스트의 최대치가 갱신되는 경우
-        if(cost > curMaxCost)
+        if (cost > curMaxCost)
         {
             if(cost > gaugeList.Count)
             {
@@ -81,7 +88,8 @@ public class CostPanel : MonoBehaviour
             
             foreach(var go in gaugeList)
             {
-                go.GetComponent<Image>().color = Color.green;
+                go.GetComponent<Image>().color = Color.white;
+                go.GetComponent<Image>().sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_CostBar_2");
                 go.SetActive(true);
             }
         }
@@ -90,12 +98,14 @@ public class CostPanel : MonoBehaviour
         {
             foreach(var go in gaugeList)
             {
-                go.GetComponent<Image>().color = Color.gray;
+                go.GetComponent<Image>().color = Color.white;
+                go.GetComponent<Image>().sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_CostBar_1");
             }
 
             for(int i=0; i<cost; i++)
             {
-                gaugeList[i].GetComponent<Image>().color = Color.green;
+                gaugeList[i].GetComponent<Image>().color = Color.white;
+                gaugeList[i].GetComponent<Image>().sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_CostBar_2");
             }
         }
         curCostCnt = cost;
@@ -122,7 +132,8 @@ public class CostPanel : MonoBehaviour
 
         for(int i=0; i<cost; i++)
         {
-            gaugeList[i].GetComponent<Image>().color = Color.green;
+            gaugeList[i].GetComponent<Image>().color = Color.white;
+            gaugeList[i].GetComponent<Image>().sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_CostBar_2"); ;
             gaugeList[i].SetActive(true);
         }
     }
