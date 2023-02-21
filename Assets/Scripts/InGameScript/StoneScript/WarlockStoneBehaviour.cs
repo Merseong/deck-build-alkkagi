@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class WarlockStoneBehaviour : StoneBehaviour
 {
-    public override void OnEnter()
+    public override void OnEnter(bool calledByPacket = false)
     {
+        base.OnEnter(calledByPacket);
+
         List<StoneBehaviour> oppoStones = new List<StoneBehaviour>();
         foreach (var stone in GameManager.Inst.AllStones.Values)
         {

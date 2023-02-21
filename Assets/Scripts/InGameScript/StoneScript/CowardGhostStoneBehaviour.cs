@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class CowardGhostStoneBehaviour : StoneBehaviour
 {
-    public override void OnEnter()
+    public override void OnEnter(bool calledByPacket = false)
     {
+        base.OnEnter(calledByPacket);
+
         GameManager.Inst.players[(int)BelongingPlayer].AddCowardGhost(this);
     }
 
-    public override void OnExit()
+    public override void OnExit(bool calledByPacket = false)
     {
+        base.OnExit(calledByPacket);
+
         GameManager.Inst.players[(int)BelongingPlayer].RemoveCowardGhost(this);
     }
 

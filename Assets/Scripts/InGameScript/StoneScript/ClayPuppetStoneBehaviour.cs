@@ -5,8 +5,10 @@ using UnityEngine;
 public class ClayPuppetStoneBehaviour : StoneBehaviour
 {
 
-    public override void OnEnter()
+    public override void OnEnter(bool calledByPacket = false)
     {
+        base.OnEnter(calledByPacket);
+
         OnShootEnter += () =>{
             GameManager.Inst.players[(int)BelongingPlayer].GetCost(1);
         };

@@ -38,8 +38,32 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
     }
     #endregion
 
-    public virtual void OnEnter() { }
-    public virtual void OnExit() { }
+    public virtual void OnEnter(bool calledByPacket = false)
+    {
+        if (!calledByPacket)
+        {
+            AkgPhysicsManager.Inst.rigidbodyRecorder.SendEventOnly(new EventRecord
+            {
+                eventEnum = EventEnum.POWER,
+                stoneId = StoneId,
+                eventMessage = "ENTER",
+                time = Time.time,
+            });
+        }
+    }
+    public virtual void OnExit(bool calledByPacket = false)
+    {
+        if (!calledByPacket)
+        {
+            AkgPhysicsManager.Inst.rigidbodyRecorder.SendEventOnly(new EventRecord
+            {
+                eventEnum = EventEnum.POWER,
+                stoneId = StoneId,
+                eventMessage = "EXIT",
+                time = Time.time,
+            });
+        }
+    }
 
     public event Action OnShootEnter;
     public event Action OnShootExit;
@@ -188,7 +212,17 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
         }
     }
 
-    public virtual void ParseActionString(string actionStr) { }
+    public virtual void ParseActionString(string actionStr)
+    {
+        if (actionStr.StartsWith("ENTER"))
+        {
+            OnEnter(true);
+        }
+        else if (actionStr.StartsWith("EXIT"))
+        {
+            OnExit();
+        }
+    }
 
     #region Stone Properties
 
