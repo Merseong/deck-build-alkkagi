@@ -930,6 +930,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 984495491861303267, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
+    - target: {fileID: 984495491861303267, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 984495492061914435, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: a3924a82fd0f3e2488e78a4e4a2425fe, type: 2}
+    - target: {fileID: 984495492061914435, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 984495492558740912, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_Name
       value: Canvas

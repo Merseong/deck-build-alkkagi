@@ -380,26 +380,9 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     public virtual Sprite GetSpriteState(string state)
     {
         Sprite sprite = GameManager.Inst.stoneAtlas.GetSprite($"{cardData.cardEngName}_{state}");
-        switch (state)
-        {
-            case "Shoot":
-            case "Hit":
-                state = "Idle";
-                break;
-            case "Ready":
-            case "Break":
-                state = "Shoot";
-                break;
-            case "Idle":
-                return null;
-            default:
-                state = "Idle";
-                break;
-        }
-        sprite = GameManager.Inst.stoneAtlas.GetSprite($"{cardData.cardEngName}_{state}");
         if(sprite == null)
         {
-            GameManager.Inst.stoneAtlas.GetSprite($"{cardData.cardEngName}_Idle");
+            sprite = GameManager.Inst.stoneAtlas.GetSprite($"{cardData.cardEngName}_Idle");
             Debug.LogError($"There is no sprite named \"{cardData.cardEngName}_{state}\""); 
         } 
         return sprite;
