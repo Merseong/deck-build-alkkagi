@@ -6,23 +6,35 @@ public class PriestStoneBehaviour : StoneBehaviour
 {
     public override void OnEnter(bool calledByPacket = false, string options = "")
     {
-        float minDist = 10000f;
-        StoneBehaviour minDistStone = null;
-        foreach (StoneBehaviour stone in BelongingPlayer.Stones.Values)
+        if (calledByPacket)
         {
-            if (stone != this)
+            if (!options.Equals(""))
             {
-                float dist = Vector3.Distance(transform.position, stone.gameObject.transform.position);
-                if (dist < minDist)
-                {
-                    minDistStone = stone;
-                    minDist = dist;
-                }
+                StoneBehaviour stone = GameManager.Inst.FindStone(int.Parse(options));
+                stone.AddProperty(new ShieldProperty(stone));
             }
         }
-        if (minDistStone != null)
+        else
         {
-            minDistStone.AddProperty(new ShieldProperty(minDistStone));
+            float minDist = 10000f;
+            StoneBehaviour minDistStone = null;
+            foreach (StoneBehaviour stone in BelongingPlayer.Stones.Values)
+            {
+                if (stone != this)
+                {
+                    float dist = Vector3.Distance(transform.position, stone.gameObject.transform.position);
+                    if (dist < minDist)
+                    {
+                        minDistStone = stone;
+                        minDist = dist;
+                    }
+                }
+            }
+            if (minDistStone != null)
+            {
+                minDistStone.AddProperty(new ShieldProperty(minDistStone));
+                options = minDistStone.StoneId.ToString();
+            }
         }
 
         base.OnEnter(calledByPacket, options);
