@@ -19,8 +19,9 @@ public class WarlockStoneBehaviour : StoneBehaviour
             PlayerBehaviour oppo = GameManager.Inst.GetOppoPlayer(BelongingPlayerEnum);
             if (oppo.Stones.Count > 0)
             {
-                int randNum = UnityEngine.Random.Range(0, oppo.Stones.Count);
-                StoneBehaviour randStone = oppo.Stones[randNum];
+                var stones = new List<StoneBehaviour>(oppo.Stones.Values);
+                int randNum = UnityEngine.Random.Range(0, stones.Count);
+                StoneBehaviour randStone = stones[randNum];
                 randStone.AddProperty(new CursedProperty(randStone));
                 options = randStone.StoneId.ToString();
             }
