@@ -334,6 +334,15 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
             Client.Send(p);
         }
     }
+
+    public void ProblemSendNetworkAction(string alertMessage)
+    {
+        SendData(new MessagePacket
+        {
+            senderID = NetworkId,
+            message = alertMessage,
+        }, PacketType.PROBLEM_REPORT);
+    }
     #endregion
 
     #region Receive Actions

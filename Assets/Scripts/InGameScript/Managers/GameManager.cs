@@ -95,6 +95,7 @@ public class GameManager : SingletonBehavior<GameManager>
         get => nextTurnStates[1];
         set => nextTurnStates[1] = value;
     }
+    private uint hsPlayerUid = 0;
 
     public ushort initialTurnCost = 6;
     public ushort normalTurnCost = 3;
@@ -619,6 +620,7 @@ public class GameManager : SingletonBehavior<GameManager>
     private void SetHSPlayer(PlayerBehaviour player)
     {
         Debug.Log($"HS : {player.Player}");
+        hsPlayerUid = player.Uid;
         //IngameUIManager.Inst.NotificationPanel.Show($"HS : {player.Player}");
         IngameUIManager.Inst.HonorMarkImage.gameObject.SetActive(true);
         Sprite sprite;
@@ -626,18 +628,49 @@ public class GameManager : SingletonBehavior<GameManager>
         {
             sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Honor_1");
         }
-
         else
         {
             sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Honor_0");
         }
         IngameUIManager.Inst.HonorMarkImage.sprite = sprite;
-        #endregion
 
-        // 아너스킵
-        // 게임중 서버 통신
-        // 메세지 받아서 뿌려주기
-        // 메세지 보내기
-        // 게임보드 동기화 (상대 턴일때)
+        NetworkManager.Inst.AddReceiveDelegate(HSPlayerReceiveNetworkAction);
+        HSPlayerSendNetworkAction(hsPlayerUid);
+        #endregion
+    }
+
+    private void HSPlayerSendNetworkAction(uint uid)
+    {
+        NetworkManager.Inst.SendData(new MessagePacket
+        {
+            senderID = NetworkManager.Inst.NetworkId,
+            message = $"HS/ {uid}"
+        }, PacketType.ROOM_BROADCAST);
+    }
+
+    private void HSPlayerReceiveNetworkAction(Packet p)
+    {
+        if (p.Type != (short)PacketType.ROOM_BROADCAST) return;
+        var msg = MessagePacket.Deserialize(p.Data);
+
+        // 내가 보낸건 무시
+        if (msg.senderID == NetworkManager.Inst.NetworkId) return;
+
+        if (msg.message.StartsWith("HS/"))
+        {
+            var msgArr = msg.message.Split(' ');
+            StartCoroutine(CheckHSPlayer(uint.Parse(msgArr[1])));
+            NetworkManager.Inst.RemoveReceiveDelegate(HSPlayerReceiveNetworkAction);
+        }
+
+        IEnumerator CheckHSPlayer(uint toCheck)
+        {
+            yield return new WaitUntil(() => hsPlayerUid != 0);
+
+            if (toCheck != hsPlayerUid)
+            {
+                NetworkManager.Inst.ProblemSendNetworkAction("HS player not matched!");
+            }
+        }
     }
 }

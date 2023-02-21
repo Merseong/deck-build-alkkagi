@@ -131,6 +131,11 @@ public enum PacketType
     /// <remarks>TestPacket</remarks>
     PACKET_TEST,
     /// <summary>
+    /// 문제 신고용 패킷
+    /// </summary>
+    /// <remarks>MessagePacket</remarks>
+    PROBLEM_REPORT,
+    /// <summary>
     /// 로그인을 위해 사용
     /// </summary>
     /// <remarks> MessagePacket, UserDataPacket </remarks>
