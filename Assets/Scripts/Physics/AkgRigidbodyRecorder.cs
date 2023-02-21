@@ -51,10 +51,11 @@ public class AkgRigidbodyRecorder
 
     public void SendEventOnly(EventRecord eventRecord)
     {
-        StartRecord(Time.time);
-        AppendEventRecord(eventRecord);
-        EndRecord(out _, out var eventRecs);
-        SendRecord(new List<VelocityRecord>(), eventRecs);
+        eventRecord.time -= Time.time;
+        SendRecord(new List<VelocityRecord>(), new List<EventRecord>
+        {
+            eventRecord
+        }, false);
     }
 
     public IEnumerator EPlayRecord(StoneActionPacket records)
@@ -77,6 +78,7 @@ public class AkgRigidbodyRecorder
                                             vRecords[vrIdx].time <= Time.time - startTime ||
                                             erIdx >= eRecords.Length ||
                                             eRecords[erIdx].time <= Time.time - startTime);
+
             while (vrIdx < vRecords.Length && vRecords[vrIdx].time <= Time.time - startTime)
             {
                 var stone = GameManager.Inst.FindStone(vRecords[vrIdx].stoneId);
@@ -86,6 +88,7 @@ public class AkgRigidbodyRecorder
             while (erIdx < eRecords.Length && eRecords[erIdx].time <= Time.time - startTime)
             {
                 StoneBehaviour stone;
+                Vector3 point;
                 var eventRec = eRecords[erIdx];
                 switch (eventRec.eventEnum)
                 {
@@ -97,22 +100,33 @@ public class AkgRigidbodyRecorder
                         }
                         GameManager.Inst.OppoPlayer.ShootTokenAvailable = false;
                         break;
-                    case EventEnum.GUARDCOLLIDE:
+                    case EventEnum.COLLIDE:
+                        // eventMessage -> (colStoneId || STATIC) (COLLIDED)
+                        if (eventRec.eventMessage.StartsWith("STATIC")) break; // -> STATICCOLLIDE에서 같이 처리
+                        var collMsgArr = eventRec.eventMessage.Split(' ');
+                        stone = GameManager.Inst.FindStone(eventRec.stoneId);
+                        var targetStone = GameManager.Inst.FindStone(int.Parse(collMsgArr[0]));
+                        bool collided = collMsgArr.Length != 1 && collMsgArr[1] == "COLLIDED";
+                        point = new Vector3(eventRec.xPosition, 0, eventRec.zPosition);
+                        stone.OnCollide(targetStone.GetComponent<AkgRigidbody>(), point, collided, true);
+                        break;
+                    case EventEnum.STATICCOLLIDE:
                         stone = GameManager.Inst.FindStone(eventRec.stoneId);
                         Guard guard = GameManager.Inst.GameBoard.FindGuard(int.Parse(eventRec.eventMessage));
-                        Vector3 point = new Vector3(eventRec.xPosition, 0, eventRec.zPosition);
+                        point = new Vector3(eventRec.xPosition, 0, eventRec.zPosition);
                         stone.OnCollide(guard.GetComponent<AkgRigidbody>(), point, false, true);
                         guard.OnCollide(stone.GetComponent<AkgRigidbody>(), point, true, true);
-                        break;
-                    case EventEnum.DROPOUT:
-                        stone = GameManager.Inst.FindStone(eventRec.stoneId);
-                        stone.transform.position = new Vector3(eventRec.xPosition, 0, eventRec.zPosition);
-                        stone.isExitingByPlaying = true;
                         break;
                     case EventEnum.POWER:
                         // 돌의 각자 특성상의 action
                         stone = GameManager.Inst.FindStone(eventRec.stoneId);
                         stone.ParseActionString(eventRec.eventMessage);
+                        break;
+                    case EventEnum.DROPOUT:
+                        stone = GameManager.Inst.FindStone(eventRec.stoneId);
+                        stone.transform.position = new Vector3(eventRec.xPosition, 0, eventRec.zPosition);
+                        stone.OnExit(true, eventRec.eventMessage);
+                        stone.isExitingByPlaying = true;
                         break;
                     default:
                         break;
@@ -137,17 +151,20 @@ public class AkgRigidbodyRecorder
         isPlaying = false;
     }
 
-    public void SendRecord(List<VelocityRecord> records, List<EventRecord> events)
+    public void SendRecord(List<VelocityRecord> records, List<EventRecord> events, bool includePosition = true)
     {
         var positionRecords = new List<PositionRecord>();
-        foreach (var stone in GameManager.Inst.AllStones)
+        if (includePosition)
         {
-            positionRecords.Add(new PositionRecord
+            foreach (var stone in GameManager.Inst.AllStones)
             {
-                stoneId = stone.Key,
-                xPosition = stone.Value.transform.position.x,
-                zPosition = stone.Value.transform.position.z,
-            });
+                positionRecords.Add(new PositionRecord
+                {
+                    stoneId = stone.Key,
+                    xPosition = stone.Value.transform.position.x,
+                    zPosition = stone.Value.transform.position.z,
+                });
+            }
         }
 
         ShootRecordSendNetworkAction(records, positionRecords, events);
@@ -184,6 +201,8 @@ public class AkgRigidbodyRecorder
         if (packet.Type != (short)PacketType.ROOM_OPPO_STONEACTION) return;
 
         var msg = StoneActionPacket.Deserialize(packet.Data);
+
+        if (msg.senderID == NetworkManager.Inst.NetworkId) return;
 
         msg.velocityRecords = msg.velocityRecords[..msg.velocityCount];
         msg.positionRecords = msg.positionRecords[..msg.positionCount];

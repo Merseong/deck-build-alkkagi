@@ -38,11 +38,6 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     public virtual void OnExit(bool calledByPacket = false, string options = "")
     {
         BelongingPlayer.OnStoneExit?.Invoke(this);
-
-        if (!calledByPacket)
-        {
-            StoneActionSendNetworkAction("EXIT/ " + options);
-        }
     }
 
     public event Action OnShootEnter;
@@ -104,12 +99,6 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
 
     private void Update()
     {
-        if (!CheckStoneDropByTransform())
-        {
-            RemoveStoneFromGame();
-            StartCoroutine(EIndirectExit());
-        }
-
         if (akgRigidbody.velocity == Vector3.zero || !isClicked)
         {
             if (nowParticle == null) return;
@@ -144,6 +133,15 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
             nowParticle.transform.position = Vector3.Lerp(nowParticle.transform.position, nowPos, _ChasingSpeed);
             float angle = Quaternion.FromToRotation(new Vector3(0,0,1), akgRigidbody.velocity.normalized).eulerAngles.y;
             nowParticle.transform.rotation = Quaternion.Euler(new Vector3(0,angle-180,0));
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (!CheckStoneDropByTransform())
+        {
+            RemoveStoneFromGame();
+            StartCoroutine(EIndirectExit());
         }
     }
 
@@ -198,14 +196,11 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         {
             OnEnter(true, actionStr.Substring(7)); // 기본적으로 space가 하나 들어감
         }
-        else if (actionStr.StartsWith("EXIT/"))
-        {
-            OnExit(true, actionStr.Substring(6));
-        }
     }
 
     protected virtual void StoneActionSendNetworkAction(string eventString)
     {
+        if (isExiting) return;
         AkgPhysicsManager.Inst.rigidbodyRecorder.SendEventOnly(new EventRecord
         {
             eventEnum = EventEnum.POWER,

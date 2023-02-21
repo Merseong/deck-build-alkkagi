@@ -260,7 +260,7 @@ public enum EventEnum
     NULL,
     SPENDTOKEN,
     COLLIDE,
-    GUARDCOLLIDE,
+    STATICCOLLIDE,
     DROPOUT,
     POWER,
     COUNT,

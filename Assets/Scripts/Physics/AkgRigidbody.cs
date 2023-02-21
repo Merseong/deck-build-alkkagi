@@ -125,13 +125,16 @@ public class AkgRigidbody : MonoBehaviour
                 collidedList.Add(colAkgObject.GetInstanceID());
                 colAkgObject.collidedList.Add(GetInstanceID());
 
-                colAkgObject.OnCollision(this, point);
-                OnCollision(colAkgObject, point);
+                colAkgObject.OnCollision(this, point, $"{stone.StoneId} COLLIDED");
+                OnCollision(colAkgObject, point, $"{(colAkgObject.isStatic ? "STATIC" : colAkgObject.stone.StoneId)}");
 
-                if (TryGetComponent<IAkgRigidbodyInterface>(out var localAkgI))
-                    localAkgI.OnCollide(colAkgObject, point, false);
-                if (colAkgObject.TryGetComponent<IAkgRigidbodyInterface>(out var akgI))
-                    akgI.OnCollide(this, point, true);
+                if (!AkgPhysicsManager.Inst.IsRecordPlaying)
+                {
+                    if (TryGetComponent<IAkgRigidbodyInterface>(out var localAkgI))
+                        localAkgI.OnCollide(colAkgObject, point, false);
+                    if (colAkgObject.TryGetComponent<IAkgRigidbodyInterface>(out var akgI))
+                        akgI.OnCollide(this, point, true);
+                }
 
                 Move(Time.deltaTime * velocity);
             }
@@ -353,7 +356,7 @@ public class AkgRigidbody : MonoBehaviour
         velocity = vel; 
     }
 
-    public void OnCollision(AkgRigidbody akg, Vector3 point)
+    public void OnCollision(AkgRigidbody akg, Vector3 point, string optionMessage)
     {
         if (IsStatic) return;
 
@@ -397,7 +400,7 @@ public class AkgRigidbody : MonoBehaviour
 
         velocity = normalVelocity + tangentialVelocity;
         RecordVelocity();
-        RecordCollideEvent(EventEnum.COLLIDE);
+        RecordCollideEvent(EventEnum.COLLIDE, point, optionMessage);
         CollideForecast();
     }
 
@@ -414,7 +417,7 @@ public class AkgRigidbody : MonoBehaviour
         });
     }
 
-    private void RecordCollideEvent(EventEnum eventEnum)
+    private void RecordCollideEvent(EventEnum eventEnum, Vector3 collidePosition, string optionMessage)
     {
         if (!TryGetComponent<StoneBehaviour>(out var stone)) return;
 
@@ -423,6 +426,9 @@ public class AkgRigidbody : MonoBehaviour
             stoneId = stone.StoneId,
             time = Time.time,
             eventEnum = eventEnum,
+            xPosition = collidePosition.x,
+            zPosition = collidePosition.z,
+            eventMessage = optionMessage,
         });
     }
 

@@ -52,7 +52,7 @@ public class Guard : MonoBehaviour, IAkgRigidbodyInterface
                     stoneId = stone.StoneId,
                     time = Time.time,
                     eventMessage = guardId.ToString(),
-                    eventEnum = EventEnum.GUARDCOLLIDE,
+                    eventEnum = EventEnum.STATICCOLLIDE,
                     xPosition = collidePoint.x,
                     zPosition = collidePoint.z,
                 });
