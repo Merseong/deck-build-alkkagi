@@ -46,7 +46,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
             {
                 eventEnum = EventEnum.POWER,
                 stoneId = StoneId,
-                eventMessage = "ENTER",
+                eventMessage = "ENTER_" + options,
                 time = Time.time,
             });
         }
@@ -59,7 +59,7 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
             {
                 eventEnum = EventEnum.POWER,
                 stoneId = StoneId,
-                eventMessage = "EXIT",
+                eventMessage = "EXIT_" + options,
                 time = Time.time,
             });
         }
@@ -214,13 +214,13 @@ public class StoneBehaviour : MonoBehaviour, AkgRigidbodyInterface
 
     public virtual void ParseActionString(string actionStr)
     {
-        if (actionStr.StartsWith("ENTER"))
+        if (actionStr.StartsWith("ENTER_"))
         {
-            OnEnter(true);
+            OnEnter(true, actionStr.Substring(6));
         }
-        else if (actionStr.StartsWith("EXIT"))
+        else if (actionStr.StartsWith("EXIT_"))
         {
-            OnExit(true);
+            OnExit(true, actionStr.Substring(5));
         }
     }
 
