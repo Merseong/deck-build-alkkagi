@@ -34,12 +34,12 @@ public class DeckDisplayUI : MonoBehaviour
     {
         if(value)
         {
-            selectButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Selected";
+            selectButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "선택됨";
             GetComponent<Image>().color = new Color(212/255f, 255/255f, 177/255f, 1f);
         }
         else
         {
-            selectButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Select";
+            selectButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "선택";
             GetComponent<Image>().color = Color.white;
         }
     }

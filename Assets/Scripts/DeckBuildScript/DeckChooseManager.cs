@@ -56,10 +56,34 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
     [SerializeField] private TextMeshProUGUI recordText;
     [SerializeField] private TextMeshProUGUI honorWinText;
     [SerializeField] private TextMeshProUGUI honorLoseText;
+    
+    private float height = 0;
+    private float width = 0;
 
     private void Start()
     {
         Initiallize();
+    }
+
+    private void Update()
+    {
+        ScaleWithScreenSize();
+    }
+
+    private void ScaleWithScreenSize()
+    {
+        if(height == Screen.height && width == Screen.width) return;
+        height = Screen.height;
+        width = Screen.width;
+        deckList.GetComponent<GridLayoutGroup>().cellSize = new Vector2((width-20) * 2, Mathf.Min(1.5f * (width-100) * 2 / 5 , height / 5) * 1.4f);
+        foreach(var item in curDisplayingDeck)
+        {
+            foreach(RectTransform obj in item.Value.CardList.GetComponentInChildren<RectTransform>())
+            {
+                var stand = 1.5f *(width-100) * 2 / 6 < deckList.GetComponent<GridLayoutGroup>().cellSize.y *.7f ? 1.5f *(width-100) * 2 / 6 : deckList.GetComponent<GridLayoutGroup>().cellSize.y *.7f;
+                obj.sizeDelta = new Vector2(stand * 2/3f, stand);
+            }
+        }
     }
 
     private void Initiallize()
@@ -198,23 +222,6 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
             output += isDeckAvailable[i] ? '1' : '0';
         }
         return output;
-    }
-
-    public string GenerateDeckCode(List<CardData> data)
-    {
-        StringBuilder sb = new StringBuilder();
-
-        foreach(var item in data)
-        {
-            sb.Append(Util.BinaryStringToHexString(Util.ConvertIdToBinary(item.CardID)));
-        }
-               
-        while(sb.ToString().Length < 12)
-        {
-            sb.Append("0");
-        }
-
-        return sb.ToString();
     }
 
     public void DisplayDeckFromDeckcode(string deckCode)
