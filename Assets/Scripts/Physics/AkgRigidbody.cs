@@ -149,10 +149,10 @@ public class AkgRigidbody : MonoBehaviour
         collide.OnCollision(this, point, $"{stone.StoneId} COL");
         OnCollision(collide, point, $"{(collide.isStatic ? "STA" : collide.stone.StoneId)}");
 
-        if (TryGetComponent<IAkgRigidbodyInterface>(out var localAkgI))
-            localAkgI.OnCollide(collide, point, false);
         if (collide.TryGetComponent<IAkgRigidbodyInterface>(out var akgI))
             akgI.OnCollide(this, point, true);
+        if (TryGetComponent<IAkgRigidbodyInterface>(out var localAkgI))
+            localAkgI.OnCollide(collide, point, false);
     }
 
     private void LateUpdate()
