@@ -15,12 +15,22 @@ public class ShieldProperty : StoneProperty
     {
         base.OnAdded(isReplaced);
 
+        if (!isReplaced)
+        {
+            baseStone.transform.GetChild(4).GetChild(2).gameObject.SetActive(true);
+        }
+
         baseStone.GetComponent<AkgRigidbody>().layerMask |= AkgLayerMask.SHIELD;
     }
 
     public override void OnRemoved(bool isReplaced = false)
     {
         base.OnRemoved(isReplaced);
+
+        if (!isReplaced)
+        {
+            baseStone.transform.GetChild(4).GetChild(2).gameObject.SetActive(false);
+        }
 
         if (!baseStone.HasAccelShield() && baseStone.ShieldCount() <= 0)
             baseStone.GetComponent<AkgRigidbody>().layerMask &= ~AkgLayerMask.SHIELD;

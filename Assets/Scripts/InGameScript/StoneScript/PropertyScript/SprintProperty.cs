@@ -12,6 +12,11 @@ public class SprintProperty : StoneProperty
     {
         base.OnAdded(isReplaced);
 
+        if (!isReplaced)
+        {
+            baseStone.transform.GetChild(4).GetChild(3).gameObject.SetActive(true);
+        }
+
         baseStone.BelongingPlayer.OnTurnStart += ResetCanSprint;
         baseStone.OnShootEnter += UseSprint;
     }
@@ -19,6 +24,11 @@ public class SprintProperty : StoneProperty
     public override void OnRemoved(bool isReplaced = false)
     {
         base.OnRemoved(isReplaced);
+
+        if (!isReplaced)
+        {
+            baseStone.transform.GetChild(4).GetChild(3).gameObject.SetActive(false);
+        }
 
         baseStone.BelongingPlayer.OnTurnStart -= ResetCanSprint;
         baseStone.OnShootEnter -= UseSprint;
@@ -29,10 +39,14 @@ public class SprintProperty : StoneProperty
     private void ResetCanSprint()
     {
         canSprint = true;
+
+        baseStone.transform.GetChild(4).GetChild(3).gameObject.SetActive(true);
     }
 
     private void UseSprint()
     {
         canSprint = false;
+
+        baseStone.transform.GetChild(4).GetChild(3).gameObject.SetActive(true);
     }
 }
