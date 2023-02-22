@@ -50,7 +50,7 @@ public class OppoPlayerBehaviour : PlayerBehaviour
 
         //temp code
         stoneBehaviour.ChangeSpriteAndRot("Idle", !GameManager.Inst.isLocalGoFirst);
-        spawnedStone.transform.GetChild(3).GetComponent<SpriteRenderer>().material.color = Color.red;
+        spawnedStone.transform.GetChild(3).GetComponent<SpriteRenderer>().sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Stone_r");
 
         var radius = Util.GetRadiusFromStoneSize(cardData.stoneSize);
         spawnedStone.transform.localScale = new Vector3(radius * 2, .15f, radius * 2);

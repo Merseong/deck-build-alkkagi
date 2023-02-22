@@ -49,6 +49,7 @@ SpriteAtlas:
     - db4f6c43920bbbc4cb5fc6ac413040f3: 21300000
     - 2ff1416389de717449ba79c454be74ec: 21300000
     - 23eb7514e7c4c864ab9ef5894bc598f4: 21300000
+    - 831e16140e3c926459e9127f882814e5: 21300000
     - 1c49a3b49a106fe478f6b3ada74f2a1d: 21300000
     - 9f87c5c457dc0bc458193a7fba28293b: 21300000
     - fff42ca5d2aa6864b9709116d740ec12: 21300000
@@ -61,9 +62,13 @@ SpriteAtlas:
     - 993d21a80ee812d4c834e7965887a1a2: 21300000
     - 2602c8c9c6cdcf64b8edbc20310687f8: 21300000
     - 36657b7ac82b0644c985d97616490ae2: 21300000
+    - 6a13936b07a61874e8cd3d5e5bdd9318: 21300000
+    - 6f517d6bfbe77ee4d9d9e8b131c0e989: 21300000
     - 34a4ae3c789519a42b343284639ac45f: 21300000
     - e7b87b7c87db6ec42a0cd8a704aa30d1: 21300000
+    - c2222bdc02f0eb248b0577056565ec09: 21300000
     - 35782fec189444f4a8319f949eacb07f: 21300000
+    - 40d36b2dfd48eff468ca73aa994829e9: 21300000
     - 1447a69dd6a999b47acc488e9c34f941: 21300000
     - d49217ed7474caa42ac34a72ed4c2cd7: 21300000
     - bfbfb46ea797b3f42a4362702d8af2db: 21300000
@@ -82,6 +87,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: db4f6c43920bbbc4cb5fc6ac413040f3, type: 3}
   - {fileID: 21300000, guid: 2ff1416389de717449ba79c454be74ec, type: 3}
   - {fileID: 21300000, guid: 23eb7514e7c4c864ab9ef5894bc598f4, type: 3}
+  - {fileID: 21300000, guid: 831e16140e3c926459e9127f882814e5, type: 3}
   - {fileID: 21300000, guid: 1c49a3b49a106fe478f6b3ada74f2a1d, type: 3}
   - {fileID: 21300000, guid: 9f87c5c457dc0bc458193a7fba28293b, type: 3}
   - {fileID: 21300000, guid: fff42ca5d2aa6864b9709116d740ec12, type: 3}
@@ -94,9 +100,13 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 993d21a80ee812d4c834e7965887a1a2, type: 3}
   - {fileID: 21300000, guid: 2602c8c9c6cdcf64b8edbc20310687f8, type: 3}
   - {fileID: 21300000, guid: 36657b7ac82b0644c985d97616490ae2, type: 3}
+  - {fileID: 21300000, guid: 6a13936b07a61874e8cd3d5e5bdd9318, type: 3}
+  - {fileID: 21300000, guid: 6f517d6bfbe77ee4d9d9e8b131c0e989, type: 3}
   - {fileID: 21300000, guid: 34a4ae3c789519a42b343284639ac45f, type: 3}
   - {fileID: 21300000, guid: e7b87b7c87db6ec42a0cd8a704aa30d1, type: 3}
+  - {fileID: 21300000, guid: c2222bdc02f0eb248b0577056565ec09, type: 3}
   - {fileID: 21300000, guid: 35782fec189444f4a8319f949eacb07f, type: 3}
+  - {fileID: 21300000, guid: 40d36b2dfd48eff468ca73aa994829e9, type: 3}
   - {fileID: 21300000, guid: 1447a69dd6a999b47acc488e9c34f941, type: 3}
   - {fileID: 21300000, guid: d49217ed7474caa42ac34a72ed4c2cd7, type: 3}
   - {fileID: 21300000, guid: bfbfb46ea797b3f42a4362702d8af2db, type: 3}
@@ -114,6 +124,7 @@ SpriteAtlas:
   - UI_Honor_1
   - card_7
   - card_3
+  - UI_StoneDot
   - UI_Cost_0
   - UI_Token_0
   - card_0
@@ -126,9 +137,13 @@ SpriteAtlas:
   - UI_Token
   - card_4
   - card_6
+  - UI_Option (2)
+  - UI_Window_2
   - UI_Option
   - UI_Honor_Gold
+  - UI_Stone_r
   - card_2
+  - UI_Stone_b
   - card_8
   - UI_Deck
   - UI_CostBar_0

@@ -398,7 +398,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         //temp code
         stoneBehaviour.ChangeSpriteAndRot("Idle", IsLocalRotated);
-        spawnedStone.transform.GetChild(3).GetComponent<SpriteRenderer>().material.color = Color.blue;
+        spawnedStone.transform.GetChild(3).GetComponent<SpriteRenderer>().sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Stone_b");
 
         var radius = Util.GetRadiusFromStoneSize(cardData.stoneSize);
         spawnedStone.transform.localScale = new Vector3(radius * 2, .15f, radius * 2);
@@ -873,7 +873,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         if (isLocalRotated)
             stoneGhost.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
         stoneGhost.transform.localScale = new Vector3(Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize) *2, .15f, Util.GetRadiusFromStoneSize(selectedCard.CardData.stoneSize)*2);
-        stoneGhost.transform.GetChild(3).GetComponent<SpriteRenderer>().material.color = Color.blue;
+        stoneGhost.transform.GetChild(3).GetComponent<SpriteRenderer>().sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Stone_b");
 
         IngameUIManager.Inst.CostPanel.CostEmphasize(selectedCard.CardData.cardCost);
     }
