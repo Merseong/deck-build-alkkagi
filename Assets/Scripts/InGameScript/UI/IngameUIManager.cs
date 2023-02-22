@@ -63,6 +63,7 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
     [Header("Enemy")]
     [SerializeField] private TextMeshProUGUI enemyCostText;
     [SerializeField] private Image enemyTokenImage;
+    [SerializeField] private TextMeshProUGUI enemyNickname;
 
     [SerializeField] private RectTransform enemyInfoPanel;
     public RectTransform EnemyInfoPanel => enemyInfoPanel;
@@ -154,9 +155,9 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
     public void SetEnemyInfo(string nickname, uint win, uint lose)
     {
         //닉네임
-        enemyInfoPanel.GetChild(1).GetComponent<TextMeshProUGUI>().text = nickname;
+        enemyNickname.text = nickname;
         //승패전적
-        enemyInfoPanel.GetChild(2).GetComponent<TextMeshProUGUI>().text = $"{win} Win | {lose} Lose";
+        enemyInfoPanel.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{win} Win | {lose} Lose";
     }
 
     /// <summary>

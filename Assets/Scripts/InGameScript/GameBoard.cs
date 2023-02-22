@@ -41,6 +41,11 @@ public class GameBoard : MonoBehaviour
     public void InitGameBoard()
     {
         gameObject.transform.localScale = new Vector3(BoardData.width, 1, BoardData.height);
+        var isRotated = (GameManager.Inst.LocalPlayer as LocalPlayerBehaviour).IsLocalRotated;
+        if (isRotated)
+        {
+            transform.Rotate(0, 180, 0);
+        }
 
         player1PutMarks = new GameObject[BoardData.player1CanStone.Length];
         player2PutMarks = new GameObject[BoardData.player2CanStone.Length];
@@ -229,44 +234,56 @@ public class GameBoard : MonoBehaviour
         // Rotated가 true일때, 서로 반대
         var isRotated = (GameManager.Inst.LocalPlayer as LocalPlayerBehaviour).IsLocalRotated;
         
-        rotation = Quaternion.Euler(0, 0, 0);
         for (int i = (int)(guardVerticalCnt/2)-1; i >= 0 ; i--)
         {
             //left local
+            rotation = Quaternion.Euler(0, 0, 0);
             position = new Vector3(-(.035f + boardData.width / 2), 0, boardData.height * (0.5f + i - (int)(guardVerticalCnt / 2)) / guardVerticalCnt) * 10f;
             if (isRotated) AddOppoGuard(position, rotation);
             else AddLocalGuard(position, rotation);
+        }
 
+        for (int i = (int)(guardVerticalCnt / 2) - 1; i >= 0; i--)
+        {
             //right oppo
             position = new Vector3(-(.035f + boardData.width / 2), 0, boardData.height * (0.5f + i - (int)(guardVerticalCnt / 2)) / guardVerticalCnt) * -10f;
+            rotation = Quaternion.Euler(0, 180, 0);
             if (isRotated) AddLocalGuard(position, rotation);
             else AddOppoGuard(position, rotation);
         }
 
-        rotation = Quaternion.Euler(0, 90, 0);
-        for (int i=guardHorizontalCnt-1; i >=0 ; i--)
+        for (int i = guardHorizontalCnt - 1; i >= 0; i--)
         {
             //lower local
+            rotation = Quaternion.Euler(0, -90, 0);
             position = new Vector3(boardData.width * (i - (float)guardHorizontalCnt / 2 + 0.5f) / guardHorizontalCnt, 0, .035f + boardData.height / 2) * -10f;
             if (isRotated) AddOppoGuard(position, rotation);
             else AddLocalGuard(position, rotation);
 
+        }
+
+        for (int i = guardHorizontalCnt - 1; i >= 0; i--)
+        {
             //upper oppo
+            rotation = Quaternion.Euler(0, 90, 0);
             position = new Vector3(boardData.width * (i - (float)guardHorizontalCnt / 2 + 0.5f) / guardHorizontalCnt, 0, .035f + boardData.height / 2) * 10f;
             if (isRotated) AddLocalGuard(position, rotation);
             else AddOppoGuard(position, rotation);
-
         }
 
-        rotation = Quaternion.Euler(0, 0, 0);
         for (int i=0; i< guardVerticalCnt/2; i++)
         {
             //right local
+            rotation = Quaternion.Euler(0, 180, 0);
             position = new Vector3(.035f + boardData.width / 2, 0, boardData.height * (0.5f + i - (int)(guardVerticalCnt / 2)) / guardVerticalCnt) * 10f;
             if (isRotated) AddOppoGuard(position, rotation);
             else AddLocalGuard(position, rotation);
+        }
 
+        for (int i = 0; i < guardVerticalCnt / 2; i++)
+        {
             //left oppo
+            rotation = Quaternion.Euler(0, 0, 0);
             position = new Vector3(.035f + boardData.width / 2, 0, boardData.height * (0.5f + i - (int)(guardVerticalCnt / 2)) / guardVerticalCnt) * -10f;
             if (isRotated) AddLocalGuard(position, rotation);
             else AddOppoGuard(position, rotation);

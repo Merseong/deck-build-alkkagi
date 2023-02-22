@@ -1456,7 +1456,7 @@ RectTransform:
   - {fileID: 1054908535547438178}
   - {fileID: 5929486963521324484}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1559,6 +1559,7 @@ MonoBehaviour:
   optionButton: {fileID: 2874726115089948706}
   enemyCostText: {fileID: 829460322}
   enemyTokenImage: {fileID: 8310807787062364117}
+  enemyNickname: {fileID: 1306823683274970973}
   enemyInfoPanel: {fileID: 540077723798313859}
   enemyInfoButton: {fileID: 226020601829180682}
   enemyInfoPanelButton: {fileID: 984495492866551161}
