@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 689437316}
   m_LocalRotation: {x: -0, y: 0.13052616, z: -0, w: 0.9914449}
-  m_LocalPosition: {x: 4, y: 5, z: -10.75}
+  m_LocalPosition: {x: 4, y: 6.2, z: -10.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -150,8 +150,7 @@ MonoBehaviour:
   shootTokenAvailable: 0
   StonePrefab: {fileID: 6663944191401573520, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
   deck:
-  - {fileID: 11400000, guid: 70d23d0614bddaa49b618b632e75eaba, type: 2}
-  - {fileID: 11400000, guid: 70d23d0614bddaa49b618b632e75eaba, type: 2}
+  - {fileID: 11400000, guid: 28e861c4b941ae646ba6b06ec2374604, type: 2}
   hand: []
   cardPrefab: {fileID: 3721772108986987150, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
   cardSpawnPoint: {fileID: 1217822889}
