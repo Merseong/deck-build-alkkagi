@@ -317,7 +317,6 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         if (!CanSprint())
             BelongingPlayer.ShootTokenAvailable = false;
         ChangeSpriteAndRot("Shoot", isRotated);
-        OnShootEnter?.Invoke();
 
         if (local)
         {
@@ -326,14 +325,17 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
             GameManager.Inst.StartCoroutine(EShoot(isRotated, callOnShootExit));
             GetComponent<AkgRigidbody>().AddForce(vec);
         }
+
+        OnShootEnter?.Invoke();
     }
 
     public void _Shoot(Vector3 vec, bool isRotated)
     {
         ChangeSpriteAndRot("Shoot", isRotated);
-        OnShootEnter?.Invoke();
         StartCoroutine(EShoot(isRotated));
         GetComponent<AkgRigidbody>().AddForce(vec);
+
+        OnShootEnter?.Invoke();
     }
 
     private IEnumerator EShoot(bool isRotated, bool callOnShootExit = true)
