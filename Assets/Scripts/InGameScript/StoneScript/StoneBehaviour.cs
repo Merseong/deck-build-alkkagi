@@ -375,18 +375,32 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         OnShootEnter?.Invoke();
     }
 
-    public void ChildShoot(Vector3 vec, bool isRotated)
+    public void ChildShoot(Vector3 vec, bool isRotated, bool useAddForce = false)
     {
         ChangeSpriteAndRot("Shoot", isRotated);
-        GetComponent<AkgRigidbody>().SetVelocity(vec, transform.position, true);
+        if (useAddForce)
+        {
+            GetComponent<AkgRigidbody>().AddForce(vec);
+        }
+        else
+        {
+            GetComponent<AkgRigidbody>().SetVelocity(vec, transform.position, true);
+        }
 
         OnShootEnter?.Invoke();
     }
 
-    private IEnumerator EShoot(bool isRotated, bool callOnShootExit = true)
+    protected IEnumerator EShoot(bool isRotated, bool callOnShootExit = true)
     {
         var recorder = AkgPhysicsManager.Inst.rigidbodyRecorder;
-        recorder.StartRecord(Time.time);
+        if (recorder.IsRecording)
+        {
+            if (callOnShootExit)
+            {
+                OnShootExit?.Invoke();
+            }
+        }
+        else recorder.StartRecord(Time.time);
 
         AkgPhysicsManager.Inst.rigidbodyRecorder.AppendEventRecord(new EventRecord
         {

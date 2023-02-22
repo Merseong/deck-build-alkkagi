@@ -107,16 +107,20 @@ public class AkgRigidbody : MonoBehaviour
             isForecasting = false;
             return;
         }
+        if (isDisableCollide) return;
 
-        oldVelocity = velocity;
+        GetNearbyCollidable(out AkgRigidbody nearby);
+        if (IgnoreCollide.Contains(nearby)) return;
+        if (!CheckCollide(nearby, out var point)) return;
 
-        float speed = velocity.magnitude;
-        if (speed > 0)
+        CollisionActions(nearby, point);
+        while (CheckCollide(nearby, out _))
         {
-            velocity = Mathf.Max(speed - Time.deltaTime * DragAccel * effectMass, 0) * velocity.normalized;
+            Move();
+            nearby.Move();
+            GetNearbyCollidable(out var newNear);
+            if (nearby != newNear) break;
         }
-
-        Move(Time.deltaTime * velocity);
         /*
         // TODO2: 매번 제일 가까운 돌과의 충돌도 체크해야될듯 (fixed나 late써야하나)
         if (isDisableCollide) return;
@@ -161,24 +165,19 @@ public class AkgRigidbody : MonoBehaviour
     private void LateUpdate()
     {
         if (IsStatic) return;
-        if (isDisableCollide) return;
 
         collidedList.Clear();
-
-        if (AkgPhysicsManager.Inst.rigidbodyRecorder.IsPlaying) return;
         if (!IsMoving) return;
 
-        GetNearbyCollidable(out AkgRigidbody nearby);
-        if (!CheckCollide(nearby, out var point)) return;
+        oldVelocity = velocity;
 
-        CollisionActions(nearby, point);
-        while (CheckCollide(nearby, out _))
+        float speed = velocity.magnitude;
+        if (speed > 0)
         {
-            Move();
-            nearby.Move();
-            GetNearbyCollidable(out var newNear);
-            if (nearby != newNear) break;
+            velocity = Mathf.Max(speed - Time.deltaTime * DragAccel * effectMass, 0) * velocity.normalized;
         }
+
+        Move(Time.deltaTime * velocity);
     }
 
     public void BeforeDestroy()
@@ -220,8 +219,6 @@ public class AkgRigidbody : MonoBehaviour
     public bool CheckCollide(AkgRigidbody targetAkg, out Vector3 point)
     {
         point = transform.position;
-
-        if (IgnoreCollide.Contains(targetAkg)) return false;
 
         if (!AkgPhysicsManager.Inst.GetLayerCollide(layerMask, targetAkg.layerMask)) return false;
 
@@ -407,6 +404,7 @@ public class AkgRigidbody : MonoBehaviour
 
         Vector3 normal = transform.position + circleCenterOffset - point;
         normal.y = 0;
+        if (normal.magnitude == 0) return;
         normal = normal.normalized;
 
         Vector3 normalVelocity = Vector3.Dot(normal, velocity) * normal;

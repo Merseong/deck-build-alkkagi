@@ -287,8 +287,15 @@ public static class Util
         return result;
     }
 
-    public static CardData GetCardDataFromID(int id, List<CardData> CardDataDic) =>
-        GetCardDataFromID(id, CardDataListToDictionary(CardDataDic));
+    public static CardData GetCardDataFromID(int id, List<CardData> CardDataDic)
+    {
+        for (int i = 0; i < CardDataDic.Count; ++i)
+        {
+            if (id == CardDataDic[i].CardID)
+                return CardDataDic[i];
+        }
+        return null;
+    }
 
     //TODO : Derive CardData from DB
     public static CardData GetCardDataFromID(int id, Dictionary<int, CardData> CardDataDic)
