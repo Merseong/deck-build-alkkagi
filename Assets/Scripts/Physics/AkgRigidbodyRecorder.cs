@@ -122,12 +122,15 @@ public class AkgRigidbodyRecorder
                         var targetStone = GameManager.Inst.FindStone(int.Parse(collMsgArr[0]));
                         bool collided = collMsgArr.Length != 1 && collMsgArr[1] == "COL";
                         point = Util.SlicedStringsToVector3(eventRec.xPosition, eventRec.zPosition);
+                        if (collided)
+                            AudioManager.Inst.HitSound(stone.GetComponent<AkgRigidbody>());
                         stone.OnCollide(targetStone.GetComponent<AkgRigidbody>(), point, collided, true);
                         break;
                     case EventEnum.STATICCOLLIDE:
                         stone = GameManager.Inst.FindStone(eventRec.stoneId);
                         Guard guard = GameManager.Inst.GameBoard.FindGuard(int.Parse(eventRec.eventMessage));
                         point = Util.SlicedStringsToVector3(eventRec.xPosition, eventRec.zPosition);
+                        AudioManager.Inst.HitSound(guard.GetComponent<AkgRigidbody>());
                         stone.OnCollide(guard.GetComponent<AkgRigidbody>(), point, false, true);
                         guard.OnCollide(stone.GetComponent<AkgRigidbody>(), point, true, true);
                         break;

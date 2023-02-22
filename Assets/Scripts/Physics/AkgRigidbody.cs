@@ -147,6 +147,8 @@ public class AkgRigidbody : MonoBehaviour
     {
         if (AkgPhysicsManager.Inst.rigidbodyRecorder.IsPlaying) return;
 
+        AudioManager.Inst.HitSound(collide);
+
         collide.OnCollision(this, point, $"{stone.StoneId} COL");
         OnCollision(collide, point, $"{(collide.isStatic ? "STA" : collide.stone.StoneId)}");
 
