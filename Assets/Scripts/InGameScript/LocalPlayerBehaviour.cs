@@ -17,6 +17,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     [SerializeField] private List<CardData> deck;
     [SerializeField] private List<Card> hand;
+    public List<Card> Hand => hand;
     [SerializeField] private GameObject cardPrefab;
     [SerializeField] Transform cardSpawnPoint;
     [SerializeField] Transform handPileLeft;

@@ -25,6 +25,7 @@ public abstract class PlayerBehaviour : MonoBehaviour
 
             cost = value;
             RefreshUI();
+            GameManager.Inst.UpdateTurnEndButtonText();
         }
     }
 
@@ -36,6 +37,7 @@ public abstract class PlayerBehaviour : MonoBehaviour
         {
             deckCount = value;
             RefreshUI();
+            GameManager.Inst.UpdateTurnEndButtonText();
         }
     }
 
@@ -50,6 +52,7 @@ public abstract class PlayerBehaviour : MonoBehaviour
 
             handCount = value;
             RefreshUI();
+            GameManager.Inst.UpdateTurnEndButtonText();
         }
     }
 

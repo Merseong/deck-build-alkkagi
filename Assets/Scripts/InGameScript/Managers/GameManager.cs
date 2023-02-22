@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using UnityEngine.U2D;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class GameManager : SingletonBehavior<GameManager>
 {
@@ -60,7 +61,7 @@ public class GameManager : SingletonBehavior<GameManager>
     /// 이후는 노말턴 선공 및 후공
     /// </summary>
     [SerializeField] private int totalTurn = 0;
-    private int lastTurn = -1;
+    private int lastTurn = 1;
     [SerializeField] private int nextTotalTurn;
     public int TurnCount => totalTurn / 2;
     public PlayerEnum WhoseTurn => (PlayerEnum)((totalTurn + (isLocalGoFirst ? 0 : 1)) % 2);
@@ -280,10 +281,35 @@ public class GameManager : SingletonBehavior<GameManager>
         //SceneManager.LoadScene(2); // load result scene
     }
 
-    private void UpdateTurnEndButtonText()
+    public void UpdateTurnEndButtonText()
     {
-        IngameUIManager.Inst.TurnEndButtonText.text = $"{(CurrentPlayer is LocalPlayerBehaviour ? "Turn End" : "Wait..")}";
-        gameBoard.SetBoardBackground(CurrentPlayer is LocalPlayerBehaviour);
+        bool isMyTurn = CurrentPlayer is LocalPlayerBehaviour;
+        IngameUIManager.Inst.TurnEndButtonText.text = $"{(isMyTurn ? "Turn End" : "Wait..")}";
+        IngameUIManager.Inst.TurnEndButtonImage.sprite = isMyTurn ? IngameUIManager.Inst.YelloButton : IngameUIManager.Inst.GrayButton;
+        gameBoard.SetBoardBackground(isMyTurn);
+
+        if (isInHonorSkipRoutine && !isLocalDoAction)
+        {
+            IngameUIManager.Inst.TurnEndButtonOverlayImage.color = new Color(1, 1, 1, 0.7f);
+        }
+        else
+        {
+            IngameUIManager.Inst.TurnEndButtonOverlayImage.color = new Color(1, 1, 1, 0);
+        }
+
+        if (isMyTurn)
+        {
+            if (!LocalPlayer.ShootTokenAvailable)
+            {
+                if (LocalPlayer.Stones.Any(e => e.Value.CanSprint()) && LocalPlayer.Cost > 0) return;
+                if ((LocalPlayer as LocalPlayerBehaviour).Hand.Any(e => e.CardData.cardCost <= LocalPlayer.Cost)) return;
+                IngameUIManager.Inst.TurnEndButtonImage.sprite = IngameUIManager.Inst.OrangeButton;
+            }
+            else if (LocalPlayer.Cost == 0)
+            {
+                IngameUIManager.Inst.TurnEndButtonImage.sprite = IngameUIManager.Inst.OrangeButton;
+            }
+        }
     }
 
     private void StartTurnBasis()
@@ -484,9 +510,9 @@ public class GameManager : SingletonBehavior<GameManager>
 
     #region Honor Skip
     [Header("HS control")]
-    [SerializeField] bool isInHonorSkipRoutine = false;
-    [SerializeField] bool isLocalDoAction = false;
-    [SerializeField] bool isTurnEnded = false;
+    [SerializeField] private bool isInHonorSkipRoutine = false;
+    [SerializeField] private bool isLocalDoAction = false;
+    [SerializeField] private bool isTurnEnded = false;
 
     private IEnumerator EHonorSkipRoutine()
     {

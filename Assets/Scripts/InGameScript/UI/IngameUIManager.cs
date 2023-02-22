@@ -30,8 +30,19 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
     public TextMeshProUGUI DeckCountText1 => deckCountText1;
     [SerializeField] private TextMeshProUGUI deckCountText2;
     public TextMeshProUGUI DeckCountText2 => deckCountText2;
+    [Header("Images")]
+    public Sprite GrayButton;
+    public Sprite YelloButton;
+    public Sprite OrangeButton;
+    public Sprite HonorSkip;
+    [Header("Turn end")]
+    [SerializeField] private Image turnEndButtonImage;
+    public Image TurnEndButtonImage => turnEndButtonImage;
+    [SerializeField] private Image turnEndButtonOverlayImage;
+    public Image TurnEndButtonOverlayImage => turnEndButtonOverlayImage;
     [SerializeField] private TextMeshProUGUI turnEndButtonText;
     public TextMeshProUGUI TurnEndButtonText => turnEndButtonText;
+
 
     [SerializeField] private RectTransform cancelPanel;
     public RectTransform CancelPanel => cancelPanel;
