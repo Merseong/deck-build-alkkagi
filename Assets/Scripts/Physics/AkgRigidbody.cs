@@ -167,10 +167,8 @@ public class AkgRigidbody : MonoBehaviour
             if (!CheckCollide(nearby, out var point)) break;
 
             CollisionActions(nearby, point);
-            EditorApplication.isPaused = true;
             while (CheckCollide(nearby, out _))
             {
-                EditorApplication.isPaused = true;
                 Move();
                 nearby.Move();
                 GetNearbyCollidable(out var newNear);
