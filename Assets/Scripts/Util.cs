@@ -115,7 +115,7 @@ public static class Util
                 return 0f;
         }
     }
-    
+
     public static Sprite GetSpriteState(CardData cardData, string state, SpriteAtlas stoneAtlas)
     {
         Sprite sprite = stoneAtlas.GetSprite(cardData.cardEngName + "_" + state);
@@ -232,13 +232,25 @@ public static class Util
     public static List<CardData> GenerateDeckFromDeckCode(string deckCode, Dictionary<int, CardData> CardDataDic)
     {
         List<CardData> result = new();
-        for(int i=0; i<deckCode.Length/2; i++)
+        for (int i = 0; i < deckCode.Length / 2; i++)
         {
-            CardData temp = GetCardDataFromID(HexStringToInt(deckCode.Substring(i*2,2)), CardDataDic);
-            if(temp != null) result.Add(temp);
+            CardData temp = GetCardDataFromID(HexStringToInt(deckCode.Substring(i * 2, 2)), CardDataDic);
+            if (temp != null) result.Add(temp);
         }
         return result;
     }
+
+    public static int GetDeckCountFromDeckCode(string deckCode, Dictionary<int, CardData> CardDataDic)
+    {
+        var deck = GenerateDeckFromDeckCode(deckCode, CardDataDic);
+        int deckCount = 0;
+        foreach (var card in deck)
+        {
+            deckCount += card.inDeckNumber;
+        }
+        return deckCount;
+    }
+
 
     public static string ConvertIdToBinary(int id)
     {

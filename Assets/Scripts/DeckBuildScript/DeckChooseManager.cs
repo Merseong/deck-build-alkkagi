@@ -252,7 +252,7 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         NetworkManager.Inst.SendData(new MessagePacket
         {
             senderID = NetworkManager.Inst.NetworkId,
-            message = $"ENTER/ {deckCodes[CurrentSelectedDeckIdx]}" // ENTER/ (덱코드 혹은 덱인덱스)
+            message = $"ENTER/ {deckCodes[CurrentSelectedDeckIdx]} {Util.GetDeckCountFromDeckCode(deckCodes[CurrentSelectedDeckIdx], CardDataDic)}" // ENTER/ (덱코드 혹은 덱인덱스)
         }, PacketType.ROOM_CONTROL);
     }
 
