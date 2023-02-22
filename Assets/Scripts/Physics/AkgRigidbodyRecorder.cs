@@ -83,6 +83,8 @@ public class AkgRigidbodyRecorder
         var startTime = Time.time;
         var vrIdx = 0;
         var erIdx = 0;
+        bool isShoot = false;
+        StoneBehaviour shootStone = null;
         while (vrIdx < vRecords.Length || erIdx < eRecords.Length)
         {
             yield return new WaitUntil(() => vrIdx >= vRecords.Length ||
@@ -109,7 +111,8 @@ public class AkgRigidbodyRecorder
                 {
                     case EventEnum.SHOOT:
                         // stoneId => striking stone의 번호
-                        stone = GameManager.Inst.FindStone(eventRec.stoneId);
+                        isShoot = true;
+                        shootStone = GameManager.Inst.FindStone(eventRec.stoneId);
                         string[] msgArr = eventRec.eventMessage.Split(' ');
                         bool useShootToken = bool.Parse(msgArr[0]);
                         bool isRotated = bool.Parse(msgArr[1]);
@@ -119,7 +122,7 @@ public class AkgRigidbodyRecorder
                         //        Debug.LogError("[OPPO] Shoot token already spent!");
                         //    GameManager.Inst.OppoPlayer.ShootTokenAvailable = false;
                         //}
-                        stone.Shoot(Vector3.zero, isRotated, false);
+                        shootStone.Shoot(Vector3.zero, isRotated, false);
                         break;
                     case EventEnum.COLLIDE:
                         // eventMessage -> (colStoneId || STATIC) (COLLIDED)
@@ -168,6 +171,9 @@ public class AkgRigidbodyRecorder
             var stone = GameManager.Inst.FindStone(pRecords[prIdx].stoneId);
             stone.transform.position = Util.SlicedStringsToVector3(pRecords[prIdx].xPosition, pRecords[prIdx].zPosition);
         }
+
+        if (isShoot)
+            shootStone.OnShootExit?.Invoke();
 
         isPlaying = false;
     }
