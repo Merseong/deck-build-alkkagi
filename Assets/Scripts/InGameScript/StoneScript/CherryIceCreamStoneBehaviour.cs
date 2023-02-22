@@ -20,7 +20,14 @@ public class CherryIceCreamStoneBehaviour : StoneBehaviour
     {
         stack = 1;
 
-        OnHit += Merge;
+        if (calledByPacket)
+        {
+            OnHit += OppoMerge;
+        }
+        else
+        {
+            OnHit += Merge;
+        }
 
         base.OnEnter(calledByPacket, options);
     }
@@ -28,6 +35,7 @@ public class CherryIceCreamStoneBehaviour : StoneBehaviour
     public override void OnExit(bool calledByPacket = false, string options = "")
     {
         OnHit -= Merge;
+        OnHit -= OppoMerge;
 
         base.OnExit(calledByPacket, options);
     }
@@ -50,6 +58,18 @@ public class CherryIceCreamStoneBehaviour : StoneBehaviour
 
             faster.RemoveStoneFromGame();
             faster.StartCoroutine(faster.EIndirectExit(true));
+        }
+    }
+
+    private void OppoMerge(AkgRigidbody other)
+    {
+        if (other.TryGetComponent<CherryIceCreamStoneBehaviour>(out CherryIceCreamStoneBehaviour stone) && BelongingPlayerEnum == stone.BelongingPlayerEnum)
+        {
+            AkgRigidbody akg = GetComponent<AkgRigidbody>();
+            CherryIceCreamStoneBehaviour slower = akg.velocity.magnitude > other.velocity.magnitude ? stone : this;
+            CherryIceCreamStoneBehaviour faster = akg.velocity.magnitude > other.velocity.magnitude ? this : stone;
+
+            slower.Upgrade(faster.stack);
         }
     }
 
