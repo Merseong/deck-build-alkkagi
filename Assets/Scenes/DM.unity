@@ -780,6 +780,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f100e1c7d3e23244fba9efc0ea85526b, type: 3}
   - {fileID: 8300000, guid: 096c68e66d0ab0e4884320a96910c324, type: 3}
   - {fileID: 8300000, guid: 02e351a3659e5e44e94881bceafc7edf, type: 3}
+  destroySound: {fileID: 8300000, guid: 41c92cd58e8a309488462f5d669f0503, type: 3}
+  wallDestroySound: {fileID: 8300000, guid: 7906ddc5326f4d846a9af7c06e28ea1d, type: 3}
   volume: 1
 --- !u!1 &1202439082
 GameObject:
