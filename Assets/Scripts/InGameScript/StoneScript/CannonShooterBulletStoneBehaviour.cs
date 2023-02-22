@@ -12,7 +12,6 @@ public class CannonShooterBulletStoneBehaviour : StoneBehaviour
 
     public override void OnEnter(bool calledByPacket = false, string options = "")
     {
-        OnShootExit += Disappear;
         OnHit += Disappear;
 
         //base.OnEnter(calledByPacket, options);
@@ -20,7 +19,6 @@ public class CannonShooterBulletStoneBehaviour : StoneBehaviour
 
     public override void OnExit(bool calledByPacket = false, string options = "")
     {
-        OnShootExit -= Disappear;
         OnHit -= Disappear;
 
         //base.OnExit(calledByPacket, options);
@@ -39,12 +37,6 @@ public class CannonShooterBulletStoneBehaviour : StoneBehaviour
     private void Disappear(AkgRigidbody akgRigid)
     {
         GetComponent<AkgRigidbody>().isDisableCollide = true;
-        Disappear();
-    }
-
-    private void Disappear()
-    {
-        Debug.Log("Disappear!!");
         RemoveStoneFromGame();
         Destroy(gameObject);
     }
