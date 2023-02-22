@@ -76,7 +76,8 @@ public class AkgRigidbody : MonoBehaviour
     private readonly int collidableRaycastForecastLimit = 3;
     private readonly int collidableNearbyForecastLimit = 0;
     private int CollidableForecastLimit => collidableRaycastForecastLimit + collidableNearbyForecastLimit;
-    private List<int> collidedList;
+    private HashSet<AkgRigidbody> collidedList;
+    private int collidedCount = 0;
     public HashSet<AkgRigidbody> IgnoreCollide;
 
     public void Init() => Init(0, 1f);
@@ -109,18 +110,16 @@ public class AkgRigidbody : MonoBehaviour
         }
         if (isDisableCollide) return;
 
-        GetNearbyCollidable(out AkgRigidbody nearby);
-        if (IgnoreCollide.Contains(nearby)) return;
-        if (!CheckCollide(nearby, out var point)) return;
+        Move(Time.deltaTime * velocity);
 
-        CollisionActions(nearby, point);
-        while (CheckCollide(nearby, out _))
+        oldVelocity = velocity;
+
+        float speed = velocity.magnitude;
+        if (speed > 0)
         {
-            Move();
-            nearby.Move();
-            GetNearbyCollidable(out var newNear);
-            if (nearby != newNear) break;
+            velocity = Mathf.Max(speed - Time.deltaTime * DragAccel * effectMass, 0) * velocity.normalized;
         }
+
         /*
         // TODO2: 매번 제일 가까운 돌과의 충돌도 체크해야될듯 (fixed나 late써야하나)
         if (isDisableCollide) return;
@@ -165,19 +164,27 @@ public class AkgRigidbody : MonoBehaviour
     private void LateUpdate()
     {
         if (IsStatic) return;
+        if (collidedCount > 3) return;
 
-        collidedList.Clear();
-        if (!IsMoving) return;
-
-        oldVelocity = velocity;
-
-        float speed = velocity.magnitude;
-        if (speed > 0)
+        GetNearbyCollidable(out AkgRigidbody nearby);
+        if (IgnoreCollide.Contains(nearby)) return;
+        if (collidedList.Contains(nearby))
         {
-            velocity = Mathf.Max(speed - Time.deltaTime * DragAccel * effectMass, 0) * velocity.normalized;
+            Move((transform.position - nearby.transform.position) * Time.fixedDeltaTime);
+            nearby.Move((nearby.transform.position - transform.position) * Time.fixedDeltaTime);
+            collidedCount++;
+            return;
         }
+        if (!CheckCollide(nearby, out var point)) return;
 
-        Move(Time.deltaTime * velocity);
+        CollisionActions(nearby, point);
+        collidedList.Add(nearby);
+    }
+
+    private void FixedUpdate()
+    {
+        collidedList.Clear();
+        collidedCount = 0;
     }
 
     public void BeforeDestroy()
@@ -189,7 +196,7 @@ public class AkgRigidbody : MonoBehaviour
 
     public void Move()
     {
-        Move(0.001f * Time.deltaTime * velocity);
+        Move(0.01f * Time.deltaTime * velocity);
     }
 
     public void Move(Vector3 next)
@@ -285,7 +292,7 @@ public class AkgRigidbody : MonoBehaviour
         var candidates = AkgPhysicsManager.Inst.GetFilteredRigidbodies((e) =>
         {
             if (e == this) return false;
-            if (collidedList.Contains(e.GetInstanceID())) return false;
+            //if (collidedList.Contains(e.GetInstanceID())) return false;
             if (!AkgPhysicsManager.Inst.GetLayerCollide(layerMask, e.layerMask)) return false;
             return true;
             //return e.transform.position.x * normaledX >= start.x * normaledX &&
@@ -317,17 +324,24 @@ public class AkgRigidbody : MonoBehaviour
 
     private void GetNearbyCollidable(out AkgRigidbody collideObject)
     {
-        var candidates = AkgPhysicsManager.Inst.GetFilteredRigidbodies((e) =>
-        {
-            if (e == this) return false;
-            if (collidedList.Contains(e.GetInstanceID())) return false;
-            if (!AkgPhysicsManager.Inst.GetLayerCollide(layerMask, e.layerMask)) return false;
-            return true;
-        });
+        var candidates = AkgPhysicsManager.Inst.GetAllRigidbodies();
         if (candidates.Length == 0)
         {
             collideObject = null;
             return;
+        }
+
+        for (int i = 0; i < candidates.Length; ++i)
+        {
+            var e = candidates[i];
+            bool doRemove = false;
+            if (e == this) doRemove = true;
+            else if (!AkgPhysicsManager.Inst.GetLayerCollide(layerMask, e.layerMask)) doRemove = true;
+
+            if (doRemove)
+            {
+                candidates[i] = null;
+            }
         }
 
         collideObject = candidates[0];
@@ -337,9 +351,7 @@ public class AkgRigidbody : MonoBehaviour
         {
             if (!targetAkg)
             {
-                Debug.Log(targetAkg.GetInstanceID());
-                Debug.Break();
-                break;
+                continue;
             }
 
             var dist = Vector3.Distance(targetAkg.CircleCenterPosition, CircleCenterPosition);
@@ -483,7 +495,7 @@ public class AkgRigidbody : MonoBehaviour
             case ColliderTypeEnum.Circle:
                 Handles.Label(transform.position + Vector3.up * .2f, velocity.magnitude.ToString());
                 Gizmos.DrawWireSphere(CircleCenterPosition, circleRadius);
-                Gizmos.DrawLine(CircleCenterPosition, velocity);
+                Gizmos.DrawLine(CircleCenterPosition, CircleCenterPosition + velocity);
                 break;
             case ColliderTypeEnum.Rect:
                 Gizmos.DrawWireCube(transform.position, new Vector3(rectPoints.z - rectPoints.x, 0.2f, rectPoints.w - rectPoints.y));

@@ -76,6 +76,11 @@ public class AkgPhysicsManager : SingletonBehavior<AkgPhysicsManager>
     {
         return rigidbodies.Where(func).ToArray();
     }
+
+    public AkgRigidbody[] GetAllRigidbodies()
+    {
+        return rigidbodies.ToArray();
+    }
     #endregion
 
     #region Layer control
