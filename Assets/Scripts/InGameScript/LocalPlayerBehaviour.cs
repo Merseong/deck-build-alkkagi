@@ -1008,7 +1008,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     private void CardDragAction(Vector3 curTouchPositionNormalized)
     {
-        stoneGhost.transform.position = selectedCard.transform.position = new Vector3(curTouchPositionNormalized.x, 5f, curTouchPositionNormalized.z);
+        stoneGhost.transform.position = selectedCard.transform.position = new Vector3(curTouchPositionNormalized.x, 7f, curTouchPositionNormalized.z);
 
         if (IsPlayingCardOnBoard(curTouchPositionNormalized))
         {
