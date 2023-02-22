@@ -420,8 +420,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         GameManager.Inst.SetLocalDoAction();
         strikingStone = selectedStone;
         selectedStone.OnShootExit += OnShootExit;
-
-        selectedStone.Shoot(vec, IsLocalRotated);
+        selectedStone.Shoot(vec, IsLocalRotated, true);
     }
 
     private void OnShootExit()

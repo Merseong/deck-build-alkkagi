@@ -312,15 +312,27 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
 
     #endregion
 
-    public void Shoot(Vector3 vec, bool isRotated)
+    public void Shoot(Vector3 vec, bool isRotated, bool local, bool callOnShootExit = true)
     {
-        GameManager.Inst.SetLocalDoAction();
         if (!CanSprint())
             BelongingPlayer.ShootTokenAvailable = false;
         ChangeSpriteAndRot("Shoot", isRotated);
         OnShootEnter?.Invoke();
-        StartCoroutine(EShoot(isRotated));
-        GetComponent<AkgRigidbody>().AddForce(vec);
+
+        if (local)
+        {
+            GameManager.Inst.SetLocalDoAction();
+            AkgPhysicsManager.Inst.rigidbodyRecorder.SendEventOnly(new EventRecord
+            {
+                eventEnum = EventEnum.SHOOT,
+                stoneId = StoneId,
+                eventMessage = BelongingPlayer.ShootTokenAvailable.ToString() + " " + isRotated.ToString(),
+                time = Time.time,
+            });
+
+            StartCoroutine(EShoot(isRotated, callOnShootExit));
+            GetComponent<AkgRigidbody>().AddForce(vec);
+        }
     }
 
     public void _Shoot(Vector3 vec, bool isRotated)
@@ -331,7 +343,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         GetComponent<AkgRigidbody>().AddForce(vec);
     }
 
-    private IEnumerator EShoot(bool isRotated)
+    private IEnumerator EShoot(bool isRotated, bool callOnShootExit = true)
     {
         var recorder = AkgPhysicsManager.Inst.rigidbodyRecorder;
         recorder.StartRecord(Time.time);
@@ -369,7 +381,8 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         recorder.EndRecord(out var velocityRecords, out var eventRecords);
         recorder.SendRecord(velocityRecords, eventRecords);
 
-        OnShootExit?.Invoke();
+        if (callOnShootExit)
+            OnShootExit?.Invoke();
     }
 
     public virtual Sprite GetSpriteState(string state)

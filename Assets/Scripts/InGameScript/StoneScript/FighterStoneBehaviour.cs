@@ -44,7 +44,7 @@ public class FighterStoneBehaviour : StoneBehaviour
             if (BelongingPlayerEnum == GameManager.PlayerEnum.LOCAL && !min.IsGhost())
             {
                 LocalPlayerBehaviour local = BelongingPlayer as LocalPlayerBehaviour;
-                min.Shoot(Vector3.Normalize(min.transform.position - transform.position) * punchForce, local.IsLocalRotated);
+                min.Shoot(Vector3.Normalize(min.transform.position - transform.position) * punchForce, local.IsLocalRotated, true, false);
             }
         }
     }

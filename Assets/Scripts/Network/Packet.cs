@@ -260,7 +260,7 @@ public struct EventRecord
 public enum EventEnum
 {
     NULL,
-    SPENDTOKEN,
+    SHOOT,
     COLLIDE,
     STATICCOLLIDE,
     DROPOUT,

@@ -96,13 +96,19 @@ public class AkgRigidbodyRecorder
                 var eventRec = eRecords[erIdx];
                 switch (eventRec.eventEnum)
                 {
-                    case EventEnum.SPENDTOKEN:
-                        // stoneId => 토큰을 사용한 stone의 번호
-                        if (!GameManager.Inst.OppoPlayer.ShootTokenAvailable)
-                        {
-                            Debug.Log("[OPPO] Shoot token already spent!");
-                        }
-                        GameManager.Inst.OppoPlayer.ShootTokenAvailable = false;
+                    case EventEnum.SHOOT:
+                        // stoneId => striking stone의 번호
+                        stone = GameManager.Inst.FindStone(eventRec.stoneId);
+                        string[] msgArr = eventRec.eventMessage.Split(' ');
+                        bool useShootToken = bool.Parse(msgArr[0]);
+                        bool isRotated = bool.Parse(msgArr[1]);
+                        //if (useShootToken)
+                        //{
+                        //    if (!GameManager.Inst.OppoPlayer.ShootTokenAvailable)
+                        //        Debug.LogError("[OPPO] Shoot token already spent!");
+                        //    GameManager.Inst.OppoPlayer.ShootTokenAvailable = false;
+                        //}
+                        stone.Shoot(Vector3.zero, isRotated, false);
                         break;
                     case EventEnum.COLLIDE:
                         // eventMessage -> (colStoneId || STATIC) (COLLIDED)
