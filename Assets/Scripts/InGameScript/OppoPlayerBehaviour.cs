@@ -8,6 +8,7 @@ public class OppoPlayerBehaviour : PlayerBehaviour
     [Header("Opponent Settings")]
     //Temp
     public GameObject StonePrefab;
+    public UserDataPacket oppoUserData;
 
     private void Start()
     {
@@ -30,6 +31,7 @@ public class OppoPlayerBehaviour : PlayerBehaviour
 
         NetworkManager.Inst.UpdateUserData(uid, (oppoUser) =>
         {
+            oppoUserData = oppoUser;
             IngameUIManager.Inst.SetEnemyInfo(oppoUser.nickname, oppoUser.win + oppoUser.honorWin, oppoUser.lose + oppoUser.honorLose);
         });
     }

@@ -143,9 +143,10 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
         return currentActivatedUI.Contains(rect);
     }
 
-    public void SetResultPanel()
+    public void SetResultPanel(bool isLocalWin)
     {
         //TODO : Set result from gamemanager's data
+        resultPanel.GetComponent<ResultPanel>().SetData(isLocalWin);
     }
 
     /// <summary>

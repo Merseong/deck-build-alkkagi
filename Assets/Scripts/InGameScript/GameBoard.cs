@@ -38,6 +38,9 @@ public class GameBoard : MonoBehaviour
     [SerializeField] private int guardHorizontalCnt;
     [SerializeField] private int guardVerticalCnt;
 
+    [SerializeField] private GameObject localBoardBackground;
+    [SerializeField] private GameObject oppoBoardBackground;
+
     public void InitGameBoard()
     {
         gameObject.transform.localScale = new Vector3(BoardData.width, 1, BoardData.height);
@@ -70,11 +73,20 @@ public class GameBoard : MonoBehaviour
         SetGuard();
     }
 
-    // 올라와있는 스톤 (각 진영별) 체크
+    public void SetBoardBackground(bool isLocalTurn)
+    {
+        if (!isLocalTurn)
+        {
+            oppoBoardBackground.SetActive(true);
+            localBoardBackground.SetActive(false);
+        }
+        else
+        {
+            oppoBoardBackground.SetActive(false);
+            localBoardBackground.SetActive(true);
+        }
+    }
 
-    // 떨어짐 판정
-
-    // 스톤을 놓을 수 있는 모든 위치 제공
     public void HighlightPossiblePos(GameManager.PlayerEnum player, float stoneRadius, bool highlightBoth = false)
     {
         if (player == GameManager.PlayerEnum.LOCAL || highlightBoth)

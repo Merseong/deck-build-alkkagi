@@ -361,9 +361,9 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
 
         yield return null;
         yield return new WaitUntil(() =>
-            (GameManager.Inst.AllStones.Count == 0 ||
-            GameManager.Inst.AllStones.Values.All(x => !x.isMoving))
-        );
+                (GameManager.Inst.AllStones.Count == 0 ||
+                GameManager.Inst.AllStones.Values.All(x => !x.isMoving))
+            );
 
         // shoot end
         foreach (StoneBehaviour stone in GameManager.Inst.AllStones.Values)

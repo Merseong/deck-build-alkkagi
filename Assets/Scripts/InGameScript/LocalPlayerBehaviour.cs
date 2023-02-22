@@ -244,8 +244,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         }
         if (number == 0)
         {
-            Debug.Log("손패가 가득 찼습니다!");
-            IngameUIManager.Inst.UserAlertPanel.Alert("Hand is full"); // "손패가 가득 찼습니다"
+            //Debug.Log("손패가 가득 찼습니다!");
+            IngameUIManager.Inst.UserAlertPanel.Alert("손패가 가득 찼습니다!"); // "손패가 가득 찼습니다"
             return;
         }
         var cardRot = Quaternion.identity;
@@ -1101,7 +1101,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         if(moveVec.sqrMagnitude == 0)
         {
-            IngameUIManager.Inst.UserAlertPanel.Alert("You need to drag stone for shot!");
+            IngameUIManager.Inst.UserAlertPanel.Alert("드래그해 돌을 쏠 수 있습니다");
             isDragging = false;
             selectedStone.ChangeSpriteAndRot("Idle", isLocalRotated);
             selectedStone = null;
@@ -1114,8 +1114,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             // shoot token이 없는 경우, 쏘지 못하게 리셋
             if (!(ShootTokenAvailable || selectedStone.CanSprint()))
             {
-                Debug.Log("공격토큰이 존재하지 않습니다.");
-                IngameUIManager.Inst.UserAlertPanel.Alert("No attack token"); // "공격 토큰이 존재하지 않습니다"
+                //Debug.Log("공격토큰이 존재하지 않습니다.");
+                IngameUIManager.Inst.UserAlertPanel.Alert("공격 토큰이 존재하지 않습니다"); // "공격 토큰이 존재하지 않습니다"
                 selectedStone.ChangeSpriteAndRot("Idle", isLocalRotated);
                 isDragging = false;
                 selectedStone = null;
@@ -1128,8 +1128,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
                 selectedStone.ChangeSpriteAndRot("Idle", isLocalRotated);
                 isDragging = false;
                 selectedStone = null;
-                Debug.Log("You have not enough cost for shooting stone!");
-                IngameUIManager.Inst.UserAlertPanel.Alert("Not enough cost for shooting stone!"); // "코스트가 부족합니다"
+                //Debug.Log("You have not enough cost for shooting stone!");
+                IngameUIManager.Inst.UserAlertPanel.Alert("코스트가 부족합니다"); // "코스트가 부족합니다"
                 return;
             }
 
@@ -1163,7 +1163,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         
         if(GameManager.Inst.turnStates[0] == GameManager.TurnState.PREPARE && selectedCard.CardData.CardID == 14)
         {
-            IngameUIManager.Inst.UserAlertPanel.Alert("Unavailable turn to spawn stone"); // 돌을 놓을 수 있는 턴이 아닙니다
+            IngameUIManager.Inst.UserAlertPanel.Alert("돌을 놓을 수 있는 턴이 아닙니다"); // 돌을 놓을 수 있는 턴이 아닙니다
             GameManager.Inst.GameBoard.UnhightlightPossiblePos();
             selectedCard.EnlargeCard(false);
             return;
@@ -1171,16 +1171,16 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         if(nearPutTransform == null)
         {
-            Debug.Log("Unavailiable place to spawn stone!");
-            IngameUIManager.Inst.UserAlertPanel.Alert("Unavailiable place to spawn stone"); // 돌을 놓을 수 있는 위치가 아닙니다
+            //Debug.Log("Unavailiable place to spawn stone!");
+            IngameUIManager.Inst.UserAlertPanel.Alert("돌을 놓을 수 있는 위치가 아닙니다"); // 돌을 놓을 수 있는 위치가 아닙니다
             GameManager.Inst.GameBoard.UnhightlightPossiblePos();
             selectedCard.EnlargeCard(false);
             return;
         }
         else if(!SpendCost(selectedCard.CardData.cardCost))
         {
-            Debug.Log("Not enough cost to play card!");
-            IngameUIManager.Inst.UserAlertPanel.Alert("Not enough cost to play card"); // 코스트가 부족합니다
+            //Debug.Log("Not enough cost to play card!");
+            IngameUIManager.Inst.UserAlertPanel.Alert("코스트가 부족합니다"); // 코스트가 부족합니다
             GameManager.Inst.GameBoard.UnhightlightPossiblePos();
             selectedCard.EnlargeCard(false);
             return;

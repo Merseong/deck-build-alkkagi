@@ -35,10 +35,6 @@ public class GameManager : SingletonBehavior<GameManager>
     public bool isLocalGoFirst;
     PlayerEnum FirstPlayer => isLocalGoFirst ? PlayerEnum.LOCAL : PlayerEnum.OPPO;
     PlayerEnum SecondPlayer => isLocalGoFirst ? PlayerEnum.OPPO : PlayerEnum.LOCAL;
-    //선,후공과 관계없이 HS를 했는지 여부에 대한 bool
-    public bool isPlayerHonorSkip;
-    //후공의 경우에 상대가 HS했을 경우 동의 여부에 대한 bool
-    public bool isPlayerConsentHonorSkip;
 
     // 각자 턴의 제어
     // WAIT가 아닌 턴의 종료가 일어나는 PLAYER쪽에서 턴 변경 처리
@@ -76,7 +72,6 @@ public class GameManager : SingletonBehavior<GameManager>
         set
         {
             turnStates[0] = value;
-            IngameUIManager.Inst.TempCurrentTurnText.text = value.ToString();
         }
     }
     public TurnState OppoTurnState
@@ -96,6 +91,8 @@ public class GameManager : SingletonBehavior<GameManager>
         set => nextTurnStates[1] = value;
     }
     private uint hsPlayerUid = 0;
+    public bool isHSPerformed => hsPlayerUid != 0;
+    public bool isLocalHS => NetworkManager.Inst.NetworkId == hsPlayerUid;
 
     public ushort initialTurnCost = 6;
     public ushort normalTurnCost = 3;
@@ -177,8 +174,6 @@ public class GameManager : SingletonBehavior<GameManager>
         turnStates[(int)SecondPlayer] = TurnState.WAIT;
         nextTurnStates[(int)FirstPlayer] = TurnState.WAIT;
         nextTurnStates[(int)SecondPlayer] = TurnState.PREPARE;
-
-        IngameUIManager.Inst.TempCurrentTurnText.text = LocalTurnState.ToString();
 
         knightEnterCount = 0;
 
@@ -272,18 +267,16 @@ public class GameManager : SingletonBehavior<GameManager>
         {
             case "W":
                 container.isLocalWin = true;
-                IngameUIManager.Inst.TempCurrentTurnText.text = "WIN!";
                 break;
             case "L":
                 container.isLocalWin = false;
-                IngameUIManager.Inst.TempCurrentTurnText.text = "LOSE";
                 break;
             default:
                 break;
         }
 
         IngameUIManager.Inst.DeactivateUI();
-        IngameUIManager.Inst.SetResultPanel();
+        IngameUIManager.Inst.SetResultPanel(container.isLocalWin);
         IngameUIManager.Inst.ActivateUI(IngameUIManager.Inst.ResultPanel);
 
         NetworkManager.Inst.RemoveReceiveDelegate(RoomExitReceiveNetworkAction);
@@ -292,7 +285,8 @@ public class GameManager : SingletonBehavior<GameManager>
 
     private void UpdateTurnEndButtonText()
     {
-        IngameUIManager.Inst.TurnEndButtonText.text = $"{totalTurn} {LocalTurnState} {CurrentPlayer is LocalPlayerBehaviour}";
+        IngameUIManager.Inst.TurnEndButtonText.text = $"{(CurrentPlayer is LocalPlayerBehaviour ? "Turn End" : "Wait..")}";
+        gameBoard.SetBoardBackground(CurrentPlayer is LocalPlayerBehaviour);
     }
 
     private void StartTurnBasis()
@@ -641,7 +635,6 @@ public class GameManager : SingletonBehavior<GameManager>
 
         NetworkManager.Inst.AddReceiveDelegate(HSPlayerReceiveNetworkAction);
         HSPlayerSendNetworkAction(hsPlayerUid);
-        #endregion
     }
 
     private void HSPlayerSendNetworkAction(uint uid)
@@ -678,4 +671,5 @@ public class GameManager : SingletonBehavior<GameManager>
             }
         }
     }
+    #endregion
 }
