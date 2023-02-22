@@ -166,6 +166,11 @@ public class AkgRigidbodyRecorder
                 GameManager.Inst.AllStones.Values.All(x => !x.isMoving);
         });
 
+        foreach (StoneBehaviour stone in GameManager.Inst.AllStones.Values)
+        {
+            stone.ChangeSpriteAndRot("Idle", !GameManager.Inst.isLocalGoFirst);
+        }
+
         for (var prIdx = 0; prIdx < pRecords.Length; ++prIdx)
         {
             var stone = GameManager.Inst.FindStone(pRecords[prIdx].stoneId);
