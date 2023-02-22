@@ -38,10 +38,12 @@ SpriteAtlas:
     cachedData: {fileID: 0}
     packedSpriteRenderDataKeys:
     - 1d3dc2809d3d6764bbadfa0a8be39524: 21300000
+    - e54963f077980ab40a5f4a299d54a354: 21300000
     - e608224144469684587b543603dfbb8e: 21300000
     - e4795391e24ef364998af5b64f8a7730: 21300000
     - e832ef12ce87c6d4a866f1bfc05be212: 21300000
     - 39f60a52ec74e4b4489f525766f4cf75: 21300000
+    - a1d2cd52a0a355540873c8d06c947e08: 21300000
     - 2e784b13b6a0f5140917b2d5c9a8aadd: 21300000
     - d2f5ac234ab2abb40970298c6b7945f3: 21300000
     - db4f6c43920bbbc4cb5fc6ac413040f3: 21300000
@@ -50,6 +52,7 @@ SpriteAtlas:
     - 1c49a3b49a106fe478f6b3ada74f2a1d: 21300000
     - fff42ca5d2aa6864b9709116d740ec12: 21300000
     - fdc69fe517e5df948b21165fddcf713c: 21300000
+    - e567d517805a4054b8e29b0a3e8bf901: 21300000
     - 720d8b67359a93e4c82f48fabdd12d9e: 21300000
     - 482603e762732724093ef689b709fd92: 21300000
     - bfcdb0588ae6c864fa9e58aa3db1ac3a: 21300000
@@ -63,13 +66,16 @@ SpriteAtlas:
     - 1447a69dd6a999b47acc488e9c34f941: 21300000
     - d49217ed7474caa42ac34a72ed4c2cd7: 21300000
     - bfbfb46ea797b3f42a4362702d8af2db: 21300000
+    - 97d910af860660c47a5e3fbc6e5cebd4: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 1d3dc2809d3d6764bbadfa0a8be39524, type: 3}
+  - {fileID: 21300000, guid: e54963f077980ab40a5f4a299d54a354, type: 3}
   - {fileID: 21300000, guid: e608224144469684587b543603dfbb8e, type: 3}
   - {fileID: 21300000, guid: e4795391e24ef364998af5b64f8a7730, type: 3}
   - {fileID: 21300000, guid: e832ef12ce87c6d4a866f1bfc05be212, type: 3}
   - {fileID: 21300000, guid: 39f60a52ec74e4b4489f525766f4cf75, type: 3}
+  - {fileID: 21300000, guid: a1d2cd52a0a355540873c8d06c947e08, type: 3}
   - {fileID: 21300000, guid: 2e784b13b6a0f5140917b2d5c9a8aadd, type: 3}
   - {fileID: 21300000, guid: d2f5ac234ab2abb40970298c6b7945f3, type: 3}
   - {fileID: 21300000, guid: db4f6c43920bbbc4cb5fc6ac413040f3, type: 3}
@@ -78,6 +84,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 1c49a3b49a106fe478f6b3ada74f2a1d, type: 3}
   - {fileID: 21300000, guid: fff42ca5d2aa6864b9709116d740ec12, type: 3}
   - {fileID: 21300000, guid: fdc69fe517e5df948b21165fddcf713c, type: 3}
+  - {fileID: 21300000, guid: e567d517805a4054b8e29b0a3e8bf901, type: 3}
   - {fileID: 21300000, guid: 720d8b67359a93e4c82f48fabdd12d9e, type: 3}
   - {fileID: 21300000, guid: 482603e762732724093ef689b709fd92, type: 3}
   - {fileID: 21300000, guid: bfcdb0588ae6c864fa9e58aa3db1ac3a, type: 3}
@@ -91,12 +98,15 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 1447a69dd6a999b47acc488e9c34f941, type: 3}
   - {fileID: 21300000, guid: d49217ed7474caa42ac34a72ed4c2cd7, type: 3}
   - {fileID: 21300000, guid: bfbfb46ea797b3f42a4362702d8af2db, type: 3}
+  - {fileID: 21300000, guid: 97d910af860660c47a5e3fbc6e5cebd4, type: 3}
   m_PackedSpriteNamesToIndex:
   - UI_Cost_2
+  - UI_Button_3
   - UI_Window_1
   - UI_Honor_Silver
   - UI_CostBar_1
   - card_1
+  - UI_Button_0
   - UI_Cost_1
   - UI_Honor_0
   - UI_Honor_1
@@ -105,6 +115,7 @@ SpriteAtlas:
   - UI_Cost_0
   - card_0
   - UI_Window_0
+  - UI_Button_2
   - card_5
   - card
   - UI_CostBar_2
@@ -118,6 +129,7 @@ SpriteAtlas:
   - card_8
   - UI_Deck
   - UI_CostBar_0
+  - UI_Button_1
   m_RenderDataMap: {}
   m_Tag: UI Atlas
   m_IsVariant: 0
