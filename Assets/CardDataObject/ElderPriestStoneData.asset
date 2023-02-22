@@ -19,5 +19,5 @@ MonoBehaviour:
   stoneWeight: 1
   cardCost: 3
   inDeckNumber: 2
-  description: "\uD0C0\uACA9\uD55C \uC544\uAD70\uC5D0\uAC8C \"\uBCF4\uD638\uB9C9\"\uC744
-    \uBD80\uC5EC\uD569\uB2C8\uB2E4."
+  description: "\uC544\uAD70\uC744 \uD0C0\uACA9\uD558\uBA74 \uADF8 \uC2A4\uD1A4\uC5D0\uAC8C
+    \"\uBCF4\uD638\uB9C9\"\uC744 \uBD80\uC5EC\uD569\uB2C8\uB2E4."
