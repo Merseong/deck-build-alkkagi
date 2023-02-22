@@ -479,6 +479,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     public IEnumerator EIndirectExit(bool isDirected = false)
     {
         stoneUI.stoneSprite.sprite = GetSpriteState("Break");
+        AudioManager.Inst.DestroySound();
 
         isExiting = true;
         float curTime = indirectExitTime;
