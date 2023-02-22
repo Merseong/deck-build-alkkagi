@@ -222,6 +222,14 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
 
             if(GetNumberProperty(property) != -1)
                 transform.GetChild(4).GetChild(GetNumberProperty(property)).gameObject.SetActive(true);
+            if (GameManager.Inst.isLocalGoFirst)
+            {
+                transform.GetChild(4).rotation = Quaternion.Euler(90, 0, 0);
+            }
+            else
+            {
+                transform.GetChild(4).rotation = Quaternion.Euler(90, 180, 0);
+            }
             if (property is GhostProperty)
             {
                 transform.GetChild(1).GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,0.5f); 
