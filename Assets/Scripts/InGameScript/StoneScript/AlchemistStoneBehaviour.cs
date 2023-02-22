@@ -22,7 +22,7 @@ public class AlchemistStoneBehaviour : StoneBehaviour
     {
         LocalPlayerBehaviour local = GameManager.Inst.LocalPlayer as LocalPlayerBehaviour;
         bool isRotated = (BelongingPlayerEnum == GameManager.PlayerEnum.LOCAL) == local.IsLocalRotated;
-        if (isRotated ? (transform.position.z > 0) : (transform.position.z < 0))
+        if (isRotated ? (transform.position.z < 0) : (transform.position.z > 0))
         {
             BelongingPlayer.GetCost(2);
         }
