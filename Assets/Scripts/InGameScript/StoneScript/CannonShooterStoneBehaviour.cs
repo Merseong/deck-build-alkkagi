@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class CannonShooterStoneBehaviour : StoneBehaviour
 {
+    public override void InitProperty()
+    {
+        base.InitProperty();
+
+        AddProperty(new AccelShieldProperty(this));
+    }
+
     public override void OnEnter(bool calledByPacket = false, string options = "")
     {
         OnShootEnter += ShootBullet;
