@@ -27,7 +27,7 @@ public class SocketClient
             maxConnectAttempts: 10,
             disconnectTimeoutMS: 600000,
             heartbeatTimeoutMS: 10000);
-        settings.WithFragmentationStageParameters(payloadCapacity: 1048576);
+        settings.WithFragmentationStageParameters(payloadCapacity: 524288);
         settings.WithReliableStageParameters(windowSize: 64);
 #if UNITY_EDITOR
         Driver = NetworkDriver.Create(settings);
