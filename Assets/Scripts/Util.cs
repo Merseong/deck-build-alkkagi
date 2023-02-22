@@ -48,72 +48,42 @@ public static class Util
 
     public static float GetMassFromStoneWeight(CardData.StoneSize size, CardData.StoneWeight weight)
     {
+        float result = 1.0f;
+        switch (size)
+        {
+            case CardData.StoneSize.Small:
+                result = .06f;
+                break;
+            case CardData.StoneSize.Medium:
+                result = .1f;
+                break;
+            case CardData.StoneSize.Large:
+                result = .15f;
+                break;
+            case CardData.StoneSize.SuperLarge:
+                result = .25f;
+                break;
+            default:
+                Debug.LogError("Invalid Stone Size!");
+                return 0f;
+        }
+
         switch (weight)
         {
             case CardData.StoneWeight.Light:
-                switch (size)
-                {
-                    case CardData.StoneSize.Small:
-                        return .110f;
-
-                    case CardData.StoneSize.Medium:
-                        return .115f;
-
-                    case CardData.StoneSize.Large:
-                        return .12f;
-
-                    case CardData.StoneSize.SuperLarge:
-                        return .13f;
-
-                    default:
-                        Debug.LogError("Invalid Stone Size!");
-                        return 0f;
-                }
-
+                result *= 0.7f;
+                break;
             case CardData.StoneWeight.Standard:
-                switch (size)
-                {
-                    case CardData.StoneSize.Small:
-                        return .12f;
-
-                    case CardData.StoneSize.Medium:
-                        return .13f;
-
-                    case CardData.StoneSize.Large:
-                        return .14f;
-
-                    case CardData.StoneSize.SuperLarge:
-                        return .16f;
-
-                    default:
-                        Debug.LogError("Invalid Stone Size!");
-                        return 0f;
-                }
-
+                break;
             case CardData.StoneWeight.Heavy:
-                switch (size)
-                {
-                    case CardData.StoneSize.Small:
-                        return .13f;
-
-                    case CardData.StoneSize.Medium:
-                        return .145f;
-
-                    case CardData.StoneSize.Large:
-                        return .16f;
-
-                    case CardData.StoneSize.SuperLarge:
-                        return .19f;
-
-                    default:
-                        Debug.LogError("Invalid Stone Size!");
-                        return 0f;
-                }
-
+                result *= 1.3f;
+                break;
             default:
                 Debug.LogError("Invalid stone weight!");
                 return 0f;
         }
+
+        return result;
     }
 
     public static Sprite GetSpriteState(CardData cardData, string state, SpriteAtlas stoneAtlas)
