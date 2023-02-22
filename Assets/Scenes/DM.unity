@@ -1046,7 +1046,7 @@ PrefabInstance:
       objectReference: {fileID: 1500342745}
     - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: deck.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: deck.Array.data[0]
@@ -1319,6 +1319,14 @@ PrefabInstance:
     - target: {fileID: 5057472525221080858, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461928564971391953, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461928564971391953, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
+      propertyPath: m_PixelsPerUnitMultiplier
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6349803784212909352, guid: 821b0bebe89e14c4997031933c388c21, type: 3}
       propertyPath: m_SizeDelta.x

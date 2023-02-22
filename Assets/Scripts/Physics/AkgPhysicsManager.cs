@@ -14,6 +14,7 @@ public enum AkgLayerMask
     GHOST = 1 << 3,
     SHIELD = 1 << 4,
     COLLIDED = 1 << 5,
+    STONEONLY = 1 << 6,
 }
 
 public class AkgPhysicsManager : SingletonBehavior<AkgPhysicsManager>
@@ -81,6 +82,10 @@ public class AkgPhysicsManager : SingletonBehavior<AkgPhysicsManager>
     public bool GetLayerCollide(AkgLayerMask l1, AkgLayerMask l2)
     {
         if (l1 == AkgLayerMask.DEFAULT || l2 == AkgLayerMask.DEFAULT)
+            return true;
+
+        if ((l1.HasFlag(AkgLayerMask.STONEONLY) && l2.HasFlag(AkgLayerMask.STONE)) ||
+            (l1.HasFlag(AkgLayerMask.STONE) && l2.HasFlag(AkgLayerMask.STONEONLY)))
             return true;
 
         if (!l1.HasFlag(AkgLayerMask.STONE))

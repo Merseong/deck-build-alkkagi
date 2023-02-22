@@ -329,11 +329,10 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         OnShootEnter?.Invoke();
     }
 
-    public void _Shoot(Vector3 vec, bool isRotated)
+    public void ChildShoot(Vector3 vec, bool isRotated)
     {
         ChangeSpriteAndRot("Shoot", isRotated);
-        StartCoroutine(EShoot(isRotated));
-        GetComponent<AkgRigidbody>().AddForce(vec);
+        GetComponent<AkgRigidbody>().SetVelocity(vec, transform.position, true);
 
         OnShootEnter?.Invoke();
     }

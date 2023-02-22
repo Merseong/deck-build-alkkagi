@@ -46,6 +46,8 @@ public class Guard : MonoBehaviour, IAkgRigidbodyInterface
         if (collider.layerMask.HasFlag(AkgLayerMask.STONE))
         {
             StoneBehaviour stone = collider.GetComponent<StoneBehaviour>();
+            if (stone.HasAccelShield() || stone.ShieldCount() > 0)
+                return;
 
             if (!calledByPacket)
             {
@@ -60,8 +62,6 @@ public class Guard : MonoBehaviour, IAkgRigidbodyInterface
                 });
             }
 
-            if (stone.HasAccelShield() || stone.ShieldCount() > 0)
-                return;
             GameManager.Inst.GameBoard.RemoveGuard(this);
         }
     }

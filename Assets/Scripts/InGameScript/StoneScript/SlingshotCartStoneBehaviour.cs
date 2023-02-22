@@ -66,7 +66,7 @@ public class SlingshotCartStoneBehaviour : StoneBehaviour
             LocalPlayerBehaviour local = GameManager.Inst.LocalPlayer as LocalPlayerBehaviour;
             bool isRotated = (BelongingPlayerEnum == GameManager.PlayerEnum.LOCAL) == local.IsLocalRotated;
             Vector3 shootVel = isRotated ? new Vector3(0, 0, -1500) : new Vector3(0, 0, 1500);
-            stone._Shoot(shootVel * stone.GetComponent<AkgRigidbody>().Mass, isRotated);
+            stone.ChildShoot(shootVel * stone.GetComponent<AkgRigidbody>().Mass, isRotated);
         }
     }
 

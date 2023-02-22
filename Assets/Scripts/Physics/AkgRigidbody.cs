@@ -164,6 +164,7 @@ public class AkgRigidbody : MonoBehaviour
         collidedList.Clear();
 
         if (AkgPhysicsManager.Inst.rigidbodyRecorder.IsPlaying) return;
+        if (!IsMoving) return;
 
         int collideCount = 0;
         while (collideCount < 3)
@@ -386,15 +387,18 @@ public class AkgRigidbody : MonoBehaviour
         velocity += Time.fixedDeltaTime * acceleration;
 
         RecordVelocity();
-        CollideForecast();
+        //CollideForecast();
     }
 
-    public void SetVelocity(Vector3 vel, Vector3 pos)
+    public void SetVelocity(Vector3 vel, Vector3 pos, bool doRecord = false)
     {
         if (IsStatic) return;
 
         velocity = vel;
         transform.position = pos;
+
+        if (doRecord)
+            RecordVelocity();
     }
 
     public void OnCollision(AkgRigidbody akg, Vector3 point, string optionMessage)

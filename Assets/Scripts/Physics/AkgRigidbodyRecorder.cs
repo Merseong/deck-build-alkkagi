@@ -92,16 +92,6 @@ public class AkgRigidbodyRecorder
                                             erIdx >= eRecords.Length ||
                                             eRecords[erIdx].time <= Time.time - startTime);
 
-            while (vrIdx < vRecords.Length && vRecords[vrIdx].time <= Time.time - startTime)
-            {
-                var vRec = vRecords[vrIdx];
-                var stone = GameManager.Inst.FindStone(vRec.stoneId);
-                stone.GetComponent<AkgRigidbody>().SetVelocity(
-                    Util.SlicedStringsToVector3(vRec.xVelocity, vRec.zVelocity),
-                    Util.SlicedStringsToVector3(vRec.xPosition, vRec.zPosition)
-                );
-                vrIdx++;
-            }
             while (erIdx < eRecords.Length && eRecords[erIdx].time <= Time.time - startTime)
             {
                 StoneBehaviour stone;
@@ -156,6 +146,16 @@ public class AkgRigidbodyRecorder
                         break;
                 }
                 erIdx++;
+            }
+            while (vrIdx < vRecords.Length && vRecords[vrIdx].time <= Time.time - startTime)
+            {
+                var vRec = vRecords[vrIdx];
+                var stone = GameManager.Inst.FindStone(vRec.stoneId);
+                stone.GetComponent<AkgRigidbody>().SetVelocity(
+                    Util.SlicedStringsToVector3(vRec.xVelocity, vRec.zVelocity),
+                    Util.SlicedStringsToVector3(vRec.xPosition, vRec.zPosition)
+                );
+                vrIdx++;
             }
         }
 
