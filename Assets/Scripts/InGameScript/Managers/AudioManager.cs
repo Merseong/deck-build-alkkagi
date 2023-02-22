@@ -30,7 +30,7 @@ public class AudioManager : SingletonBehavior<AudioManager>
     }
     public void DestroySound()
     {
-        GetComponent<AudioSource>().PlayOneShot(destroySound, volume);
+        GetComponent<AudioSource>().PlayOneShot(destroySound, volume*0.3f);
     }
 
     public void SetAudioVolume(float volume)
