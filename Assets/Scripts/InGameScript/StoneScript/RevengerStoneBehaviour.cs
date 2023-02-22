@@ -48,6 +48,8 @@ public class RevengerStoneBehaviour : StoneBehaviour
 
     private void StoneAbility()
     {
+        if (hitStone == null) return;
+
         hitStone.AddProperty(new CursedProperty(hitStone));
 
         hitStone.OnShootExit -= StoneAbility;

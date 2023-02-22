@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEditor.PackageManager;
+using System;
 
 public class AkgRigidbodyRecorder
 {
@@ -94,71 +96,83 @@ public class AkgRigidbodyRecorder
 
             while (erIdx < eRecords.Length && eRecords[erIdx].time <= Time.time - startTime)
             {
-                StoneBehaviour stone;
-                Vector3 point;
-                var eventRec = eRecords[erIdx];
-                switch (eventRec.eventEnum)
+                try
                 {
-                    case EventEnum.SHOOT:
-                        // stoneId => striking stone의 번호
-                        isShoot = true;
-                        shootStone = GameManager.Inst.FindStone(eventRec.stoneId);
-                        string[] msgArr = eventRec.eventMessage.Split(' ');
-                        bool useShootToken = bool.Parse(msgArr[0]);
-                        bool isRotated = bool.Parse(msgArr[1]);
-                        //if (useShootToken)
-                        //{
-                        //    if (!GameManager.Inst.OppoPlayer.ShootTokenAvailable)
-                        //        Debug.LogError("[OPPO] Shoot token already spent!");
-                        //    GameManager.Inst.OppoPlayer.ShootTokenAvailable = false;
-                        //}
-                        shootStone.Shoot(Vector3.zero, isRotated, false, msgArr[2] == "true");
-                        break;
-                    case EventEnum.COLLIDE:
-                        // eventMessage -> (colStoneId || STATIC) (COLLIDED)
-                        if (eventRec.eventMessage.StartsWith("STA")) break; // -> STATICCOLLIDE에서 같이 처리
-                        var collMsgArr = eventRec.eventMessage.Split(' ');
-                        stone = GameManager.Inst.FindStone(eventRec.stoneId);
-                        var targetStone = GameManager.Inst.FindStone(int.Parse(collMsgArr[0]));
-                        bool collided = collMsgArr.Length != 1 && collMsgArr[1] == "COL";
-                        point = Util.SlicedStringsToVector3(eventRec.xPosition, eventRec.zPosition);
-                        if (collided)
-                            AudioManager.Inst.HitSound(stone.GetComponent<AkgRigidbody>());
-                        stone.OnCollide(targetStone.GetComponent<AkgRigidbody>(), point, collided, true);
-                        break;
-                    case EventEnum.STATICCOLLIDE:
-                        stone = GameManager.Inst.FindStone(eventRec.stoneId);
-                        Guard guard = GameManager.Inst.GameBoard.FindGuard(int.Parse(eventRec.eventMessage));
-                        point = Util.SlicedStringsToVector3(eventRec.xPosition, eventRec.zPosition);
-                        AudioManager.Inst.HitSound(guard.GetComponent<AkgRigidbody>());
-                        stone.OnCollide(guard.GetComponent<AkgRigidbody>(), point, false, true);
-                        guard.OnCollide(stone.GetComponent<AkgRigidbody>(), point, true, true);
-                        break;
-                    case EventEnum.POWER:
-                        // 돌의 각자 특성상의 action
-                        stone = GameManager.Inst.FindStone(eventRec.stoneId);
-                        stone.ParseActionString(eventRec.eventMessage);
-                        break;
-                    case EventEnum.DROPOUT:
-                        stone = GameManager.Inst.FindStone(eventRec.stoneId);
-                        stone.transform.position = Util.SlicedStringsToVector3(eventRec.xPosition, eventRec.zPosition);
-                        stone.OnExit(true, eventRec.eventMessage);
-                        stone.isExitingByPlaying = true;
-                        break;
-                    default:
-                        break;
+                    StoneBehaviour stone;
+                    Vector3 point;
+                    var eventRec = eRecords[erIdx];
+                    switch (eventRec.eventEnum)
+                    {
+                        case EventEnum.SHOOT:
+                            // stoneId => striking stone의 번호
+                            isShoot = true;
+                            shootStone = GameManager.Inst.FindStone(eventRec.stoneId);
+                            string[] msgArr = eventRec.eventMessage.Split(' ');
+                            bool useShootToken = bool.Parse(msgArr[0]);
+                            bool isRotated = bool.Parse(msgArr[1]);
+                            //if (useShootToken)
+                            //{
+                            //    if (!GameManager.Inst.OppoPlayer.ShootTokenAvailable)
+                            //        Debug.LogError("[OPPO] Shoot token already spent!");
+                            //    GameManager.Inst.OppoPlayer.ShootTokenAvailable = false;
+                            //}
+                            shootStone.Shoot(Vector3.zero, isRotated, false, msgArr[2] == "true");
+                            break;
+                        case EventEnum.COLLIDE:
+                            // eventMessage -> (colStoneId || STATIC) (COLLIDED)
+                            if (eventRec.eventMessage.StartsWith("STA")) break; // -> STATICCOLLIDE에서 같이 처리
+                            var collMsgArr = eventRec.eventMessage.Split(' ');
+                            stone = GameManager.Inst.FindStone(eventRec.stoneId);
+                            var targetStone = GameManager.Inst.FindStone(int.Parse(collMsgArr[0]));
+                            bool collided = collMsgArr.Length != 1 && collMsgArr[1] == "COL";
+                            point = Util.SlicedStringsToVector3(eventRec.xPosition, eventRec.zPosition);
+                            if (collided)
+                                AudioManager.Inst.HitSound(stone.GetComponent<AkgRigidbody>());
+                            stone.OnCollide(targetStone.GetComponent<AkgRigidbody>(), point, collided, true);
+                            break;
+                        case EventEnum.STATICCOLLIDE:
+                            stone = GameManager.Inst.FindStone(eventRec.stoneId);
+                            Guard guard = GameManager.Inst.GameBoard.FindGuard(int.Parse(eventRec.eventMessage));
+                            point = Util.SlicedStringsToVector3(eventRec.xPosition, eventRec.zPosition);
+                            AudioManager.Inst.HitSound(guard.GetComponent<AkgRigidbody>());
+                            stone.OnCollide(guard.GetComponent<AkgRigidbody>(), point, false, true);
+                            guard.OnCollide(stone.GetComponent<AkgRigidbody>(), point, true, true);
+                            break;
+                        case EventEnum.POWER:
+                            // 돌의 각자 특성상의 action
+                            stone = GameManager.Inst.FindStone(eventRec.stoneId);
+                            stone.ParseActionString(eventRec.eventMessage);
+                            break;
+                        case EventEnum.DROPOUT:
+                            stone = GameManager.Inst.FindStone(eventRec.stoneId);
+                            stone.transform.position = Util.SlicedStringsToVector3(eventRec.xPosition, eventRec.zPosition);
+                            stone.OnExit(true, eventRec.eventMessage);
+                            stone.isExitingByPlaying = true;
+                            break;
+                        default:
+                            break;
+                    }
+                    erIdx++;
                 }
-                erIdx++;
+                catch (Exception _)
+                {
+                    
+                }
             }
             while (vrIdx < vRecords.Length && vRecords[vrIdx].time <= Time.time - startTime)
             {
-                var vRec = vRecords[vrIdx];
-                var stone = GameManager.Inst.FindStone(vRec.stoneId);
-                stone.GetComponent<AkgRigidbody>().SetVelocity(
-                    Util.SlicedStringsToVector3(vRec.xVelocity, vRec.zVelocity),
-                    Util.SlicedStringsToVector3(vRec.xPosition, vRec.zPosition)
-                );
-                vrIdx++;
+                try
+                {
+                    var vRec = vRecords[vrIdx];
+                    var stone = GameManager.Inst.FindStone(vRec.stoneId);
+                    stone.GetComponent<AkgRigidbody>().SetVelocity(
+                        Util.SlicedStringsToVector3(vRec.xVelocity, vRec.zVelocity),
+                        Util.SlicedStringsToVector3(vRec.xPosition, vRec.zPosition)
+                    );
+                    vrIdx++;
+                }
+                catch (Exception _)
+                { }
             }
         }
 
@@ -177,6 +191,7 @@ public class AkgRigidbodyRecorder
         for (var prIdx = 0; prIdx < pRecords.Length; ++prIdx)
         {
             var stone = GameManager.Inst.FindStone(pRecords[prIdx].stoneId);
+            if (stone == null) continue;
             stone.transform.position = Util.SlicedStringsToVector3(pRecords[prIdx].xPosition, pRecords[prIdx].zPosition);
         }
 
