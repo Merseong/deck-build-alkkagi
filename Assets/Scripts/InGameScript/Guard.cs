@@ -53,8 +53,8 @@ public class Guard : MonoBehaviour, IAkgRigidbodyInterface
                     time = Time.time,
                     eventMessage = guardId.ToString(),
                     eventEnum = EventEnum.STATICCOLLIDE,
-                    xPosition = collidePoint.x,
-                    zPosition = collidePoint.z,
+                    xPosition = Util.FloatToSlicedString(collidePoint.x),
+                    zPosition = Util.FloatToSlicedString(collidePoint.z),
                 });
             }
 

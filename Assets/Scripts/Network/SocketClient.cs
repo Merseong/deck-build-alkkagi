@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using Unity.Collections;
 using Unity.Networking.Transport;
+using Unity.Networking.Transport.Utilities;
 using UnityEngine;
 
 public class SocketClient
@@ -24,7 +25,10 @@ public class SocketClient
         settings.WithNetworkConfigParameters(
             connectTimeoutMS: 1000,
             maxConnectAttempts: 10,
-            disconnectTimeoutMS: 600000);
+            disconnectTimeoutMS: 600000,
+            heartbeatTimeoutMS: 10000);
+        settings.WithFragmentationStageParameters(payloadCapacity: 1048576);
+        settings.WithReliableStageParameters(windowSize: 64);
 #if UNITY_EDITOR
         Driver = NetworkDriver.Create(settings);
 #else
@@ -115,7 +119,10 @@ public class SocketClient
 
         var sendStatus = Driver.BeginSend(Pipeline, Connection, out var writer);
         writer.WriteBytes(byteArr);
+        Debug.Log($"{writer.Capacity} {byteArr.Length}");
         var endStatus = Driver.EndSend(writer);
+
+        Debug.Log($"{sendStatus} {endStatus}");
 
         /**
         if (m_socket == null || !m_socket.Connected)

@@ -230,16 +230,18 @@ public struct VelocityRecord
 {
     public float time;
     public int stoneId;
-    public float xVelocity;
-    public float zVelocity;
+    public string xPosition;
+    public string zPosition;
+    public string xVelocity;
+    public string zVelocity;
 }
 
 [Serializable]
 public struct PositionRecord
 {
     public int stoneId;
-    public float xPosition;
-    public float zPosition;
+    public string xPosition;
+    public string zPosition;
 }
 
 [Serializable]
@@ -250,8 +252,8 @@ public struct EventRecord
     public int stoneId;
     public string eventMessage;
     public EventEnum eventEnum; // -> EventEnum
-    public float xPosition;
-    public float zPosition;
+    public string xPosition;
+    public string zPosition;
 }
 
 [Serializable]

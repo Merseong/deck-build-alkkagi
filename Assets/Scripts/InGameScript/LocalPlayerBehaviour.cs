@@ -1122,7 +1122,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
 
             float VelocityCalc = Mathf.Lerp(minShootVelocity, maxShootVelocity, Mathf.Min(moveVec.magnitude, maxDragLimit) / maxDragLimit) * velocityMultiplier;
-            ShootStone(moveVec.normalized * selectedStone.GetComponent<AkgRigidbody>().Mass * VelocityCalc);
+            ShootStone(selectedStone.GetComponent<AkgRigidbody>().Mass * VelocityCalc * moveVec.normalized);
         }
 
         // 여기넣는게 맞는지 모름

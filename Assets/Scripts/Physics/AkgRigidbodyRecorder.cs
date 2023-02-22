@@ -81,8 +81,12 @@ public class AkgRigidbodyRecorder
 
             while (vrIdx < vRecords.Length && vRecords[vrIdx].time <= Time.time - startTime)
             {
-                var stone = GameManager.Inst.FindStone(vRecords[vrIdx].stoneId);
-                stone.GetComponent<AkgRigidbody>().SetVelocity(new Vector3(vRecords[vrIdx].xVelocity, 0, vRecords[vrIdx].zVelocity));
+                var vRec = vRecords[vrIdx];
+                var stone = GameManager.Inst.FindStone(vRec.stoneId);
+                stone.GetComponent<AkgRigidbody>().SetVelocity(
+                    Util.SlicedStringsToVector3(vRec.xVelocity, vRec.zVelocity),
+                    Util.SlicedStringsToVector3(vRec.xPosition, vRec.zPosition)
+                );
                 vrIdx++;
             }
             while (erIdx < eRecords.Length && eRecords[erIdx].time <= Time.time - startTime)
@@ -102,18 +106,18 @@ public class AkgRigidbodyRecorder
                         break;
                     case EventEnum.COLLIDE:
                         // eventMessage -> (colStoneId || STATIC) (COLLIDED)
-                        if (eventRec.eventMessage.StartsWith("STATIC")) break; // -> STATICCOLLIDE에서 같이 처리
+                        if (eventRec.eventMessage.StartsWith("STA")) break; // -> STATICCOLLIDE에서 같이 처리
                         var collMsgArr = eventRec.eventMessage.Split(' ');
                         stone = GameManager.Inst.FindStone(eventRec.stoneId);
                         var targetStone = GameManager.Inst.FindStone(int.Parse(collMsgArr[0]));
-                        bool collided = collMsgArr.Length != 1 && collMsgArr[1] == "COLLIDED";
-                        point = new Vector3(eventRec.xPosition, 0, eventRec.zPosition);
+                        bool collided = collMsgArr.Length != 1 && collMsgArr[1] == "COL";
+                        point = Util.SlicedStringsToVector3(eventRec.xPosition, eventRec.zPosition);
                         stone.OnCollide(targetStone.GetComponent<AkgRigidbody>(), point, collided, true);
                         break;
                     case EventEnum.STATICCOLLIDE:
                         stone = GameManager.Inst.FindStone(eventRec.stoneId);
                         Guard guard = GameManager.Inst.GameBoard.FindGuard(int.Parse(eventRec.eventMessage));
-                        point = new Vector3(eventRec.xPosition, 0, eventRec.zPosition);
+                        point = Util.SlicedStringsToVector3(eventRec.xPosition, eventRec.zPosition);
                         stone.OnCollide(guard.GetComponent<AkgRigidbody>(), point, false, true);
                         guard.OnCollide(stone.GetComponent<AkgRigidbody>(), point, true, true);
                         break;
@@ -124,7 +128,7 @@ public class AkgRigidbodyRecorder
                         break;
                     case EventEnum.DROPOUT:
                         stone = GameManager.Inst.FindStone(eventRec.stoneId);
-                        stone.transform.position = new Vector3(eventRec.xPosition, 0, eventRec.zPosition);
+                        stone.transform.position = Util.SlicedStringsToVector3(eventRec.xPosition, eventRec.zPosition);
                         stone.OnExit(true, eventRec.eventMessage);
                         stone.isExitingByPlaying = true;
                         break;
@@ -145,7 +149,7 @@ public class AkgRigidbodyRecorder
         for (var prIdx = 0; prIdx < pRecords.Length; ++prIdx)
         {
             var stone = GameManager.Inst.FindStone(pRecords[prIdx].stoneId);
-            stone.transform.position = new Vector3(pRecords[prIdx].xPosition, 0, pRecords[prIdx].zPosition);
+            stone.transform.position = Util.SlicedStringsToVector3(pRecords[prIdx].xPosition, pRecords[prIdx].zPosition);
         }
 
         isPlaying = false;
@@ -161,8 +165,8 @@ public class AkgRigidbodyRecorder
                 positionRecords.Add(new PositionRecord
                 {
                     stoneId = stone.Key,
-                    xPosition = stone.Value.transform.position.x,
-                    zPosition = stone.Value.transform.position.z,
+                    xPosition = Util.FloatToSlicedString(stone.Value.transform.position.x),
+                    zPosition = Util.FloatToSlicedString(stone.Value.transform.position.z),
                 });
             }
         }

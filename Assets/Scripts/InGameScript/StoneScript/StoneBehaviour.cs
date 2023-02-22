@@ -166,8 +166,8 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
                 stoneId = stoneId,
                 eventEnum = EventEnum.DROPOUT,
                 time = Time.time,
-                xPosition = transform.position.x,
-                zPosition = transform.position.z,
+                xPosition = Util.FloatToSlicedString(transform.position.x),
+                zPosition = Util.FloatToSlicedString(transform.position.z),
             });
         OnExit();
         BelongingPlayer.RemoveStone(stoneId);

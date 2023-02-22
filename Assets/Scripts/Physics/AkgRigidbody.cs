@@ -9,6 +9,7 @@ public class AkgRigidbody : MonoBehaviour
     [Header("Physics")]
     public Vector3 velocity = Vector3.zero;
     private Vector3 oldVelocity = Vector3.zero;
+    public bool IsMoving => velocity.magnitude > 0;
 
     private StoneBehaviour stone = null;
 
@@ -72,11 +73,17 @@ public class AkgRigidbody : MonoBehaviour
     private AkgRigidbody[] collidableList;
     private bool isForecasting = false;
     private readonly int collidableRaycastForecastLimit = 3;
-    private readonly int collidableNearbyForecastLimit = 1;
+    private readonly int collidableNearbyForecastLimit = 0;
     private int CollidableForecastLimit => collidableRaycastForecastLimit + collidableNearbyForecastLimit;
     private List<int> collidedList;
 
     public void Init() => Init(0, 1f);
+
+    private void Awake()
+    {
+        collidedList = new();
+        collidableList = new AkgRigidbody[CollidableForecastLimit];
+    }
 
     public void Init(float initRadius, float initMass)
     {
@@ -86,8 +93,6 @@ public class AkgRigidbody : MonoBehaviour
 
         stone = GetComponent<StoneBehaviour>();
 
-        collidableList = new AkgRigidbody[CollidableForecastLimit];
-        collidedList = new();
         AkgPhysicsManager.Inst.AddAkgRigidbody(this);
     }
 
@@ -109,8 +114,7 @@ public class AkgRigidbody : MonoBehaviour
         }
 
         Move(Time.deltaTime * velocity);
-
-        // TODO: 속도변환시 해당 돌의 위치도 받아서 출발점, 속도를 이용해 좀더 정확하게 보여줄수있도록
+        
         // TODO2: 매번 제일 가까운 돌과의 충돌도 체크해야될듯 (fixed나 late써야하나)
         if (AkgPhysicsManager.Inst.IsRecordPlaying) return;
         if (!isForecasting) return;
@@ -128,20 +132,24 @@ public class AkgRigidbody : MonoBehaviour
                 collidedList.Add(colAkgObject.GetInstanceID());
                 colAkgObject.collidedList.Add(GetInstanceID());
 
-                colAkgObject.OnCollision(this, point, $"{stone.StoneId} COLLIDED");
-                OnCollision(colAkgObject, point, $"{(colAkgObject.isStatic ? "STATIC" : colAkgObject.stone.StoneId)}");
-
-                if (!AkgPhysicsManager.Inst.IsRecordPlaying)
-                {
-                    if (TryGetComponent<IAkgRigidbodyInterface>(out var localAkgI))
-                        localAkgI.OnCollide(colAkgObject, point, false);
-                    if (colAkgObject.TryGetComponent<IAkgRigidbodyInterface>(out var akgI))
-                        akgI.OnCollide(this, point, true);
-                }
-
-                Move(Time.deltaTime * velocity);
+                CollisionActions(colAkgObject, point);
+                Move();
+                colAkgObject.Move();
             }
         }
+    }
+
+    private void CollisionActions(AkgRigidbody collide, Vector3 point)
+    {
+        if (AkgPhysicsManager.Inst.rigidbodyRecorder.IsPlaying) return;
+
+        collide.OnCollision(this, point, $"{stone.StoneId} COL");
+        OnCollision(collide, point, $"{(collide.isStatic ? "STA" : collide.stone.StoneId)}");
+
+        if (TryGetComponent<IAkgRigidbodyInterface>(out var localAkgI))
+            localAkgI.OnCollide(collide, point, false);
+        if (collide.TryGetComponent<IAkgRigidbodyInterface>(out var akgI))
+            akgI.OnCollide(this, point, true);
     }
 
     private void LateUpdate()
@@ -149,6 +157,27 @@ public class AkgRigidbody : MonoBehaviour
         if (IsStatic) return;
 
         collidedList.Clear();
+
+        if (AkgPhysicsManager.Inst.rigidbodyRecorder.IsPlaying) return;
+
+        int collideCount = 0;
+        while (collideCount < 3)
+        {
+            GetNearbyCollidable(out AkgRigidbody nearby);
+            if (!CheckCollide(nearby, out var point)) break;
+
+            CollisionActions(nearby, point);
+            EditorApplication.isPaused = true;
+            while (CheckCollide(nearby, out _))
+            {
+                EditorApplication.isPaused = true;
+                Move();
+                nearby.Move();
+                GetNearbyCollidable(out var newNear);
+                if (nearby != newNear) break;
+            }
+            ++collideCount;
+        }
     }
 
     public void BeforeDestroy()
@@ -156,6 +185,11 @@ public class AkgRigidbody : MonoBehaviour
         if (AkgPhysicsManager.IsEnabled)
             AkgPhysicsManager.Inst.RemoveAkgRigidbody(this);
         isForecasting = false;
+    }
+
+    public void Move()
+    {
+        Move(0.001f * Time.deltaTime * velocity);
     }
 
     public void Move(Vector3 next)
@@ -336,8 +370,6 @@ public class AkgRigidbody : MonoBehaviour
             Raycast(startings[i], velocity, out collidableList[i]);
         }
 
-        GetNearbyCollidable(out collidableList[3]);
-
         isForecasting = true;
     }
 
@@ -352,18 +384,17 @@ public class AkgRigidbody : MonoBehaviour
         CollideForecast();
     }
 
-    public void SetVelocity(Vector3 vel)
+    public void SetVelocity(Vector3 vel, Vector3 pos)
     {
         if (IsStatic) return;
 
-        velocity = vel; 
+        velocity = vel;
+        transform.position = pos;
     }
 
     public void OnCollision(AkgRigidbody akg, Vector3 point, string optionMessage)
     {
         if (IsStatic) return;
-
-        if (AkgPhysicsManager.Inst.rigidbodyRecorder.IsPlaying) return;
 
         Debug.Log($"Collision/ {transform.position} {point} {akg.velocity}");
 
@@ -415,8 +446,10 @@ public class AkgRigidbody : MonoBehaviour
         {
             stoneId = stone.StoneId,
             time = Time.time,
-            xVelocity = velocity.x,
-            zVelocity = velocity.z,
+            xPosition = Util.FloatToSlicedString(transform.position.x),
+            zPosition = Util.FloatToSlicedString(transform.position.x),
+            xVelocity = Util.FloatToSlicedString(velocity.x),
+            zVelocity = Util.FloatToSlicedString(velocity.z),
         });
     }
 
@@ -429,8 +462,8 @@ public class AkgRigidbody : MonoBehaviour
             stoneId = stone.StoneId,
             time = Time.time,
             eventEnum = eventEnum,
-            xPosition = collidePosition.x,
-            zPosition = collidePosition.z,
+            xPosition = Util.FloatToSlicedString(collidePosition.x),
+            zPosition = Util.FloatToSlicedString(collidePosition.z),
             eventMessage = optionMessage,
         });
     }
@@ -440,11 +473,12 @@ public class AkgRigidbody : MonoBehaviour
     {
         //GUI.color = velocity.magnitude >= AkgPhysics.dragThreshold ? Color.red : Color.blue;
         GUI.color = Color.red;
-        Handles.Label(transform.position + Vector3.up * .2f, velocity.magnitude.ToString());
         switch (ColliderType)
         {
             case ColliderTypeEnum.Circle:
+                Handles.Label(transform.position + Vector3.up * .2f, velocity.magnitude.ToString());
                 Gizmos.DrawWireSphere(CircleCenterPosition, circleRadius);
+                Gizmos.DrawLine(CircleCenterPosition, velocity);
                 break;
             case ColliderTypeEnum.Rect:
                 Gizmos.DrawWireCube(transform.position, new Vector3(rectPoints.z - rectPoints.x, 0.2f, rectPoints.w - rectPoints.y));

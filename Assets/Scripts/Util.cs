@@ -332,4 +332,26 @@ public static class Util
         newData.SetCost(data, Mathf.Max(data.cardCost + amount, 0));
         return newData;
     }
+
+    public static string FloatToSlicedString(float input, int digits = 6)
+    {
+        return Math.Round(input, digits).ToString();
+    }
+
+    public static float SlicedStringToFloat(string input)
+    {
+        if (!float.TryParse(input, out var output)) return 0f;
+        return output;
+    }
+
+    public static Vector3 SlicedStringsToVector3(string x, string z) => SlicedStringsToVector3(x, "0", z);
+
+    public static Vector3 SlicedStringsToVector3(string x, string y, string z)
+    {
+        return new Vector3(
+            SlicedStringToFloat(x),
+            SlicedStringToFloat(y),
+            SlicedStringToFloat(z)
+        );
+    }
 }
