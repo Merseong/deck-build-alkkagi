@@ -220,14 +220,49 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
                 Properties.Remove(oldProperty);
             }
 
+            if(GetNumberProperty(property) != -1)
+                transform.GetChild(4).GetChild(GetNumberProperty(property)).gameObject.SetActive(true);
+            if (property is GhostProperty)
+            {
+                transform.GetChild(1).GetComponent<SpriteRenderer>().color = new Color(255,255,255,130);
+            }
             Properties.Add(property);
             property.OnAdded(oldProperty != null);
         }
     }
 
+    public int GetNumberProperty<T>(T property) where T : StoneProperty 
+    {
+        if (property is SprintProperty)
+        {
+            return 3;
+        }
+        else if (property is GreasedProperty)
+        {
+            return 0;
+        }
+        else if (property is CursedProperty)
+        {
+            return 1;
+        }
+        else if (property is ShieldProperty)
+        {
+            return 2;
+        }
+        return -1;
+    }
+
     public void RemoveProperty(StoneProperty property)
     {
         property.OnRemoved();
+        if (GetNumberProperty(property) != -1)
+        {
+            transform.GetChild(4).GetChild(GetNumberProperty(property)).gameObject.SetActive(false);
+        }
+        if (property is GhostProperty)
+        {
+            transform.GetChild(1).GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, 255);
+        }
         Properties.Remove(property);
     }
 
