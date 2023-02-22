@@ -94,10 +94,13 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
 
     public List<StoneProperty> Properties { get; private set; }
 
+    public Stone stoneUI;
+
     private void Awake()
     {
         boardTransform = GameObject.Find("Board").transform;
         akgRigidbody = GetComponent<AkgRigidbody>();
+        stoneUI = GetComponent<Stone>();
 
         collideParticle = ParticleManager.Inst.collideParticlePrefab;
         directExitParticle = ParticleManager.Inst.directExitParticlePrefab;
@@ -227,59 +230,24 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
                 Properties.Remove(oldProperty);
             }
 
-            if(GetNumberProperty(property) != -1)
-                transform.GetChild(4).GetChild(GetNumberProperty(property)).gameObject.SetActive(true);
+            property.EffectProperty(true, property);
             if (GameManager.Inst.isLocalGoFirst)
             {
-                transform.GetChild(4).rotation = Quaternion.Euler(90, 0, 0);
+                stoneUI.property.transform.rotation = Quaternion.Euler(90, 0, 0);
             }
             else
             {
-                transform.GetChild(4).rotation = Quaternion.Euler(90, 180, 0);
-            }
-            if (property is GhostProperty)
-            {
-                transform.GetChild(1).GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,0.5f); 
-                transform.GetChild(3).GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.5f);
+                stoneUI.property.transform.rotation = Quaternion.Euler(90, 180, 0);
             }
             Properties.Add(property);
             property.OnAdded(oldProperty != null);
         }
     }
 
-    public int GetNumberProperty<T>(T property) where T : StoneProperty 
-    {
-        if (property is SprintProperty)
-        {
-            return 3;
-        }
-        else if (property is GreasedProperty)
-        {
-            return 0;
-        }
-        else if (property is CursedProperty)
-        {
-            return 1;
-        }
-        else if (property is ShieldProperty)
-        {
-            return 2;
-        }
-        return -1;
-    }
-
     public void RemoveProperty(StoneProperty property)
     {
         property.OnRemoved();
-        if (GetNumberProperty(property) != -1)
-        {
-            transform.GetChild(4).GetChild(GetNumberProperty(property)).gameObject.SetActive(false);
-        }
-        if (property is GhostProperty)
-        {
-            transform.GetChild(1).GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f);
-            transform.GetChild(3).GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f);
-        }
+        property.EffectProperty(false, property);
         Properties.Remove(property);
     }
 
@@ -459,11 +427,11 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
 
     public virtual void ChangeSpriteAndRot(string state, bool isRotated)
     {
-        transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = GetSpriteState(state);
+        stoneUI.stoneSprite.sprite = GetSpriteState(state);
         if (isRotated)
-            transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 180, 0);
+            stoneUI.stoneSprite.transform.rotation = Quaternion.Euler(90, 180, 0);
         else
-            transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, 0, 0);
+            stoneUI.stoneSprite.transform.rotation = Quaternion.Euler(90, 0, 0);
     }
 
     private bool CheckStoneDropByTransform()
@@ -510,7 +478,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
 
     public IEnumerator EIndirectExit(bool isDirected = false)
     {
-        transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = GetSpriteState("Break");
+        stoneUI.stoneSprite.sprite = GetSpriteState("Break");
 
         isExiting = true;
         float curTime = indirectExitTime;

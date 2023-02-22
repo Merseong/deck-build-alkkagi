@@ -277,7 +277,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2635580922628588131}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.001}
+  m_LocalPosition: {x: 0, y: 0, z: -0.0009998084}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -733,6 +733,7 @@ GameObject:
   - component: {fileID: 6663944191401573526}
   - component: {fileID: 6663944191401573522}
   - component: {fileID: 6019077282944342910}
+  - component: {fileID: 5143717792054551489}
   m_Layer: 6
   m_Name: Stone
   m_TagString: Stone
@@ -806,3 +807,23 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5143717792054551489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6663944191401573520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91bf69853e1581347a887b7657fcf560, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stoneSprite: {fileID: 908310324}
+  stoneCircle: {fileID: 181461924677724794}
+  property: {fileID: 4313187175020583619}
+  Effects:
+  - {fileID: 52286789235417922}
+  - {fileID: 2635580922628588131}
+  - {fileID: 3495764096709306623}
+  - {fileID: 3132512809275854528}

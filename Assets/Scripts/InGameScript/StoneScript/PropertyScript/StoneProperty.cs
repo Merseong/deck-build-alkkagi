@@ -77,4 +77,29 @@ public abstract class StoneProperty
     {
         baseStone.RemoveProperty(this);
     }
+
+    public void EffectProperty<T>(bool isAcitvated, T property) where T : StoneProperty
+    {
+        switch (property)
+        {
+            case GreasedProperty:
+                baseStone.stoneUI.Effects[0].SetActive(isAcitvated ? true : false);
+                break;
+            case SprintProperty:
+                baseStone.stoneUI.Effects[3].SetActive(isAcitvated ? true : false);
+                break;
+            case CursedProperty:
+                baseStone.stoneUI.Effects[1].SetActive(isAcitvated ? true : false);
+                break;
+            case ShieldProperty:
+            case AccelShieldProperty:
+                baseStone.stoneUI.Effects[2].SetActive(isAcitvated ? true : false);
+                break;
+            case GhostProperty:
+                baseStone.stoneUI.stoneSprite.color = isAcitvated ? new Color(1f, 1f, 1f, 0.5f):new Color(1f,1f,1f,1f);
+                break;
+            default:
+                break;
+        }
+    }
 }

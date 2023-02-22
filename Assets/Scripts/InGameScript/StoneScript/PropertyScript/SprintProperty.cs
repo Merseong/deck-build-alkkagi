@@ -30,13 +30,13 @@ public class SprintProperty : StoneProperty
     {
         canSprint = true;
 
-        baseStone.transform.GetChild(4).GetChild(3).gameObject.SetActive(true);
+        EffectProperty(true, this);
     }
 
     private void UseSprint()
     {
         canSprint = false;
 
-        baseStone.transform.GetChild(4).GetChild(3).gameObject.SetActive(false);
+        EffectProperty(false, this);
     }
 }

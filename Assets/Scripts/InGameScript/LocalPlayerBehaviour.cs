@@ -399,7 +399,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
         //temp code
         stoneBehaviour.ChangeSpriteAndRot("Idle", IsLocalRotated);
-        spawnedStone.transform.GetChild(3).GetComponent<SpriteRenderer>().sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Stone_b");
+        stoneBehaviour.stoneUI.stoneCircle.sprite = IngameUIManager.Inst.UIAtlas.GetSprite("UI_Stone_b");
 
         var radius = Util.GetRadiusFromStoneSize(cardData.stoneSize);
         spawnedStone.transform.localScale = new Vector3(radius * 2, .15f, radius * 2);
@@ -989,13 +989,13 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         {
             float angle = Mathf.Acos(Vector3.Dot(Vector3.left, moveVec.normalized)) * 180 / Mathf.PI + 180;
             stoneArrowObj.transform.rotation = Quaternion.Euler(90, angle, 0);
-            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, angle + 90, 0);
+            selectedStone.stoneUI.stoneSprite.transform.rotation = Quaternion.Euler(90, angle + 90, 0);
         }
         else
         {
             float angle = Mathf.Acos(Vector3.Dot(Vector3.right, moveVec.normalized)) * 180 / Mathf.PI;
             stoneArrowObj.transform.rotation = Quaternion.Euler(90, angle, 0);
-            selectedStone.transform.GetChild(1).GetComponent<SpriteRenderer>().transform.rotation = Quaternion.Euler(90, angle + 90, 0);
+            selectedStone.stoneUI.stoneSprite.transform.rotation = Quaternion.Euler(90, angle + 90, 0);
         }
 
         if (!isDragging)
