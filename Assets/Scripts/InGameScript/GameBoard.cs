@@ -295,7 +295,7 @@ public class GameBoard : MonoBehaviour
         var go = Instantiate(guardPrefab, position, rotation);
         var scale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.height / guardVerticalCnt / go.transform.localScale.z);
         go.transform.localScale = scale;
-        go.GetComponent<AkgRigidbody>().rectPoints = rotation == Quaternion.identity ?
+        go.GetComponent<AkgRigidbody>().rectPoints = rotation == Quaternion.identity || rotation == Quaternion.Euler(0, 180, 0) ?
             new Vector4(-scale.x / 2, -scale.z / 2, scale.x / 2, scale.z / 2) :
             new Vector4(-scale.z / 2, -scale.x / 2, scale.z / 2, scale.x / 2);
         var idx = playerGuards.Count;
@@ -309,7 +309,7 @@ public class GameBoard : MonoBehaviour
         var go = Instantiate(guardPrefab, position, rotation);
         var scale = new Vector3(go.transform.localScale.x, 1f, 10 * boardData.height / guardVerticalCnt / go.transform.localScale.z);
         go.transform.localScale = scale;
-        go.GetComponent<AkgRigidbody>().rectPoints = rotation == Quaternion.identity ?
+        go.GetComponent<AkgRigidbody>().rectPoints = rotation == Quaternion.identity || rotation == Quaternion.Euler(0, 180, 0) ?
             new Vector4(-scale.x / 2, -scale.z / 2, scale.x / 2, scale.z / 2) :
             new Vector4(-scale.z / 2, -scale.x / 2, scale.z / 2, scale.x / 2);
         var idx = playerGuards.Count;
