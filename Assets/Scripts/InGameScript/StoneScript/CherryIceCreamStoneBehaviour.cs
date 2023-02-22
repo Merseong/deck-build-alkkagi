@@ -70,6 +70,8 @@ public class CherryIceCreamStoneBehaviour : StoneBehaviour
             CherryIceCreamStoneBehaviour faster = akg.velocity.magnitude > other.velocity.magnitude ? this : stone;
 
             slower.Upgrade(faster.stack);
+            faster.GetComponent<AkgRigidbody>().isDisableCollide = true;
+            faster.transform.position = slower.transform.position;
         }
     }
 

@@ -12,7 +12,7 @@ public class AkgRigidbody : MonoBehaviour
     public bool IsMoving => velocity.magnitude > 0;
 
     private StoneBehaviour stone = null;
-
+    public bool isDisableCollide = false;
     [SerializeField] private bool isStatic = false;
     [SerializeField] private float mass = 1.0f;
     [SerializeField] private float dragAccel = 1f;
@@ -117,8 +117,9 @@ public class AkgRigidbody : MonoBehaviour
         }
 
         Move(Time.deltaTime * velocity);
-        
+
         // TODO2: 매번 제일 가까운 돌과의 충돌도 체크해야될듯 (fixed나 late써야하나)
+        if (isDisableCollide) return;
         if (AkgPhysicsManager.Inst.IsRecordPlaying) return;
         if (!isForecasting) return;
 
@@ -158,6 +159,7 @@ public class AkgRigidbody : MonoBehaviour
     private void LateUpdate()
     {
         if (IsStatic) return;
+        if (isDisableCollide) return;
 
         collidedList.Clear();
 
@@ -398,6 +400,7 @@ public class AkgRigidbody : MonoBehaviour
     public void OnCollision(AkgRigidbody akg, Vector3 point, string optionMessage)
     {
         if (IsStatic) return;
+        if (isDisableCollide) return;
 
         Debug.Log($"Collision/ {transform.position} {point} {akg.velocity}");
 
