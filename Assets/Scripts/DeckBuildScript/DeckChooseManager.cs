@@ -150,7 +150,7 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
     {
         if (deckUnlockSelectedIdx < 0) return;
         if (isDeckAvailable[deckUnlockSelectedIdx]) return;
-        if (NetworkManager.Inst.UserData.moneyPoint < 5) return; // 덱의 가격
+        if (NetworkManager.Inst.UserData == null || NetworkManager.Inst.UserData.moneyPoint < 5) return; // 덱의 가격
 
         NetworkManager.Inst.UserData.moneyPoint -= 5;
         isDeckAvailable[deckUnlockSelectedIdx] = true;
