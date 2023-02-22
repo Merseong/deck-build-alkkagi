@@ -344,7 +344,12 @@ public class AkgRigidbody : MonoBehaviour
             }
         }
 
-        collideObject = candidates[0];
+        var idx = 0;
+        collideObject = candidates[idx++];
+        while (collideObject != null)
+        {
+            collideObject = candidates[idx++];
+        }
         var closestDist = Vector3.Distance(collideObject.CircleCenterPosition, CircleCenterPosition);
 
         foreach (var targetAkg in candidates)
