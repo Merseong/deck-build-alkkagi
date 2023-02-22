@@ -77,7 +77,7 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         if(height == Screen.height && width == Screen.width) return;
         height = Screen.height;
         width = Screen.width;
-        deckList.GetComponent<GridLayoutGroup>().cellSize = new Vector2((width-20) * 2, Mathf.Min(1.5f * (width-100) * 2 / 5 , height / 5) * 1.4f);
+        deckList.GetComponent<GridLayoutGroup>().cellSize = new Vector2((width * .9f) * 2, Mathf.Min(1.5f * (width * .9f) * 2 / 5 , height / 5) * 1.4f);
         foreach(var item in curDisplayingDeck)
         {
             foreach(RectTransform obj in item.Value.CardList.GetComponentInChildren<RectTransform>())
