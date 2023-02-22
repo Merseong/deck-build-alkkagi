@@ -5,6 +5,8 @@ using UnityEngine;
 public class AudioManager : SingletonBehavior<AudioManager>
 {
     [SerializeField] private AudioClip[] hitSounds;
+    [SerializeField] private float volume = 1.0f;
+
 
     public void HitSound(AkgRigidbody akg)
     {
@@ -17,8 +19,13 @@ public class AudioManager : SingletonBehavior<AudioManager>
 
         if (clip != null)
         {
-            Debug.Log("in");
-            GetComponent<AudioSource>().PlayOneShot(clip);
+            GetComponent<AudioSource>().PlayOneShot(clip, volume);
         }
+    }
+
+    public void SetAudioVolume(float volume)
+    {
+        this.volume = volume;
+        GetComponent<AudioSource>().volume = volume;
     }
 }
