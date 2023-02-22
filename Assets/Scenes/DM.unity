@@ -785,7 +785,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 70d23d0614bddaa49b618b632e75eaba, type: 2}
     - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: velocityMultiplier
-      value: 100
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: maxClippingPercentage

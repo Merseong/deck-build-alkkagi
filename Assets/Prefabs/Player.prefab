@@ -127,7 +127,7 @@ Transform:
   - {fileID: 689437317}
   - {fileID: 1217822889}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &178128857093286909
 MonoBehaviour:
@@ -142,38 +142,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: 0
+  uid: 0
   cost: 0
+  deckCount: 0
   handCount: 0
   nextStoneId: 0
   shootTokenAvailable: 0
   StonePrefab: {fileID: 6663944191401573520, guid: b49fb6214a7fad540923250aa8e63937, type: 3}
   deck:
-  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
-  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
-  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
-  - {fileID: 3721772108986987149, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
-  - {fileID: 3721772108986987149, guid: cbe20cb326ac5874aa12a2d99e3ff1bc, type: 3}
-  - {fileID: 3721772108986987149, guid: cbe20cb326ac5874aa12a2d99e3ff1bc, type: 3}
-  - {fileID: 3721772108986987149, guid: cbe20cb326ac5874aa12a2d99e3ff1bc, type: 3}
-  - {fileID: 3721772108986987149, guid: cbe20cb326ac5874aa12a2d99e3ff1bc, type: 3}
+  - {fileID: 11400000, guid: 70d23d0614bddaa49b618b632e75eaba, type: 2}
+  - {fileID: 11400000, guid: 70d23d0614bddaa49b618b632e75eaba, type: 2}
   hand: []
   cardPrefab: {fileID: 3721772108986987150, guid: d996b2cdd18259f45a3a2aa5a403f7a1, type: 3}
   cardSpawnPoint: {fileID: 1217822889}
   handPileLeft: {fileID: 2031866645}
   handPileRight: {fileID: 689437317}
-  deckCount: 0
   selectedStone: {fileID: 0}
   selectedCard: {fileID: 0}
-  isInformOpened: 0
   gameBoard: {fileID: 0}
   StoneSelectionActionThreshold: 1
-  cardDragThreshold: 1
+  cardDragThreshold: 0
   minShootVelocity: 5
   maxShootVelocity: 22
-  velocityMultiplier: 200
+  velocityMultiplier: 150
   dragEffectObj: {fileID: 178128856140976623}
   maxDragLimit: 10
-  maxClippingPercentage: 0.2
+  maxClippingPercentage: 0.5
   Cost1Color: {r: 1, g: 1, b: 0, a: 1}
   Cost2Color: {r: 1, g: 0, b: 0, a: 1}
   alphaOnCancel: 0.7
@@ -212,6 +206,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!120 &178128856140976623
 LineRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -308,13 +303,17 @@ LineRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
+      m_ColorSpace: -1
       m_NumColorKeys: 3
       m_NumAlphaKeys: 3
     numCornerVertices: 20
     numCapVertices: 10
     alignment: 1
     textureMode: 0
+    textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
+  m_MaskInteraction: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+  m_ApplyActiveColorSpace: 0

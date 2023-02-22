@@ -39,6 +39,7 @@ public class AkgRigidbody : MonoBehaviour
         }
         private set => mass = value;
     }
+    private float effectMass => 1 + Mass * 5;
     public virtual float DragAccel
     {
         get
@@ -110,7 +111,7 @@ public class AkgRigidbody : MonoBehaviour
         float speed = velocity.magnitude;
         if (speed > 0)
         {
-            velocity = Mathf.Max(speed - Time.deltaTime * DragAccel, 0) * velocity.normalized;
+            velocity = Mathf.Max(speed - Time.deltaTime * DragAccel * effectMass, 0) * velocity.normalized;
         }
 
         Move(Time.deltaTime * velocity);
@@ -433,7 +434,7 @@ public class AkgRigidbody : MonoBehaviour
         velocity = normalVelocity + tangentialVelocity;
         RecordVelocity();
         RecordCollideEvent(EventEnum.COLLIDE, point, optionMessage);
-        CollideForecast();
+        //CollideForecast();
     }
 
     private void RecordVelocity()
