@@ -32,7 +32,7 @@ public class AccelShieldProperty : StoneProperty
     {
         hasAccelShield = true;
 
-        EffectProperty(true, this);
+        EffectProperty(true, this, true);
 
         baseStone.GetComponent<AkgRigidbody>().layerMask |= AkgLayerMask.SHIELD;
     }
