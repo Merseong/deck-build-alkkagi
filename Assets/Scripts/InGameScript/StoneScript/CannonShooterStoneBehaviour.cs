@@ -52,6 +52,7 @@ public class CannonShooterStoneBehaviour : StoneBehaviour
             CardData cardData = Util.GetCardDataFromID(500, GameManager.Inst.CardDatas);
             var stoneID = GameManager.Inst.LocalPlayer.SpawnStone(cardData, transform.position, -1, true);
             AkgPhysicsManager.Inst.rigidbodyRecorder.AppendEventRecord(StoneId, $"SPAWN {stoneID}");
+            
             StoneBehaviour bullet = GameManager.Inst.FindStone(stoneID);
             var bulletAkg = bullet.GetComponent<AkgRigidbody>();
             var thisAkg = GetComponent<AkgRigidbody>();

@@ -12,6 +12,9 @@ public class CannonShooterBulletStoneBehaviour : StoneBehaviour
 
     public override void OnEnter(bool calledByPacket = false, string options = "")
     {
+        akgRigidbody.SetDragAccel(0);
+        akgRigidbody.SetMass(.3f);
+
         OnShootExit += Disappear;
         OnHit += Disappear;
 
@@ -34,7 +37,7 @@ public class CannonShooterBulletStoneBehaviour : StoneBehaviour
 
     private void Disappear()
     {
-        if (BelongingPlayerEnum != GameManager.PlayerEnum.LOCAL) return;
+        Debug.Log("Disappear!!");
         RemoveStoneFromGame();
         Destroy(gameObject);
     }
