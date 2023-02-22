@@ -857,8 +857,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
             selectedStone.ChangeSpriteAndRot("Ready", IsLocalRotated);
 
             dragEffectObj.gameObject.SetActive(true);
-            dragEffectObj.SetPosition(0, curTouchPositionNormalized);
-            dragEffectObj.SetPosition(1, curTouchPositionNormalized);
+            dragEffectObj.SetPosition(0, new Vector3(curTouchPositionNormalized.x, 15f, curTouchPositionNormalized.z));
+            dragEffectObj.SetPosition(1, new Vector3(curTouchPositionNormalized.x, 15f, curTouchPositionNormalized.z));
 
             stoneArrowObj = selectedStone.transform.GetChild(0).GetComponent<ArrowGenerator>();
             stoneArrowObj.gameObject.SetActive(true);
@@ -975,7 +975,8 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         dragEffectObj.endColor = dragEffectObj.startColor = dragColor;
         stoneArrowObj.GetComponent<MeshRenderer>().material.color = dragEffectObj.startColor;
 
-        dragEffectObj.SetPosition(1, dragStartPoint - moveVec.normalized * curDragMagnitude);
+        Vector3 tempVec = dragStartPoint - moveVec.normalized * curDragMagnitude;
+        dragEffectObj.SetPosition(1, new Vector3(tempVec.x, 15f, tempVec.z));
         stoneArrowObj.stemLength = curDragMagnitude;
     
         if(selectedStone.CardData.CardID == 19) 

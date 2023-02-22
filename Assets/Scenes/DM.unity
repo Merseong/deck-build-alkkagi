@@ -1147,6 +1147,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 178128856140976616, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 178128856140976623, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: m_Parameters.alignment
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 178128856140976623, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: m_Positions.Array.data[0].x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 178128856140976623, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: m_Positions.Array.data[0].y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 178128856140976623, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: m_Positions.Array.data[1].x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 178128856140976623, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: m_Positions.Array.data[1].y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
       propertyPath: gameBoard
       value: 
