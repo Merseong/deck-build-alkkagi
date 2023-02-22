@@ -83,17 +83,17 @@ public abstract class StoneProperty
         switch (property)
         {
             case GreasedProperty:
-                baseStone.stoneUI.Effects[0].SetActive(isAcitvated ? true : false);
+                baseStone.stoneUI.Effects[0].SetActive(isAcitvated);
                 break;
             case SprintProperty:
-                baseStone.stoneUI.Effects[3].SetActive(isAcitvated ? true : false);
+                baseStone.stoneUI.Effects[3].SetActive(isAcitvated);
                 break;
             case CursedProperty:
-                baseStone.stoneUI.Effects[1].SetActive(isAcitvated ? true : false);
+                baseStone.stoneUI.Effects[1].SetActive(isAcitvated);
                 break;
             case ShieldProperty:
             case AccelShieldProperty:
-                baseStone.stoneUI.Effects[2].SetActive(isAcitvated ? true : false);
+                baseStone.stoneUI.Effects[2].SetActive(isAcitvated);
                 break;
             case GhostProperty:
                 baseStone.stoneUI.stoneSprite.color = isAcitvated ? new Color(1f, 1f, 1f, 0.5f):new Color(1f,1f,1f,1f);
