@@ -147,16 +147,6 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         }
     }
 
-    public void InvokeShootEnter()
-    {
-        OnShootEnter?.Invoke();
-    }
-
-    public void InvokeShootExit()
-    {
-        OnShootExit?.Invoke();
-    }
-
     public void RemoveStoneFromGame()
     {
         isExiting = true;

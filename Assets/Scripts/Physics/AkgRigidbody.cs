@@ -77,6 +77,7 @@ public class AkgRigidbody : MonoBehaviour
     private readonly int collidableNearbyForecastLimit = 0;
     private int CollidableForecastLimit => collidableRaycastForecastLimit + collidableNearbyForecastLimit;
     private List<int> collidedList;
+    public HashSet<AkgRigidbody> IgnoreCollide;
 
     public void Init() => Init(0, 1f);
 
@@ -84,6 +85,7 @@ public class AkgRigidbody : MonoBehaviour
     {
         collidedList = new();
         collidableList = new AkgRigidbody[CollidableForecastLimit];
+        IgnoreCollide = new();
     }
 
     public void Init(float initRadius, float initMass)
@@ -218,6 +220,8 @@ public class AkgRigidbody : MonoBehaviour
     public bool CheckCollide(AkgRigidbody targetAkg, out Vector3 point)
     {
         point = transform.position;
+
+        if (IgnoreCollide.Contains(targetAkg)) return false;
 
         if (!AkgPhysicsManager.Inst.GetLayerCollide(layerMask, targetAkg.layerMask)) return false;
 
