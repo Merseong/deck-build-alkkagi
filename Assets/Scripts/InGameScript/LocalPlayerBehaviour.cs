@@ -172,8 +172,10 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         IngameUIManager.Inst.DeckCountText1.text = DeckCount.ToString();
         IngameUIManager.Inst.DeckCountText2.text = DeckCount.ToString();
 
-        ColorUtility.TryParseHtmlString(ShootTokenAvailable ? "#C0FFBD" : "#FF8D91", out Color color);
-        IngameUIManager.Inst.ShootTokenImage.color = color;
+        //ColorUtility.TryParseHtmlString(ShootTokenAvailable ? "#C0FFBD" : "#FF8D91", out Color color);
+        //IngameUIManager.Inst.ShootTokenImage.color = color;
+        string str = ShootTokenAvailable ? "UI_Token" : "UI_Token_0";
+        IngameUIManager.Inst.ShootTokenImage.sprite = IngameUIManager.Inst.UIAtlas.GetSprite(str);
     }
 
     private bool IsTouchOnBoard(Vector3 point)

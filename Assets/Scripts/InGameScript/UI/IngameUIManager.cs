@@ -169,7 +169,7 @@ public class IngameUIManager : SingletonBehavior<IngameUIManager>
         //TODO : Set enemy info from gagmemanager's data
         enemyInfoDeckHandText.text = $"Deck: {enemyPlayer.DeckCount} / Hand: {enemyPlayer.HandCount}";
         enemyCostText.text = enemyPlayer.Cost.ToString();
-        ColorUtility.TryParseHtmlString(enemyPlayer.ShootTokenAvailable ? "#C0FFBD" : "#FF8D91", out Color color);
-        enemyTokenImage.color = color;
+        string str = enemyPlayer.ShootTokenAvailable ? "UI_Token" : "UI_Token_0";
+        enemyTokenImage.sprite = UIAtlas.GetSprite(str);
     }
 }
