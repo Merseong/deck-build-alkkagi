@@ -380,7 +380,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         {
             eventEnum = EventEnum.SHOOT,
             stoneId = StoneId,
-            eventMessage = BelongingPlayer.ShootTokenAvailable.ToString() + " " + isRotated.ToString(),
+            eventMessage = BelongingPlayer.ShootTokenAvailable.ToString() + " " + isRotated.ToString() + " " + (callOnShootExit ? "true" : "false"),
             time = Time.time,
         });
 

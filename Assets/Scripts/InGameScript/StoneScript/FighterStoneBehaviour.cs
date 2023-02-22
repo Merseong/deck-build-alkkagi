@@ -5,11 +5,14 @@ using UnityEngine.SocialPlatforms;
 
 public class FighterStoneBehaviour : StoneBehaviour
 {
-    private float punchForce = 10.0f;
+    private float punchForce = 100.0f;
 
     public override void OnEnter(bool calledByPacket = false, string options = "")
     {
-        OnShootExit += Punch;
+        if (!calledByPacket)
+        {
+            OnShootExit += Punch;
+        }
 
         base.OnEnter(calledByPacket, options);
     }

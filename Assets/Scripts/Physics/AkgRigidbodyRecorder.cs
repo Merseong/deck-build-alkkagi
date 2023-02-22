@@ -112,7 +112,7 @@ public class AkgRigidbodyRecorder
                         //        Debug.LogError("[OPPO] Shoot token already spent!");
                         //    GameManager.Inst.OppoPlayer.ShootTokenAvailable = false;
                         //}
-                        shootStone.Shoot(Vector3.zero, isRotated, false);
+                        shootStone.Shoot(Vector3.zero, isRotated, false, msgArr[2] == "true");
                         break;
                     case EventEnum.COLLIDE:
                         // eventMessage -> (colStoneId || STATIC) (COLLIDED)
@@ -179,9 +179,6 @@ public class AkgRigidbodyRecorder
             var stone = GameManager.Inst.FindStone(pRecords[prIdx].stoneId);
             stone.transform.position = Util.SlicedStringsToVector3(pRecords[prIdx].xPosition, pRecords[prIdx].zPosition);
         }
-
-        if (isShoot)
-            shootStone.OnShootExit?.Invoke();
 
         isPlaying = false;
     }
