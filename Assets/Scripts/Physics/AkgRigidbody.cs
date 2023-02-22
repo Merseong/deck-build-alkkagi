@@ -346,7 +346,7 @@ public class AkgRigidbody : MonoBehaviour
 
         var idx = 0;
         collideObject = candidates[idx++];
-        while (collideObject != null)
+        while (collideObject == null)
         {
             collideObject = candidates[idx++];
         }
