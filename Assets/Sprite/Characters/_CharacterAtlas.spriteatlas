@@ -206,7 +206,7 @@ SpriteAtlas:
   - MaskKnight_Ready
   - TinyRobot_Idle
   - Knight_Idle1
-  - fighter_ready
+  - Fighter_Ready
   - RailDriver_Ready
   - Magician_Ready
   - CannonShooterBullet_Idle

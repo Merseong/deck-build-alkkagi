@@ -27,16 +27,19 @@ public class CannonShooterStoneBehaviour : StoneBehaviour
 
     private void ShootBullet()
     {
-        CardData cardData = Util.GetCardDataFromID(500, GameManager.Inst.CardDatas);
-        var stoneID = GameManager.Inst.LocalPlayer.SpawnStone(cardData, transform.position, -1, true);   
-        StoneBehaviour bullet = GameManager.Inst.FindStone(stoneID);
-        var bulletAkg = bullet.GetComponent<AkgRigidbody>();
-        var thisAkg = GetComponent<AkgRigidbody>();
-        bulletAkg.IgnoreCollide.Add(thisAkg);
-        thisAkg.IgnoreCollide.Add(bulletAkg);
+        if (BelongingPlayerEnum == GameManager.PlayerEnum.LOCAL)
+        {
+            CardData cardData = Util.GetCardDataFromID(500, GameManager.Inst.CardDatas);
+            var stoneID = GameManager.Inst.LocalPlayer.SpawnStone(cardData, transform.position, -1, true);
+            StoneBehaviour bullet = GameManager.Inst.FindStone(stoneID);
+            var bulletAkg = bullet.GetComponent<AkgRigidbody>();
+            var thisAkg = GetComponent<AkgRigidbody>();
+            bulletAkg.IgnoreCollide.Add(thisAkg);
+            thisAkg.IgnoreCollide.Add(bulletAkg);
 
-        // TODO: 쏜 stone이 가만히 있음, 호출 시점의 velocity == 0
-        bullet._Shoot(-akgRigidbody.velocity, true);
+            // TODO: 쏜 stone이 가만히 있음, 호출 시점의 velocity == 0
+            bullet._Shoot(-akgRigidbody.velocity, true);
+        }
     }
 
 }
