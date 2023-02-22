@@ -34,6 +34,16 @@ public class OppoPlayerBehaviour : PlayerBehaviour
             oppoUserData = oppoUser;
             IngameUIManager.Inst.SetEnemyInfo(oppoUser.nickname, oppoUser.win + oppoUser.honorWin, oppoUser.lose + oppoUser.honorLose);
         });
+
+        if (!NetworkManager.Inst.IsNetworkMode)
+        {
+            oppoUserData = new UserDataPacket
+            {
+                nickname = "test",
+                rating = 1000,
+                uid = 12345,
+            };
+        }
     }
 
     public override int SpawnStone(CardData cardData, Vector3 spawnPosition, int stoneId = -1, bool ignoreSpawnPos = false)

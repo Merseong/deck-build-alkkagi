@@ -70,7 +70,15 @@ public class NetworkManager : SingletonBehavior<NetworkManager>
 
         RefreshReceiveDelegate();
 
-        if (!m_isNetworkMode) return;
+        if (!m_isNetworkMode)
+        {
+            UserData = new UserDataPacket
+            {
+                nickname = "me",
+                rating = 1000,
+            };
+            return;
+        }
 
         m_client = new SocketClient();
         ConnectionStatus = ConnectionStatusEnum.DISCONNECTED;
