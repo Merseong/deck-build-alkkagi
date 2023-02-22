@@ -11,6 +11,9 @@ public class LoginSceneControlManager : MonoBehaviour
     [SerializeField] private GameObject LoginCanvasObject;
     [SerializeField] private GameObject RegisterCanvasObject;
 
+    [SerializeField] private Button LoginButton;
+    [SerializeField] private Button RegisterButton;
+
     [Header("Login data field")]
     [SerializeField] private bool isLoginDataSent;
     [SerializeField] private string idValue;
@@ -40,10 +43,17 @@ public class LoginSceneControlManager : MonoBehaviour
         NetworkManager.Inst.OnConnected = () =>
         {
             WaitPanelObject.SetActive(false);
-            LoginCanvasObject.SetActive(true);
         };
         NetworkManager.Inst.AddReceiveDelegate(LoginDataReceiveNetworkAction);
         NetworkManager.Inst.ConnectServer();
+
+        LoginButton.onClick.AddListener(()=>{
+            LoginCanvasObject.SetActive(true);
+        });
+
+        RegisterButton.onClick.AddListener(()=>{
+            RegisterCanvasObject.SetActive(true);
+        });
     }
 
     #region UI actions
@@ -78,22 +88,22 @@ public class LoginSceneControlManager : MonoBehaviour
         problem = "";
         if (!(idValue.Length > 0))
         {
-            problem = "ID is empty";
+            problem = "아이디를 써주세요!";
             return false;
         }
         if (!(passwordValue.Length > 0))
         {
-            problem = "Password is empty";
+            problem = "비밀번호를 써주세요!";
             return false;
         }
         if (passwordValue != passwordCheckValue)
         {
-            problem = "Password and password check not matching";
+            problem = "비밀번호와 비밀번호 확인이 같지 않습니다!";
             return false;
         }
         if (!(nicknameValue.Length > 0))
         {
-            problem = "Nickname is empty";
+            problem = "닉네임을 써주세요!";
             return false;
         }
         return true;
@@ -113,7 +123,6 @@ public class LoginSceneControlManager : MonoBehaviour
     public void OnCancelButtonClicked()
     {
         WaitPanelObject.SetActive(false);
-        LoginCanvasObject.SetActive(true);
         RegisterCanvasObject.SetActive(false);
         idValue = "";
         passwordValue = "";
@@ -227,7 +236,7 @@ public class LoginSceneControlManager : MonoBehaviour
         var newColor = baseColor;
         newColor.a = 1;
         alertBackground.color = newColor;
-        alertText.color = newColor;
+        alertText.color = Color.white;
 
         yield return new WaitForSeconds(0.5f);
 
