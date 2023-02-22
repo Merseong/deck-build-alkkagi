@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AccelShieldProperty : StoneProperty
 {
-    private bool hasAccelShield = true;
+    private bool hasAccelShield = false;
 
     public AccelShieldProperty(StoneBehaviour stone, int turn = -1) : base(stone, turn) { }
 
