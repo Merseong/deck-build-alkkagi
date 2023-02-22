@@ -26,7 +26,12 @@ public class CannonShooterBulletStoneBehaviour : StoneBehaviour
         //base.OnExit(calledByPacket, options);
     }
 
-    private void Disappear(AkgRigidbody akgRigid) => Disappear();
+    private void Disappear(AkgRigidbody akgRigid)
+    {
+        GetComponent<AkgRigidbody>().isDisableCollide = true;
+        Disappear();
+    }
+
     private void Disappear()
     {
         if (BelongingPlayerEnum != GameManager.PlayerEnum.LOCAL) return;

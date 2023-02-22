@@ -117,7 +117,7 @@ public class AkgRigidbody : MonoBehaviour
         }
 
         Move(Time.deltaTime * velocity);
-
+        /*
         // TODO2: 매번 제일 가까운 돌과의 충돌도 체크해야될듯 (fixed나 late써야하나)
         if (isDisableCollide) return;
         if (AkgPhysicsManager.Inst.IsRecordPlaying) return;
@@ -140,7 +140,7 @@ public class AkgRigidbody : MonoBehaviour
                 Move();
                 colAkgObject.Move();
             }
-        }
+        }*/
     }
 
     private void CollisionActions(AkgRigidbody collide, Vector3 point)
@@ -166,21 +166,16 @@ public class AkgRigidbody : MonoBehaviour
         if (AkgPhysicsManager.Inst.rigidbodyRecorder.IsPlaying) return;
         if (!IsMoving) return;
 
-        int collideCount = 0;
-        while (collideCount < 3)
-        {
-            GetNearbyCollidable(out AkgRigidbody nearby);
-            if (!CheckCollide(nearby, out var point)) break;
+        GetNearbyCollidable(out AkgRigidbody nearby);
+        if (!CheckCollide(nearby, out var point)) return;
 
-            CollisionActions(nearby, point);
-            while (CheckCollide(nearby, out _))
-            {
-                Move();
-                nearby.Move();
-                GetNearbyCollidable(out var newNear);
-                if (nearby != newNear) break;
-            }
-            ++collideCount;
+        CollisionActions(nearby, point);
+        while (CheckCollide(nearby, out _))
+        {
+            Move();
+            nearby.Move();
+            GetNearbyCollidable(out var newNear);
+            if (nearby != newNear) break;
         }
     }
 
@@ -417,7 +412,7 @@ public class AkgRigidbody : MonoBehaviour
 
         if (akg.IsStatic)
         {
-            normalVelocity = -cor * normalVelocity;
+            normalVelocity = -akg.cor * normalVelocity;
         }
         else
         {

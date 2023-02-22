@@ -9,10 +9,7 @@ public class SlingshotCartStoneBehaviour : StoneBehaviour
     {
         if(calledByPacket)
         {
-            if(!options.Equals(""))
-            {
-                //BelongingPlayer.OnTurnEnd += SlingShot_Oppo;
-            }
+            BelongingPlayer.OnTurnEnd += SlingShot_Oppo;
         }
         else
         {
@@ -24,7 +21,7 @@ public class SlingshotCartStoneBehaviour : StoneBehaviour
     public override void OnExit(bool calledByPacket = false, string options = "")
     {
         BelongingPlayer.OnTurnEnd -= SlingShot;
-        //BelongingPlayer.OnTurnEnd -= SlingShot_Oppo;
+        BelongingPlayer.OnTurnEnd -= SlingShot_Oppo;
 
         base.OnExit(calledByPacket, options);
     }
@@ -70,13 +67,13 @@ public class SlingshotCartStoneBehaviour : StoneBehaviour
         }
     }
 
-    //private void SlingShot_Oppo()
-    //{
-    //    StoneBehaviour stone = GameManager.Inst.FindStone(int.Parse(option));
+    private void SlingShot_Oppo()
+    {
+        StoneBehaviour stone = GameManager.Inst.FindStone(int.Parse(option));
 
-    //    var spawnAkg = stone.GetComponent<AkgRigidbody>();
-    //    var thisAkg = GetComponent<AkgRigidbody>();
-    //    spawnAkg.IgnoreCollide.Add(thisAkg);
-    //    thisAkg.IgnoreCollide.Add(spawnAkg);
-    //}
+        var spawnAkg = stone.GetComponent<AkgRigidbody>();
+        var thisAkg = GetComponent<AkgRigidbody>();
+        spawnAkg.IgnoreCollide.Add(thisAkg);
+        thisAkg.IgnoreCollide.Add(spawnAkg);
+    }
 }

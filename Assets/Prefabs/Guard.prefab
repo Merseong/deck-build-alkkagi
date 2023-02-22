@@ -113,10 +113,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocity: {x: 0, y: 0, z: 0}
+  isDisableCollide: 0
   isStatic: 1
   mass: 1
   dragAccel: 1
-  cor: 0.2
+  cor: 1
   colliderType: 1
   circleCenterOffset: {x: 0, y: 0, z: 0}
   circleRadius: 0
