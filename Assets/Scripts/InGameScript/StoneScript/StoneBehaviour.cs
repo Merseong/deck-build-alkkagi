@@ -322,13 +322,6 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         if (local)
         {
             GameManager.Inst.SetLocalDoAction();
-            AkgPhysicsManager.Inst.rigidbodyRecorder.SendEventOnly(new EventRecord
-            {
-                eventEnum = EventEnum.SHOOT,
-                stoneId = StoneId,
-                eventMessage = BelongingPlayer.ShootTokenAvailable.ToString() + " " + isRotated.ToString(),
-                time = Time.time,
-            });
 
             StartCoroutine(EShoot(isRotated, callOnShootExit));
             GetComponent<AkgRigidbody>().AddForce(vec);
@@ -347,6 +340,14 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     {
         var recorder = AkgPhysicsManager.Inst.rigidbodyRecorder;
         recorder.StartRecord(Time.time);
+
+        AkgPhysicsManager.Inst.rigidbodyRecorder.AppendEventRecord(new EventRecord
+        {
+            eventEnum = EventEnum.SHOOT,
+            stoneId = StoneId,
+            eventMessage = BelongingPlayer.ShootTokenAvailable.ToString() + " " + isRotated.ToString(),
+            time = Time.time,
+        });
 
         //if (!ShootTokenAvailable)
         //{
@@ -377,12 +378,12 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
             stone.ChangeSpriteAndRot("Idle", isRotated);
         }
 
+        if (callOnShootExit)
+            OnShootExit?.Invoke();
+
         // send physics records, stone final poses, event list
         recorder.EndRecord(out var velocityRecords, out var eventRecords);
         recorder.SendRecord(velocityRecords, eventRecords);
-
-        if (callOnShootExit)
-            OnShootExit?.Invoke();
     }
 
     public virtual Sprite GetSpriteState(string state)

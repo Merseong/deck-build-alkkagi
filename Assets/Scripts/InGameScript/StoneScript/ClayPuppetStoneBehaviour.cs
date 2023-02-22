@@ -18,8 +18,19 @@ public class ClayPuppetStoneBehaviour : StoneBehaviour
         base.OnExit(calledByPacket, options);
     }
 
+    public override void ParseActionString(string actionStr)
+    {
+        base.ParseActionString(actionStr);
+        
+        if (actionStr.StartsWith("COST"))
+        {
+            BelongingPlayer.GetCost(1);
+        }
+    }
+
     private void CardAbility()
     {
         BelongingPlayer.GetCost(1);
+        AkgPhysicsManager.Inst.rigidbodyRecorder.AppendEventRecord(StoneId, "COST");
     }
 }

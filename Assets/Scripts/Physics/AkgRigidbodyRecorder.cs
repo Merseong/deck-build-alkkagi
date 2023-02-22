@@ -49,6 +49,17 @@ public class AkgRigidbodyRecorder
         eventRecords.Add(eventRecord);
     }
 
+    public void AppendEventRecord(int stoneId, string eventString)
+    {
+        eventRecords.Add(new EventRecord
+        {
+            eventEnum = EventEnum.POWER,
+            stoneId = stoneId,
+            eventMessage = eventString,
+            time = Time.time - startTime,
+        });
+    }
+
     public void SendEventOnly(EventRecord eventRecord)
     {
         eventRecord.time -= Time.time;
