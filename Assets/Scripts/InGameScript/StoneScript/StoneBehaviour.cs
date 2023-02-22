@@ -56,7 +56,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     [SerializeField] private int stoneId;
     public int StoneId => stoneId;
     [SerializeField] private Transform boardTransform;
-    [SerializeField] private CardData cardData;
+    [SerializeField] protected CardData cardData;
     [SerializeField] private GameObject collideParticle;
     [SerializeField] private GameObject directExitParticle;
     public CardData CardData => cardData;
@@ -161,6 +161,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     {
         isExiting = true;
         if (!AkgPhysicsManager.Inst.rigidbodyRecorder.IsPlaying)
+        {
             AkgPhysicsManager.Inst.rigidbodyRecorder.AppendEventRecord(new EventRecord
             {
                 stoneId = stoneId,
@@ -169,7 +170,12 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
                 xPosition = Util.FloatToSlicedString(transform.position.x),
                 zPosition = Util.FloatToSlicedString(transform.position.z),
             });
-        OnExit();
+            OnExit();
+        }
+        else
+        {
+            OnExit(true);
+        }
         BelongingPlayer.RemoveStone(stoneId);
         akgRigidbody.SetDragAccel(0);
         akgRigidbody.BeforeDestroy();
@@ -421,7 +427,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         {
             sprite = GameManager.Inst.stoneAtlas.GetSprite($"{cardData.cardEngName}_Idle");
             Debug.Log($"There is no sprite named \"{cardData.cardEngName}_{state}\""); 
-        } 
+        }
         return sprite;
     }
 
