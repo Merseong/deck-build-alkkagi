@@ -37,7 +37,8 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     /// <param name="options">"@ @ @ ... @" 꼴, Split(' ')으로 쪼개서 사용하면됨</param>
     public virtual void OnExit(bool calledByPacket = false, string options = "")
     {
-        GameManager.Inst.localDeadStones.Add(CardData.CardID);
+        if (!calledByPacket)
+            GameManager.Inst.localDeadStones.Add(CardData.CardID);
 
         BelongingPlayer.OnStoneExit?.Invoke(this);
     }
