@@ -410,7 +410,11 @@ public class GameManager : SingletonBehavior<GameManager>
     {
         isTurnEndSent = false;
 
-        if (newTurnAction) OnTurnEnd?.Invoke();
+        if (newTurnAction)
+        {
+            CurrentPlayer.EndTurn();
+            OnTurnEnd?.Invoke();
+        }
         // 상대 GameManager의 turn info 변경
         // 예시
         // SomeNetworkPacket result = await SendTurnInfo();
