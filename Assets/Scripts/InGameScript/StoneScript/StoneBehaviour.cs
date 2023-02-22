@@ -370,14 +370,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         // shoot end
         foreach (StoneBehaviour stone in GameManager.Inst.AllStones.Values)
         {
-            if (stone.BelongingPlayerEnum == GameManager.PlayerEnum.LOCAL)
-            {
-                stone.ChangeSpriteAndRot("Idle", isRotated);
-            }
-            else
-            {
-                stone.ChangeSpriteAndRot("Idle", !isRotated);
-            }
+            stone.ChangeSpriteAndRot("Idle", isRotated);
         }
 
         if (callOnShootExit)
