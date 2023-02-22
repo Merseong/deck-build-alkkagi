@@ -47,6 +47,8 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
     [SerializeField] InformationPanel cardInformPanel;
     [SerializeField] RectTransform matchmakingLoadingPanel;
     [SerializeField] RectTransform matchmakingLoadingImage;
+    [SerializeField] Button tutorialOpenButton;
+    [SerializeField] TutorialPanel tutorialPanel;
 
     [Header("Main view")]
     [SerializeField] private TextMeshProUGUI moneyText;
@@ -114,6 +116,11 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
         menuCloseButton.onClick.AddListener(()=>{
             menuPanel.gameObject.SetActive(false);
             menuBackgroundPanel.gameObject.SetActive(false);
+        });
+
+        tutorialOpenButton.onClick.AddListener(()=>{
+            tutorialPanel.gameObject.SetActive(true);
+            tutorialPanel.Initialize();
         });
 
         SetPlayerProfile();
@@ -242,6 +249,12 @@ public class DeckChooseManager : SingletonBehavior<DeckChooseManager>
             card.transform.GetChild(0).GetComponent<Image>().sprite = Util.GetSpriteState(item, "Idle", stoneAtlas);
         }
     }
+
+    public void SetTutorialPanel()
+    {
+
+    }
+
 
     private void EnterRoomSendNetworkAction()
     {
