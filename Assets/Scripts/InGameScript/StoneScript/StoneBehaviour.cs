@@ -280,7 +280,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         return init;
     }
 
-    public float GetMass(float init)
+    public virtual float GetMass(float init)
     {
         foreach (StoneProperty property in Properties)
         {
