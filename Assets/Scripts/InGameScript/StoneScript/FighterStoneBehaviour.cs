@@ -5,6 +5,8 @@ using UnityEngine.SocialPlatforms;
 
 public class FighterStoneBehaviour : StoneBehaviour
 {
+    private float punchForce = 10.0f;
+
     public override void OnEnter(bool calledByPacket = false, string options = "")
     {
         OnShootExit += Punch;
@@ -39,11 +41,10 @@ public class FighterStoneBehaviour : StoneBehaviour
         {
             // Punch animation
 
-            if (!min.IsGhost())
+            if (BelongingPlayerEnum == GameManager.PlayerEnum.LOCAL && !min.IsGhost())
             {
-                LocalPlayerBehaviour local = GameManager.Inst.LocalPlayer as LocalPlayerBehaviour;
-                bool isRotated = (BelongingPlayerEnum == GameManager.PlayerEnum.LOCAL) == local.IsLocalRotated;
-                min.Shoot(transform.position, isRotated);
+                LocalPlayerBehaviour local = BelongingPlayer as LocalPlayerBehaviour;
+                min.Shoot(Vector3.Normalize(min.transform.position - transform.position) * punchForce, local.IsLocalRotated);
             }
         }
     }
