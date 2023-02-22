@@ -132,7 +132,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     public override void InitDeck(string deckCode)
     {
-        //deck.Clear();
+        deck.Clear();
 
         //TODO : Should generate deck from user DB
         var cardData = Util.GenerateDeckFromDeckCode(deckCode, GameManager.Inst.CardDatas);
@@ -143,7 +143,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         }
 
         DeckCount = (ushort)cardData.Count;
-        //ShuffleDeck();
+        ShuffleDeck();
     }
 
     private void ShuffleDeck()

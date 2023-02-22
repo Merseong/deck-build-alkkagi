@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AkgPhysics
 {
-    public static float dragAccel = 50.0f;
+    public static float dragAccel = 80.0f;
 
     public static Vector3 Collide1D(float mass1, Vector3 velocity1, float mass2, Vector3 velocity2, float cor)
     {

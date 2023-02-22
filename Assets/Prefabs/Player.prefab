@@ -162,7 +162,7 @@ MonoBehaviour:
   StoneSelectionActionThreshold: 1
   cardDragThreshold: 0
   minShootVelocity: 5
-  maxShootVelocity: 22
+  maxShootVelocity: 18
   velocityMultiplier: 150
   dragEffectObj: {fileID: 178128856140976623}
   maxDragLimit: 10
