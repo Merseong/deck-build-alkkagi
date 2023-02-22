@@ -152,11 +152,14 @@ public class AkgRigidbodyRecorder
                         default:
                             break;
                     }
-                    erIdx++;
                 }
                 catch (Exception _)
                 {
                     
+                }
+                finally
+                {
+                    erIdx++;
                 }
             }
             while (vrIdx < vRecords.Length && vRecords[vrIdx].time <= Time.time - startTime)
@@ -169,10 +172,11 @@ public class AkgRigidbodyRecorder
                         Util.SlicedStringsToVector3(vRec.xVelocity, vRec.zVelocity),
                         Util.SlicedStringsToVector3(vRec.xPosition, vRec.zPosition)
                     );
-                    vrIdx++;
+                    
                 }
                 catch (Exception _)
                 { }
+                finally { vrIdx++; }
             }
         }
 
