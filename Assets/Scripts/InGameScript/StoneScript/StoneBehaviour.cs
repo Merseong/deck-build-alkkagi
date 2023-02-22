@@ -40,6 +40,12 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         if (!calledByPacket)
             GameManager.Inst.localDeadStones.Add(CardData.CardID);
 
+        for (int i = Properties.Count - 1; i >= 0; i--)
+        {
+            StoneProperty property = Properties[i];
+            RemoveProperty(property);
+        }
+
         BelongingPlayer.OnStoneExit?.Invoke(this);
     }
 
