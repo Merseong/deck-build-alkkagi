@@ -50,6 +50,7 @@ SpriteAtlas:
     - 2ff1416389de717449ba79c454be74ec: 21300000
     - 23eb7514e7c4c864ab9ef5894bc598f4: 21300000
     - 1c49a3b49a106fe478f6b3ada74f2a1d: 21300000
+    - 9f87c5c457dc0bc458193a7fba28293b: 21300000
     - fff42ca5d2aa6864b9709116d740ec12: 21300000
     - fdc69fe517e5df948b21165fddcf713c: 21300000
     - e567d517805a4054b8e29b0a3e8bf901: 21300000
@@ -82,6 +83,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 2ff1416389de717449ba79c454be74ec, type: 3}
   - {fileID: 21300000, guid: 23eb7514e7c4c864ab9ef5894bc598f4, type: 3}
   - {fileID: 21300000, guid: 1c49a3b49a106fe478f6b3ada74f2a1d, type: 3}
+  - {fileID: 21300000, guid: 9f87c5c457dc0bc458193a7fba28293b, type: 3}
   - {fileID: 21300000, guid: fff42ca5d2aa6864b9709116d740ec12, type: 3}
   - {fileID: 21300000, guid: fdc69fe517e5df948b21165fddcf713c, type: 3}
   - {fileID: 21300000, guid: e567d517805a4054b8e29b0a3e8bf901, type: 3}
@@ -113,6 +115,7 @@ SpriteAtlas:
   - card_7
   - card_3
   - UI_Cost_0
+  - UI_Token_0
   - card_0
   - UI_Window_0
   - UI_Button_2

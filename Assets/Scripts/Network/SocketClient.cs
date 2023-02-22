@@ -119,10 +119,10 @@ public class SocketClient
 
         var sendStatus = Driver.BeginSend(Pipeline, Connection, out var writer);
         writer.WriteBytes(byteArr);
-        Debug.Log($"{writer.Capacity} {byteArr.Length}");
+        //Debug.Log($"{writer.Capacity} {byteArr.Length}");
         var endStatus = Driver.EndSend(writer);
 
-        Debug.Log($"{sendStatus} {endStatus}");
+        //Debug.Log($"{sendStatus} {endStatus}");
 
         /**
         if (m_socket == null || !m_socket.Connected)

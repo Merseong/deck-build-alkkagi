@@ -450,7 +450,7 @@ public class AkgRigidbody : MonoBehaviour
             stoneId = stone.StoneId,
             time = Time.time,
             xPosition = Util.FloatToSlicedString(transform.position.x),
-            zPosition = Util.FloatToSlicedString(transform.position.x),
+            zPosition = Util.FloatToSlicedString(transform.position.z),
             xVelocity = Util.FloatToSlicedString(velocity.x),
             zVelocity = Util.FloatToSlicedString(velocity.z),
         });
