@@ -80,7 +80,11 @@ public abstract class PlayerBehaviour : MonoBehaviour
 
     //플레이어가 발사한 스톤, 다른 스톤들에서는 이 스톤의 충돌 여부를 확인하여 타격 여부를 결정하여야 함
     protected StoneBehaviour strikingStone;
-    public StoneBehaviour StrikingStone => strikingStone;
+    public StoneBehaviour StrikingStone
+    {
+        get => strikingStone;
+        set => strikingStone = value;
+    }
 
     public void StartTurn()
     {
@@ -120,6 +124,12 @@ public abstract class PlayerBehaviour : MonoBehaviour
     public void ResetShootToken()
     {
         ShootTokenAvailable = true;
+    }
+
+    public void OnShootExit()
+    {
+        strikingStone.OnShootExit -= OnShootExit;
+        strikingStone = null;
     }
 
     #region UI actions

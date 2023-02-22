@@ -116,7 +116,9 @@ public class AkgRigidbodyRecorder
                             //        Debug.LogError("[OPPO] Shoot token already spent!");
                             //    GameManager.Inst.OppoPlayer.ShootTokenAvailable = false;
                             //}
+                            GameManager.Inst.OppoPlayer.StrikingStone = shootStone;
                             shootStone.Shoot(Vector3.zero, isRotated, false, msgArr[2] == "true");
+                            shootStone.OnShootExit += GameManager.Inst.OppoPlayer.OnShootExit;
                             break;
                         case EventEnum.COLLIDE:
                             // eventMessage -> (colStoneId || STATIC) (COLLIDED)

@@ -370,7 +370,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         OnShootEnter?.Invoke();
     }
 
-    protected IEnumerator EShoot(bool isRotated, bool callOnShootExit = true)
+    public IEnumerator EShoot(bool isRotated, bool callOnShootExit = true)
     {
         var recorder = AkgPhysicsManager.Inst.rigidbodyRecorder;
         if (recorder.IsRecording)
