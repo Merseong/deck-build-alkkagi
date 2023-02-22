@@ -408,7 +408,7 @@ public class LocalPlayerBehaviour : PlayerBehaviour
     }
 
     // PlayCard 함수에서 사용되는 패킷 전송
-    private void PlayCardSendNetworkAction(CardData cardData, Vector3 position, int stoneId)
+    public void PlayCardSendNetworkAction(CardData cardData, Vector3 position, int stoneId)
     {
         var toSend = $"PLAYCARD/ {cardData.CardID} {Vector3ToString(position)} {stoneId} {Cost}";
 

@@ -323,7 +323,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         {
             GameManager.Inst.SetLocalDoAction();
 
-            StartCoroutine(EShoot(isRotated, callOnShootExit));
+            GameManager.Inst.StartCoroutine(EShoot(isRotated, callOnShootExit));
             GetComponent<AkgRigidbody>().AddForce(vec);
         }
     }
@@ -360,17 +360,10 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         //}
 
         yield return null;
-        bool isAllStoneStop = false;
-
-        while (!isAllStoneStop)
-        {
-            yield return new WaitUntil(() =>
-                (GameManager.Inst.AllStones.Count == 0 ||
-                GameManager.Inst.AllStones.Values.All(x => !x.isMoving))
-            );
-
-            isAllStoneStop = true;
-        }
+        yield return new WaitUntil(() =>
+            (GameManager.Inst.AllStones.Count == 0 ||
+            GameManager.Inst.AllStones.Values.All(x => !x.isMoving))
+        );
 
         // shoot end
         foreach (StoneBehaviour stone in GameManager.Inst.AllStones.Values)
