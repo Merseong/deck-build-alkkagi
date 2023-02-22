@@ -320,7 +320,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         return init;
     }
 
-    public float GetDragAccel(float init)
+    public virtual float GetDragAccel(float init)
     {
         foreach (StoneProperty property in Properties)
         {

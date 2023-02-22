@@ -12,9 +12,6 @@ public class CannonShooterBulletStoneBehaviour : StoneBehaviour
 
     public override void OnEnter(bool calledByPacket = false, string options = "")
     {
-        akgRigidbody.SetDragAccel(0);
-        akgRigidbody.SetMass(.3f);
-
         OnShootExit += Disappear;
         OnHit += Disappear;
 
@@ -27,6 +24,16 @@ public class CannonShooterBulletStoneBehaviour : StoneBehaviour
         OnHit -= Disappear;
 
         //base.OnExit(calledByPacket, options);
+    }
+
+    public override float GetMass(float init)
+    {
+        return 0.3f;
+    }
+
+    public override float GetDragAccel(float init)
+    {
+        return 0.0f;
     }
 
     private void Disappear(AkgRigidbody akgRigid)

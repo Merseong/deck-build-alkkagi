@@ -209,11 +209,6 @@ public class AkgRigidbody : MonoBehaviour
         DragAccel = newDragAccel;
     }
 
-    public void SetMass(float newMass)
-    {
-        mass = newMass;
-    }
-
     public bool CheckPointCollide(Vector3 point)
     {
         return ColliderType switch
