@@ -187,7 +187,7 @@ SpriteAtlas:
   - ClayShaman_Idle
   - Fighter_Idle
   - SpearKnight_Idle
-  - Knight_Idle_
+  - Knight_Idle
   - CherryIceCream_Ready
   - ClayPuppet_Ready
   - Revenger_Idle
@@ -195,7 +195,7 @@ SpriteAtlas:
   - BladelessMan_Ready
   - TinyRobot_Idle
   - Knight_Ready
-  - Knight_Idle
+  - Knight_Idle1
   - CannonShooterBullet_Idle
   - SlingshotCart_Idle
   - DeadBall_Idle

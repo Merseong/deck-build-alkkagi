@@ -196,10 +196,7 @@ public class GameManager : SingletonBehavior<GameManager>
         OppoPlayer.ResetCost();
         OppoPlayer.ShootTokenAvailable = true;
         UpdateTurnEndButtonText();
-        if (isLocalGoFirst)
-        {
-            IngameUIManager.Inst.NotificationPanel.Show("My Turn!");
-        }
+        IngameUIManager.Inst.NotificationPanel.Show(isLocalGoFirst ? "선공!" : "후공!");
     }
 
     public void SurrenderButtonAction()
