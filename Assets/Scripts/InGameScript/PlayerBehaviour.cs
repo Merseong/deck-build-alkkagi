@@ -190,7 +190,7 @@ public abstract class PlayerBehaviour : MonoBehaviour
     /// <param name="spawnPosition"></param>
     /// <param name="stoneId">use only in oppo code</param>
     /// <returns>spawned stone's stoneID</returns>
-    public abstract int SpawnStone(CardData cardData, Vector3 spawnPosition, int stoneId = -1);
+    public abstract int SpawnStone(CardData cardData, Vector3 spawnPosition, int stoneId = -1, bool ignoreSpawnPos = false);
     #endregion
 
     #region Stone List Control

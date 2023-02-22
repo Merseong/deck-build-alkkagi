@@ -34,7 +34,7 @@ public class OppoPlayerBehaviour : PlayerBehaviour
         });
     }
 
-    public override int SpawnStone(CardData cardData, Vector3 spawnPosition, int stoneId = -1)
+    public override int SpawnStone(CardData cardData, Vector3 spawnPosition, int stoneId = -1, bool ignoreSpawnPos = false)
     {
         //FIXME : 카드에 맞는 스톤을 런타임에 생성해줘야 함
         GameObject spawnedStone = Instantiate(StonePrefab, spawnPosition, Quaternion.identity);

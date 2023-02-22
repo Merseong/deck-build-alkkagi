@@ -362,11 +362,14 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         ArrangeHand(false);
     }
 
-    public override int SpawnStone(CardData cardData, Vector3 spawnPosition, int stoneId = -1)
+    public override int SpawnStone(CardData cardData, Vector3 spawnPosition, int stoneId = -1, bool ignoreSpawnPos = false)
     {
-        if (!gameBoard.IsPossibleToPut(spawnPosition, Util.GetRadiusFromStoneSize(cardData.stoneSize)))
+        if(!ignoreSpawnPos)
         {
-            return -1;
+            if (!gameBoard.IsPossibleToPut(spawnPosition, Util.GetRadiusFromStoneSize(cardData.stoneSize)))
+            {
+                return -1;
+            }
         }
         
         // TODO: 코스트 소모를 여기서 하는게 아님??

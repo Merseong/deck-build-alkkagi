@@ -10,14 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ab37ca60595e43469bbcaf7f2d4c0a7, type: 3}
-  m_Name: KnightCommanderStoneData
+  m_Name: CannonShooterBulletStone
   m_EditorClassIdentifier: 
-  cardID: 25
-  cardName: "\uAE30\uC0AC\uB2E8\uC7A5"
-  cardEngName: KnightCommander
-  stoneSize: 3
-  stoneWeight: 1
-  cardCost: 7
-  inDeckNumber: 1
-  description: "\uC774\uBC88 \uAC8C\uC784\uC5D0\uC11C \uB4F1\uC7A5\uD55C \"\uAE30\uC0AC\"
-    \uD558\uB098 \uB2F9 \uBE44\uC6A9\uC774 1 \uAC10\uC18C\uD569\uB2C8\uB2E4."
+  cardID: 500
+  cardName: "\uD0C4\uD658"
+  cardEngName: CannonShooterBullet
+  stoneSize: 0
+  stoneWeight: 0
+  cardCost: 0
+  inDeckNumber: 0
+  description: 

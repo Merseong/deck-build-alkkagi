@@ -305,6 +305,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 70d23d0614bddaa49b618b632e75eaba, type: 2}
   - {fileID: 11400000, guid: 12985c4e161e61c4f90e73f2a4b37943, type: 2}
   - {fileID: 11400000, guid: 7bb324639ab464649a3ec1cef64cd434, type: 2}
+  - {fileID: 11400000, guid: 2ba94b41dba55e24092ba4c8f974dca0, type: 2}
   stoneAtlas: {fileID: 4343727234628468602, guid: 15417bec6ed96894fa69a9c23e6fd69d, type: 2}
   gameBoard: {fileID: 1500342745}
   isLocalGoFirst: 1
@@ -768,6 +769,14 @@ PrefabInstance:
       propertyPath: gameBoard
       value: 
       objectReference: {fileID: 1500342745}
+    - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: deck.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 28e861c4b941ae646ba6b06ec2374604, type: 2}
+    - target: {fileID: 178128857093286909, guid: 7f14f54baba11284daf353b3c61c2231, type: 3}
+      propertyPath: deck.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 28e861c4b941ae646ba6b06ec2374604, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

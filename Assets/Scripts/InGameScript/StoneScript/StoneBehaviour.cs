@@ -54,7 +54,7 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
     [SerializeField] private GameObject directExitParticle;
     public CardData CardData => cardData;
 
-    private AkgRigidbody akgRigidbody;
+    protected AkgRigidbody akgRigidbody;
     public bool isMoving
     {
         get
@@ -327,6 +327,14 @@ public class StoneBehaviour : MonoBehaviour, IAkgRigidbodyInterface
         GameManager.Inst.SetLocalDoAction();
         if (!CanSprint())
             BelongingPlayer.ShootTokenAvailable = false;
+        ChangeSpriteAndRot("Shoot", isRotated);
+        OnShootEnter?.Invoke();
+        StartCoroutine(EShoot(isRotated));
+        GetComponent<AkgRigidbody>().AddForce(vec);
+    }
+
+    public void _Shoot(Vector3 vec, bool isRotated)
+    {
         ChangeSpriteAndRot("Shoot", isRotated);
         OnShootEnter?.Invoke();
         StartCoroutine(EShoot(isRotated));
