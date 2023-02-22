@@ -32,6 +32,9 @@ public class SlingshotCartStoneBehaviour : StoneBehaviour
     }
     private void SlingShot()
     {
+        if (GameManager.Inst.TurnCount == 0)
+            return;
+
         if (BelongingPlayerEnum == GameManager.PlayerEnum.LOCAL)
         {
             List<Card> handCard = BelongingPlayer.GetHandCard();

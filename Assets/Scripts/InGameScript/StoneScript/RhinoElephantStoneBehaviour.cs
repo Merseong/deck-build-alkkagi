@@ -8,6 +8,7 @@ public class RhinoElephantStoneBehaviour : StoneBehaviour
     {
         base.InitProperty();
 
-        AddProperty(new PinnedProperty(this, 1));
+        if (GameManager.Inst.TurnCount > 0)
+            AddProperty(new PinnedProperty(this, 1));
     }
 }

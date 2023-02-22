@@ -6,10 +6,13 @@ public class CycloneStoneBehaviour : StoneBehaviour
 {
     public override void OnEnter(bool calledByPacket = false, string options = "")
     {
-        foreach (StoneBehaviour stone in BelongingPlayer.Stones.Values)
+        if (GameManager.Inst.TurnCount > 0)
         {
-            if (stone != this)
-                stone.AddProperty(new SprintProperty(stone));
+            foreach (StoneBehaviour stone in BelongingPlayer.Stones.Values)
+            {
+                if (stone != this)
+                    stone.AddProperty(new SprintProperty(stone));
+            }
         }
 
         base.OnEnter(calledByPacket, options);

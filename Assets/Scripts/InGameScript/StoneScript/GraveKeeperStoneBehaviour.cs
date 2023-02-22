@@ -6,7 +6,7 @@ public class GraveKeeperStoneBehaviour : StoneBehaviour
 {
     public override void OnEnter(bool calledByPacket = false, string options = "")
     {
-        if(BelongingPlayer.Player == GameManager.PlayerEnum.LOCAL)
+        if (GameManager.Inst.TurnCount > 0 && BelongingPlayer.Player == GameManager.PlayerEnum.LOCAL)
         {
             SpawnStone();
         }

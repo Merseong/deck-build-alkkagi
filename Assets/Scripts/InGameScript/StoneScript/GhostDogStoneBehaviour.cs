@@ -8,6 +8,7 @@ public class GhostDogStoneBehaviour : StoneBehaviour
     {
         base.InitProperty();
 
-        AddProperty(new GhostProperty(this, 1));
+        if (GameManager.Inst.TurnCount > 0)
+            AddProperty(new GhostProperty(this, 1));
     }
 }

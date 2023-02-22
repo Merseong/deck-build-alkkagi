@@ -8,6 +8,7 @@ public class GhostGolemStoneBehaviour : StoneBehaviour
     {
         base.InitProperty();
 
-        AddProperty(new GhostProperty(this, 2));
+        if (GameManager.Inst.TurnCount > 0)
+            AddProperty(new GhostProperty(this, 2));
     }
 }
