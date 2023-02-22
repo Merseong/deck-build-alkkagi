@@ -71,6 +71,7 @@ SpriteAtlas:
     - c1e998c261d32f54fbd25008cc6653a4: 21300000
     - 84a06a032f51c004888c18faa107f744: 21300000
     - 8ac41163a2c6a7c4994e74fea6b9dea5: 21300000
+    - 4dd90054da97d5c4686033dcbcbe76e5: 21300000
     - 6fdb32a427e880844aa9e1a09bc22b59: 21300000
     - 67a515c4ee48626429a9416ef7c34e4a: 21300000
     - 6a5cc9e43617a5845815dcb37888ef6d: 21300000
@@ -125,6 +126,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: c1e998c261d32f54fbd25008cc6653a4, type: 3}
   - {fileID: 21300000, guid: 84a06a032f51c004888c18faa107f744, type: 3}
   - {fileID: 21300000, guid: 8ac41163a2c6a7c4994e74fea6b9dea5, type: 3}
+  - {fileID: 21300000, guid: 4dd90054da97d5c4686033dcbcbe76e5, type: 3}
   - {fileID: 21300000, guid: 6fdb32a427e880844aa9e1a09bc22b59, type: 3}
   - {fileID: 21300000, guid: 67a515c4ee48626429a9416ef7c34e4a, type: 3}
   - {fileID: 21300000, guid: 6a5cc9e43617a5845815dcb37888ef6d, type: 3}
@@ -178,6 +180,7 @@ SpriteAtlas:
   - DeadBall_Ready
   - CowardGhost_Ready
   - Magician_Idle
+  - CherryIceCream_Idle
   - CannonShooter_Ready
   - ElderPriest_Ready
   - GhostDog_Idle
