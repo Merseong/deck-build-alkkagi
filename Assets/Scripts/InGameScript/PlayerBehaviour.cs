@@ -185,6 +185,13 @@ public abstract class PlayerBehaviour : MonoBehaviour
     {
         HandCount--;
     }
+    public virtual List<Card> GetHandCard()
+    {
+        return null;
+    }
+    public virtual void RemoveHandCardAndArrange(Card card, Vector3 pos, int stoneId)
+    {
+    }
 
     /// <param name="cardData"></param>
     /// <param name="spawnPosition"></param>

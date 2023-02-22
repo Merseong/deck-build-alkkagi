@@ -298,6 +298,10 @@ public class LocalPlayerBehaviour : PlayerBehaviour
         base.RemoveCards(idx);
         // TODO: 나중에 Playcard에 있는 카드 컨트롤 부분 옮기던가
     }
+    public override List<Card> GetHandCard()
+    {
+        return hand;
+    }
 
     private void SetOriginOrder()
     {
@@ -350,16 +354,21 @@ public class LocalPlayerBehaviour : PlayerBehaviour
 
     // 카드 내기; 하스스톤에서는 카드를 "내다"가 play인듯
     // TODO: 위치도 인자로 같이 받아서 하게
-    private void PlayCard(Card card, Vector3 nearbyPos)
+    public void PlayCard(Card card, Vector3 nearbyPos)
     {
         // 끌어놓은 위치에 Stone 생성
         GameManager.Inst.SetLocalDoAction();
         var stoneId = SpawnStone(card.CardData, nearbyPos);
         selectedCard = null;
-        
+
+        RemoveHandCardAndArrange(card, nearbyPos, stoneId);
+    }
+
+    public override void RemoveHandCardAndArrange(Card card,Vector3 pos,int stoneId)
+    {
         hand.Remove(card);
         RemoveCards(0);
-        PlayCardSendNetworkAction(card.CardData, nearbyPos, stoneId);
+        PlayCardSendNetworkAction(card.CardData, pos, stoneId);
         Destroy(card.gameObject);
         ArrangeHand(false);
     }
