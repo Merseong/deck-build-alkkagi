@@ -32,7 +32,7 @@ public class AccelShieldProperty : StoneProperty
     {
         hasAccelShield = true;
 
-        baseStone.transform.GetChild(4).GetChild(2).gameObject.SetActive(true);
+        EffectProperty(true, this);
 
         baseStone.GetComponent<AkgRigidbody>().layerMask |= AkgLayerMask.SHIELD;
     }
@@ -41,7 +41,7 @@ public class AccelShieldProperty : StoneProperty
     {
         hasAccelShield = false;
 
-        baseStone.transform.GetChild(4).GetChild(2).gameObject.SetActive(false);
+        EffectProperty(false, this);
 
         if (!baseStone.HasAccelShield() && baseStone.ShieldCount() <= 0)
             baseStone.GetComponent<AkgRigidbody>().layerMask &= ~AkgLayerMask.SHIELD;

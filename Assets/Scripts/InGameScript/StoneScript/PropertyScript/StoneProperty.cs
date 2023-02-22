@@ -78,7 +78,7 @@ public abstract class StoneProperty
         baseStone.RemoveProperty(this);
     }
 
-    public void EffectProperty<T>(bool isAcitvated, T property) where T : StoneProperty
+    public void EffectProperty<T>(bool isAcitvated, T property, bool accelShield = false) where T : StoneProperty
     {
         switch (property)
         {
@@ -92,8 +92,10 @@ public abstract class StoneProperty
                 baseStone.stoneUI.Effects[1].SetActive(isAcitvated);
                 break;
             case ShieldProperty:
-            case AccelShieldProperty:
                 baseStone.stoneUI.Effects[2].SetActive(isAcitvated);
+                break;
+            case AccelShieldProperty:
+                baseStone.stoneUI.Effects[2].SetActive(isAcitvated && accelShield);
                 break;
             case GhostProperty:
                 baseStone.stoneUI.stoneSprite.color = isAcitvated ? new Color(1f, 1f, 1f, 0.5f):new Color(1f,1f,1f,1f);
