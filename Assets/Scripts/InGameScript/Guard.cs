@@ -9,6 +9,8 @@ public class Guard : MonoBehaviour, IAkgRigidbodyInterface
 
     private AkgRigidbody akgRigidbody;
 
+    [SerializeField] private Material[] guardMaterials;
+    
     private void OnDestroy()
     {
         if (akgRigidbody) akgRigidbody.BeforeDestroy();
@@ -26,13 +28,13 @@ public class Guard : MonoBehaviour, IAkgRigidbodyInterface
     {
         if(isBelongLocal) 
         {
-            gameObject.transform.GetComponent<MeshRenderer>().material.color = Color.green;
+            gameObject.transform.GetComponent<MeshRenderer>().material = guardMaterials[0];
             //gameObject.layer = LayerMask.NameToLayer("LocalGuard");
             akgRigidbody.layerMask = AkgLayerMask.LOCAL;
         }
         else
         {
-            gameObject.transform.GetComponent<MeshRenderer>().material.color = Color.red;
+            gameObject.transform.GetComponent<MeshRenderer>().material = guardMaterials[1];
             //gameObject.layer = LayerMask.NameToLayer("OppoGuard");
             akgRigidbody.layerMask = AkgLayerMask.OPPO;
         } 

@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 27a5bd08bfcd7ef4dacb690cbc414344, type: 2}
+  - {fileID: 2100000, guid: f93e1e6181fa153409c7dc390be32666, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -97,6 +97,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09eda12a248422a4bb5da500079e854e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  guardMaterials:
+  - {fileID: 2100000, guid: f93e1e6181fa153409c7dc390be32666, type: 2}
+  - {fileID: 2100000, guid: b6064f4354f5cc546a9b68c2e539b5c2, type: 2}
 --- !u!114 &1072273095557792384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,8 +115,10 @@ MonoBehaviour:
   velocity: {x: 0, y: 0, z: 0}
   isStatic: 1
   mass: 1
+  dragAccel: 1
   cor: 0.2
   colliderType: 1
-  circleCenter: {x: 0, y: 0, z: 0}
+  circleCenterOffset: {x: 0, y: 0, z: 0}
   circleRadius: 0
   rectPoints: {x: -1, y: -0.5, z: 1, w: 0.5}
+  layerMask: 0
