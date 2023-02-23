@@ -154,16 +154,6 @@ public class AkgRigidbody : MonoBehaviour
             return;
         }
         if (isDisableCollide) return;
-
-        Move(Time.deltaTime * velocity);
-
-        oldVelocity = velocity;
-
-        float speed = velocity.magnitude;
-        if (speed > 0)
-        {
-            velocity = Mathf.Max(speed - Time.deltaTime * DragAccel * effectMass, 0) * velocity.normalized;
-        }
     }
 
     private void FixedUpdate()
@@ -173,6 +163,16 @@ public class AkgRigidbody : MonoBehaviour
         if (IsStatic) return;
         if (collidedCount > 3) return;
         if (isDisableCollide) return;
+
+        Move(Time.fixedDeltaTime * velocity);
+
+        oldVelocity = velocity;
+
+        float speed = velocity.magnitude;
+        if (speed > 0)
+        {
+            velocity = Mathf.Max(speed - Time.fixedDeltaTime * DragAccel * effectMass, 0) * velocity.normalized;
+        }
 
         GetNearbyCollidable(out AkgRigidbody nearby);
         if (IgnoreCollide.Contains(nearby)) return;
