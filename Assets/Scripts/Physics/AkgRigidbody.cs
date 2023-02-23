@@ -102,23 +102,7 @@ public class AkgRigidbody : MonoBehaviour
 
     private void Update()
     {
-        if (IsStatic) return;
-        if (velocity == Vector3.zero)
-        {
-            isForecasting = false;
-            return;
-        }
-        if (isDisableCollide) return;
-
-        Move(Time.deltaTime * velocity);
-
-        oldVelocity = velocity;
-
-        float speed = velocity.magnitude;
-        if (speed > 0)
-        {
-            velocity = Mathf.Max(speed - Time.deltaTime * DragAccel * effectMass, 0) * velocity.normalized;
-        }
+        
 
         /*
         // TODO2: 매번 제일 가까운 돌과의 충돌도 체크해야될듯 (fixed나 late써야하나)
@@ -164,6 +148,29 @@ public class AkgRigidbody : MonoBehaviour
     private void LateUpdate()
     {
         if (IsStatic) return;
+        if (velocity == Vector3.zero)
+        {
+            isForecasting = false;
+            return;
+        }
+        if (isDisableCollide) return;
+
+        Move(Time.deltaTime * velocity);
+
+        oldVelocity = velocity;
+
+        float speed = velocity.magnitude;
+        if (speed > 0)
+        {
+            velocity = Mathf.Max(speed - Time.deltaTime * DragAccel * effectMass, 0) * velocity.normalized;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        collidedList.Clear();
+        collidedCount = 0;
+        if (IsStatic) return;
         if (collidedCount > 3) return;
         if (isDisableCollide) return;
 
@@ -180,12 +187,6 @@ public class AkgRigidbody : MonoBehaviour
 
         CollisionActions(nearby, point);
         collidedList.Add(nearby);
-    }
-
-    private void FixedUpdate()
-    {
-        collidedList.Clear();
-        collidedCount = 0;
     }
 
     public void BeforeDestroy()
