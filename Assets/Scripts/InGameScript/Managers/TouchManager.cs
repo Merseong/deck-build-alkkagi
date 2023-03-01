@@ -17,13 +17,26 @@ public class TouchManager : SingletonBehavior<TouchManager>
     protected override void Awake()
     {
         base.Awake();
+    }
 
+    private void Start()
+    {
         playerInput = GetComponent<PlayerInput>();
+
+#if     UNITY_EDITOR
+        Debug.Log("dfdf");
+        touchPositionAction = playerInput.actions["_TouchPosition"];
+        touchPressAction = playerInput.actions["_TouchPress"];
+        touchDeltaAction = playerInput.actions["_TouchDelta"];
+
+#elif   UNITY_STANDALONE
         touchPositionAction = playerInput.actions["TouchPosition"];
-        touchStartPositionAction = playerInput.actions["TouchStartPosition"];
         touchPressAction = playerInput.actions["TouchPress"];
-        primaryTouchPressAction = playerInput.actions["PrimaryTouch"];
         touchDeltaAction = playerInput.actions["TouchDelta"];
+#endif
+
+        primaryTouchPressAction = playerInput.actions["PrimaryTouch"];
+        touchStartPositionAction = playerInput.actions["TouchStartPosition"];
     }
 
     ///<summary>

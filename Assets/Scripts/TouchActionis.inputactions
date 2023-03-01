@@ -49,13 +49,40 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "_TouchPress",
+                    "type": "Button",
+                    "id": "e6abb6b2-43bd-45b7-a2e2-6afbb76f4758",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press(pressPoint=0.3)",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "_TouchPosition",
+                    "type": "PassThrough",
+                    "id": "4dbe0fd9-8978-4c27-a2d1-e07ccf8d7b30",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "_TouchDelta",
+                    "type": "Value",
+                    "id": "5fc9f320-0dea-44a9-83ed-097bf916f2bf",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
                     "name": "",
                     "id": "71461a9a-82d4-442f-8d2f-bea946999b6a",
-                    "path": "<Touchscreen>/Press",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -77,7 +104,7 @@
                 {
                     "name": "",
                     "id": "cd9cfa7a-e54f-44ff-9a25-ea5a91b57879",
-                    "path": "<Touchscreen>/position",
+                    "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -99,11 +126,44 @@
                 {
                     "name": "",
                     "id": "401e7878-0149-482c-8571-76c1e947b68d",
-                    "path": "<Pointer>/delta",
+                    "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "TouchDelta",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2f2fcdb4-5ffb-4dc2-9038-94d558edd04b",
+                    "path": "<Touchscreen>/Press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "_TouchPress",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "58a9c0ab-ca86-4be1-a2ad-c25460e24888",
+                    "path": "<Touchscreen>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "_TouchPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5d5f582c-2ff2-414b-9670-4b553fdf6ff1",
+                    "path": "<Touchscreen>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "_TouchDelta",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
